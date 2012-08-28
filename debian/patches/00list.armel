@@ -30,5 +30,5 @@ armel-backtrace
 iconv-gsm
 glibc-ports-shared-pie
 data-cache-flush
-
+glibc-gnu89-inline
 
