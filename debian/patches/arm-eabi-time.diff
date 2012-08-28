@@ -1,0 +1,71 @@
+#! /bin/sh -e
+## 99-unnamed.dpatch by Yauheni Kaliuta <y.kaliuta@gmail.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+if [ $# -lt 1 ]; then
+    echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+    exit 1
+fi
+
+[ -f debian/patches/00patch-opts ] && . debian/patches/00patch-opts
+patch_opts="${patch_opts:--f --no-backup-if-mismatch} ${2:+-d $2}"
+
+case "$1" in
+    -patch) patch -p1 ${patch_opts} < $0;;
+    -unpatch) patch -R -p1 ${patch_opts} < $0;;
+    *)
+        echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+        exit 1;;
+esac
+
+exit 0
+
+@DPATCH@
+diff -urN glibc/ports/sysdeps/unix/sysv/linux/arm/eabi/gettimeofday.c glibc.old/ports/sysdeps/unix/sysv/linux/arm/eabi/gettimeofday.c
+--- glibc/ports/sysdeps/unix/sysv/linux/arm/eabi/gettimeofday.c	1970-01-01 02:00:00.000000000 +0200
++++ glibc.old/ports/sysdeps/unix/sysv/linux/arm/eabi/gettimeofday.c	2007-01-04 19:55:59.000000000 +0200
+@@ -0,0 +1,32 @@
++#include <errno.h>
++#include <endian.h>
++#include <unistd.h>
++
++
++#include <sysdep-cancel.h>
++#include <sys/syscall.h>
++#include <bp-checks.h>
++
++
++#include <sys/time.h>
++#include <time.h>
++
++
++#undef __gettimeofday
++
++int
++__gettimeofday (tv, tz)
++     struct timeval *tv;
++     struct timezone *tz;
++{
++  if (tv == NULL)
++    {
++      __set_errno (EINVAL);
++      return -1;
++    }
++
++  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
++}
++INTDEF(__gettimeofday)
++weak_alias (__gettimeofday, gettimeofday)
++
+diff -urN glibc/ports/sysdeps/unix/sysv/linux/arm/eabi/time.c glibc.old/ports/sysdeps/unix/sysv/linux/arm/eabi/time.c
+--- glibc/ports/sysdeps/unix/sysv/linux/arm/eabi/time.c	1970-01-01 02:00:00.000000000 +0200
++++ glibc.old/ports/sysdeps/unix/sysv/linux/arm/eabi/time.c	2007-01-04 19:55:59.000000000 +0200
+@@ -0,0 +1 @@
++#include <sysdeps/unix/time.c>
+diff -urN glibc/ports/sysdeps/unix/sysv/linux/arm/eabi/utime.c glibc.old/ports/sysdeps/unix/sysv/linux/arm/eabi/utime.c
+--- glibc/ports/sysdeps/unix/sysv/linux/arm/eabi/utime.c	1970-01-01 02:00:00.000000000 +0200
++++ glibc.old/ports/sysdeps/unix/sysv/linux/arm/eabi/utime.c	2007-01-04 19:55:59.000000000 +0200
+@@ -0,0 +1 @@
++#include <sysdeps/unix/utime.c>

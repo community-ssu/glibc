@@ -1,0 +1,41 @@
+#! /bin/sh -e
+
+# All lines beginning with `# DP:' are a description of the patch.
+# DP: Description: minimum kernel version workaround hack
+# DP: Related bugs: 38468
+# DP: Patch author: Andrey Petrov <andrey.petrov@nokia.com>
+# DP: Upstream status: Not submitted
+# DP: Status Details: N/A
+# DP: Date: 2006-09-20
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p0 < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p0 < $0;;
+    *)
+	echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+	exit 1
+esac
+exit 0
+
+--- ports/sysdeps/unix/sysv/linux/arm/eabi/configure.in.orig	2006-09-20 12:59:21.000000000 +0300
++++ ports/sysdeps/unix/sysv/linux/arm/eabi/configure.in	2006-09-20 12:59:47.000000000 +0300
+@@ -1,5 +1,5 @@
+ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+ # Local configure fragment for sysdeps/unix/sysv/linux/arm/eabi.
+ 
+-arch_minimum_kernel=2.6.14
++arch_minimum_kernel=2.6.8
+ libc_cv_gcc_unwind_find_fde=no
+--- ports/sysdeps/unix/sysv/linux/arm/eabi/configure.orig	2006-09-20 12:59:30.000000000 +0300
++++ ports/sysdeps/unix/sysv/linux/arm/eabi/configure	2006-09-20 12:59:36.000000000 +0300
+@@ -1,5 +1,5 @@
+ # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+  # Local configure fragment for sysdeps/unix/sysv/linux/arm/eabi.
+ 
+-arch_minimum_kernel=2.6.14
++arch_minimum_kernel=2.6.8
+ libc_cv_gcc_unwind_find_fde=no

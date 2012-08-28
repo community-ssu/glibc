@@ -1,0 +1,35 @@
+#! /bin/sh -e
+
+# All lines beginning with `## DP:' are a description of the patch.
+# DP: Description: allow compilation without optimizations
+
+PATCHLEVEL=1
+
+if [ $# -lt 1 ]; then
+    echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+    exit 1
+fi
+
+[ -f debian/patches/00patch-opts ] && . debian/patches/00patch-opts
+patch_opts="${patch_opts:--f --no-backup-if-mismatch} ${2:+-d $2}"
+
+case "$1" in
+    -patch) patch -p$PATCHLEVEL ${patch_opts} < $0;;
+    -unpatch) patch -R -p$PATCHLEVEL ${patch_opts} < $0;;
+    *)
+        echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+        exit 1;;
+esac
+
+exit 0
+
+diff -Naur glibc-2.5.orig/config.h.in glibc-2.5/config.h.in
+--- glibc-2.5.orig/config.h.in	2008-11-04 15:01:14.000000000 +0200
++++ glibc-2.5/config.h.in	2008-11-04 15:04:23.000000000 +0200
+@@ -1,5 +1,5 @@
+ #if !defined __ASSEMBLER__ && !defined _ISOMAC && !defined __OPTIMIZE__
+-# error "glibc cannot be compiled without optimization"
++/* # error "glibc cannot be compiled without optimization" */
+ #endif
+ 
+ /* Another evil option when it comes to compiling the C library is

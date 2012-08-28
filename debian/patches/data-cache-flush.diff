@@ -1,0 +1,52 @@
+#! /bin/sh -e
+
+# All lines beginning with `# DP:' are a description of the patch.
+# DP: Description: flush data cache
+# DP: Status Details: N/A
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p1 < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p1 < $0;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+@DPATCH@
+
+From e18f6c66f7b2aca4ec3e4f40eba1eeaf63501870 Mon Sep 17 00:00:00 2001
+From: Kirill A. Shutemov <kirill@shutemov.name>
+Date: Wed, 2 Jun 2010 17:20:16 +0300
+Subject: [PATCH] Flush cache after solving TEXTRELs if arch requires it
+
+On ARM instruction and data cache is not coherent, so we have to flush
+cache after solving TEXTRELs to be sure that we run correct code.
+
+This is regression introduced by commit f133c097.
+
+Signed-off-by: Kirill A. Shutemov <kirill@shutemov.name>
+---
+ elf/dl-reloc.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/elf/dl-reloc.c b/elf/dl-reloc.c
+index 6c00691..01f458f 100644
+--- a/elf/dl-reloc.c
++++ b/elf/dl-reloc.c
+@@ -307,6 +307,9 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
+ 	  goto call_error;
+ 	}
+ 
++#ifdef CLEAR_CACHE
++      CLEAR_CACHE (textrels->start, textrels->start + textrels->len);
++#endif
+       textrels = textrels->next;
+     }
+ 
+-- 
+1.7.0.6

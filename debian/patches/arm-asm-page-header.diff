@@ -1,0 +1,31 @@
+#! /bin/sh -e
+
+# DP: linux-kernel-headers no longer offers asm/page.h for arm
+# DP: Date: 2007-10-07
+
+PATCHLEVEL=1
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p$PATCHLEVEL < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p$PATCHLEVEL < $0;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+--- glibc.orig/ports/sysdeps/unix/sysv/linux/arm/ioperm.c	2007-09-25 17:20:40.000000000 +0300
++++ glibc/ports/sysdeps/unix/sysv/linux/arm/ioperm.c	2008-10-07 14:22:47.000000000 +0300
+@@ -45,7 +45,7 @@
+ #include <sys/mman.h>
+ 
+ #include <linux/version.h>
+-#include <asm/page.h>
++/* #include <asm/page.h> */
+ #include <sys/sysctl.h>
+ 
+ #define PATH_ARM_SYSTYPE	"/etc/arm_systype"

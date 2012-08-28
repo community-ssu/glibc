@@ -1,0 +1,35 @@
+#! /bin/sh -e
+
+# All lines beginning with `# DP:' are a description of the patch.
+# DP: Description: enable VFP for libm
+# DP: Related bugs: N/A
+# DP: Patch author: Andrey Petrov <andrey.petrov@nokia.com>
+# DP: Upstream status: Not submitted
+# DP: Status Details: N/A
+# DP: Date: 2007-02-13
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p0 < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p0 < $0;;
+    *)
+	echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+	exit 1
+esac
+exit 0
+
+--- math/Makefile.orig	2007-02-13 15:50:22.000000000 +0200
++++ math/Makefile	2007-02-13 15:51:31.000000000 +0200
+@@ -167,6 +167,9 @@
+ # only the fdlibm code.
+ math-CPPFLAGS += -D__NO_MATH_INLINES -D__LIBC_INTERNAL_MATH_INLINES 
+ 
++# ARM Vector Floating Point
++math-CPPFLAGS += -mfpu=vfp -mfloat-abi=softfp
++
+ ifneq ($(long-double-fcts),yes)
+ # The `double' and `long double' types are the same on this machine.
+ # We won't compile the `long double' code at all.  Tell the `double' code

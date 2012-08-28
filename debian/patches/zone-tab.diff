@@ -1,0 +1,58 @@
+#! /bin/sh -e
+ 
+# DP: Description: Updated zone.tab with support to GMT+- format
+ 
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p0 < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p0 < $0;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+--- timezone/zone.tab.orig	2009-07-08 14:44:43.000000000 +0300
++++ timezone/zone.tab	2009-07-08 14:45:01.000000000 +0300
+@@ -421,3 +421,38 @@
+ ZA	-2615+02800	Africa/Johannesburg
+ ZM	-1525+02817	Africa/Lusaka
+ ZW	-1750+03103	Africa/Harare
++aa	+513030-0000731	Etc/GMT
++ab	+513030-0000731	Etc/UTC
++ac	+513030-0000731	Etc/UCT
++ad	+513030-0000731	Etc/GMT-14
++ae	+513030-0000731	Etc/GMT-13
++af	+513030-0000731	Etc/GMT-12
++ag	+513030-0000731	Etc/GMT-11
++ah	+513030-0000731	Etc/GMT-10
++ai	+513030-0000731	Etc/GMT-9
++aj	+513030-0000731	Etc/GMT-8
++ak	+513030-0000731	Etc/GMT-7
++al	+513030-0000731	Etc/GMT-6
++am	+513030-0000731	Etc/GMT-5
++an	+513030-0000731	Etc/GMT-4
++ao	+513030-0000731	Etc/GMT-3
++ap	+513030-0000731	Etc/GMT-2
++aq	+513030-0000731	Etc/GMT-1
++ar	+513030-0000731	Etc/GMT+1
++as	+513030-0000731	Etc/GMT+2
++at	+513030-0000731	Etc/GMT+3
++au	+513030-0000731	Etc/GMT+4
++av	+513030-0000731	Etc/GMT+5
++aw	+513030-0000731	Etc/GMT+6
++ax	+513030-0000731	Etc/GMT+7
++ay	+513030-0000731	Etc/GMT+8
++az	+513030-0000731	Etc/GMT+9
++ba	+513030-0000731	Etc/GMT+10
++bb	+513030-0000731	Etc/GMT+11
++bc	+513030-0000731	Etc/GMT+12
++bd	+513030-0000731	Etc/Universal
++be	+513030-0000731	Etc/Zulu
++bf	+513030-0000731	Etc/Greenwich
++bg	+513030-0000731	Etc/GMT-0
++bh	+513030-0000731	Etc/GMT+0
++bi	+513030-0000731	Etc/GMT0

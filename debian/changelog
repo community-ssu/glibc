@@ -1,0 +1,518 @@
+glibc (2.5.1-1eglibc27+0m5) unstable; urgency=low
+
+  * This entry has been added by BIFH queue processor
+    version has been changed to 2.5.1-1eglibc27+0m5
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Tue, 08 Jun 2010 15:03:37 +0300
+
+glibc (2.5.1-1eglibc27) unstable; urgency=low
+
+  * Fixes: NB#172361 - Random crashes on startup of an ELF binary with TEXTREL
+  * applies patches data-cache-flush.diff and glibc-ports-shared-pie.diff for
+    armel
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Fri, 05 Jun 2010 14:25:39 +0300
+
+glibc (2.5.1-1eglibc26) unstable; urgency=low
+
+  * Fixes: NB#160590 - updated tzdata to 2010i-1
+  * Fixes: NB#158466 - add charset VISCII
+  * Fixes: NB#165170 - add charsets CP1255 and ISO-8859-8
+  * Fixes: NB#164159 - Timezone needs to be update for "Anadyr,Russia"
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Thu, 20 May 2010 14:11:38 +0300
+
+glibc (2.5.1-1eglibc25) unstable; urgency=low
+
+  * Fixes: NB#150146 - add charset KOI8-U
+  * Fixes: NB#143290 - add charset CP1256
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Wed, 10 Mar 2010 11:09:09 +0200
+
+glibc (2.5.1-1eglibc24) unstable; urgency=low
+
+  * Fixes: NB#159733 - add TIS-620 charset support
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Tue, 09 Mar 2010 12:33:30 +0200
+
+glibc (2.5.1-1eglibc23) unstable; urgency=low
+
+  * Fixes: NB#153506 - recompile glibc with updated toolchain for increased
+    performance
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Mon, 18 Jan 2010 16:57:28 +0200
+
+glibc (2.5.1-1eglibc22) unstable; urgency=low
+
+  * Fixes: NB#150057 updated timezonedata (tzdata2009s.diff)
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Wed, 09 Dec 2009 16:16:42 +0200
+
+glibc (2.5.1-1eglibc21+0m5) unstable; urgency=low
+
+  * This entry has been added by BIFH queue processor
+    Suffix +0m5 added to package revision
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Wed, 02 Dec 2009 18:58:42 +0200
+
+glibc (2.5.1-1eglibc21) unstable; urgency=low
+
+  * Fixes: NB#139131 - added GSM alphabet support (3GPP 23.0.38)
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Wed, 25 Nov 2009 16:49:32 +0200
+
+glibc (2.5.1-1eglibc20+0m5) unstable; urgency=low
+
+  * This entry has been added by BIFH queue processor
+    Suffix +0m5 added to package revision
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Tue, 03 Nov 2009 13:43:32 +0200
+
+glibc (2.5.1-1eglibc20) unstable; urgency=low
+
+  * Fixes: NB#145126 Added CP437 codepage for i386
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Tue, 03 Nov 2009 13:23:27 +0200
+
+glibc (2.5.1-1eglibc19+0m5) unstable; urgency=low
+
+  * This entry has been added by BIFH queue processor
+    Suffix +0m5 added to package revision
+
+ -- jussi hakala <ext-jussi.hakala@nokia.com>  Fri, 28 Aug 2009 10:43:27 +0300
+
+glibc (2.5.1-1eglibc19) unstable; urgency=low
+
+  * Better backtrace implementation for armel (Fixes: NB#118496)
+    patch by Tommi Rantala
+
+ -- Jussi Hakala <ext-jussi.hakala@nokia.com>  Wed, 26 Aug 2009 11:31:27 +0300
+
+glibc (2.5.1-1eglibc18+0m5) unstable; urgency=low
+
+  * This entry has been added by BIFH queue processor
+    Suffix +0m5 added to package revision
+
+ -- jussi hakala <ext-jussi.hakala@nokia.com>  Tue, 18 Aug 2009 11:03:26 +0300
+
+glibc (2.5.1-1eglibc18) unstable; urgency=low
+
+  * Fix for NEON optimized memcpy
+  * Fixes: NB#103765 Add eventfd support
+
+ -- Jussi Hakala <ext-jussi.hakala@nokia.com>  Thu, 13 Aug 2009 16:02:29 +0300
+
+glibc (2.5.1-1eglibc17+0m5) unstable; urgency=low
+
+  * This entry has been added by BIFH queue processor
+    Suffix +0m5 added to package revision
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Wed, 08 Jul 2009 15:06:26 +0300
+
+glibc (2.5.1-1eglibc17) unstable; urgency=low
+
+  * Fixes: NB#119648 - updated zone.tab with support to GMT+- format
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Wed, 08 Jul 2009 14:32:22 +0300
+
+glibc (2.5.1-1eglibc16+0m5) unstable; urgency=low
+
+  * This entry has been added by BIFH queue processor
+    Suffix +0m5 added to package revision
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Fri, 03 Jul 2009 17:39:22 +0300
+
+glibc (2.5.1-1eglibc16) unstable; urgency=low
+
+  * Fixes: NB#126121 NEON optimizations for memcpy function
+  * Fixes: NB#126047 syslog call optimization in case no syslog installed
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Fri, 03 Jul 2009 16:43:28 +0300
+
+glibc (2.5.1-1eglibc15+0m5) unstable; urgency=low
+
+  * This entry has been added by BIFH queue processor
+    Suffix +0m5 added to package revision
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Fri, 12 Jun 2009 12:24:28 +0300
+
+glibc (2.5.1-1eglibc15) unstable; urgency=low
+
+  * forces /bin/sh as the ldd shell in armel build
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Fri, 12 Jun 2009 11:32:25 +0300
+
+glibc (2.5.1-1eglibc14+0m5) unstable; urgency=low
+
+  * This entry has been added by BIFH queue processor
+    Suffix +0m5 added to package revision
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Fri, 05 Jun 2009 16:04:25 +0300
+
+glibc (2.5.1-1eglibc14) unstable; urgency=low
+
+  * Fixed locales package dependencies
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Fri, 05 Jun 2009 14:00:31 +0300
+
+glibc (2.5.1-1eglibc13+0m5) unstable; urgency=low
+
+  * This entry has been added by BIFH queue processor
+    Suffix +0m5 added to package revision
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Mon, 25 May 2009 11:22:31 +0300
+
+glibc (2.5.1-1eglibc13) unstable; urgency=low
+
+  * applies the tzdata patch to i386 too
+  * Fixes: NB#118415
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  May, 25 May 2009 10:58:31 +0300
+
+glibc (2.5.1-1eglibc12) unstable; urgency=low
+
+  * Defines a new __gnu_mcount_nc entry point for ARM EABI profiling support
+  * Removed udeb packages from build
+  * Fixes: NB#108117
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Thu, 30 Apr 2009 10:43:45 +0300
+
+glibc (2.5.1-1eglibc11+0m5) unstable; urgency=low
+
+  * This entry has been added by BIFH queue processor
+    Suffix +0m5 added to package revision
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Mon, 06 Apr 2009 14:31:24 +0300
+
+glibc (2.5.1-1eglibc11) unstable; urgency=low
+
+  * Fixes: NB#104420 - implement SHMLBA correctly for ARM
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Mon, 06 Apr 2009 12:41:45 +0300
+
+glibc (2.5.1-1eglibc10) unstable; urgency=low
+
+  * Fixes: NB#104741 make stack non-executable
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Tue, 10 Mar 2009 12:22:45 +0200
+
+glibc (2.5.1-1eglibc9) unstable; urgency=low
+
+  * Updated sysdeps/i386/dl-trampoline.S to make running la-trace on
+    x86 target possible.
+  * Removed gcc-3.4 entries from build-deps
+  * Fixes: NB#100061
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Tue, 17 Feb 2009 17:40:45 +0200
+
+glibc (2.5.1-1eglibc8) unstable; urgency=low
+
+  * modified fix to get backtraces for noreturn functions to
+    use -fno-omit-frame-pointer and -mapcs-frame instead of -O0
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Tue, 02 Dec 2008 16:53:45 +0200
+
+glibc (2.5.1-1eglibc7) unstable; urgency=low
+
+  * adds iso-2022 encoding, fixes: NB#85297
+  * adds CP1252 encoding, fixes: NB#92227
+  * updates stale timezone data, fixes: NB#92229
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Tue, 11 Nov 2008 17:43:45 +0200
+
+glibc (2.5.1-1eglibc6) unstable; urgency=low
+
+  * Does not reset timezone to UTC when upgraded
+  * Fixes: NB#88466
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Mon, 10 Nov 2008 15:43:45 +0200
+
+glibc (2.5.1-1eglibc5) unstable; urgency=low
+
+  * Added -O0 for armel abort(), exit(), _exit() and assert() functions
+    to be able to get backtraces.
+  * Added -fgnu89-inline to CFLAGS to suppress inlining warnings during
+    compilation.
+  * Fixes: NB#88617
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Tue, 04 Nov 2008 18:30:45 +0200
+
+glibc (2.5.1-1eglibc4) unstable; urgency=low
+
+  * Does not copy debug symbols from /usr/lib/debug/*.* to the -dbg package
+  * Commented out #include <asm/page.h> for arm since it's not provided
+    anymore by the linux-kernel-headers package.
+
+ -- Juha Kallioinen <juha.kallioinen@nokia.com>  Tue, 07 Oct 2008 15:18:45 +0300
+
+glibc (2.5.1-1eglibc3) unstable; urgency=low
+
+  * Repackage with new upstream source from cs2007q3
+  * Adjust packaging accordingly
+  * Tidy up the changelog
+
+ -- Jussi Hakala <ext-jussi.hakala@nokia.com>  Wed, 17 Sep 2008 11:44:45 +0300
+
+glibc (2.5.0-1osso7) unstable; urgency=low
+
+  * Build i386 --with-fp. Fixes: NB#65505
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Wed, 05 Sep 2007 16:03:44 +0300
+
+glibc (2.5.0-1osso6) unstable; urgency=low
+
+  * postinst: removed debian stuff. Fixes: NB#65423 
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Fri, 17 Aug 2007 12:04:10 +0300
+
+glibc (2.5.0-1osso5) unstable; urgency=low
+
+  * Removed crypt/speeds.c, legal issues. Fixes: NB#53920
+  * Fixed shlibver for the current version
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Wed, 11 Apr 2007 14:22:35 +0300
+
+glibc (2.5.0-1osso4) unstable; urgency=low
+
+  * ARMEL: use VFP for libm.
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Tue, 13 Feb 2007 16:28:03 +0200
+
+glibc (2.5.0-1osso3) unstable; urgency=low
+
+  * Added kernel version hack for armel
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Wed,  7 Feb 2007 16:30:54 +0200
+
+glibc (2.5.0-1osso2.1) unstable; urgency=low
+
+  * linux-kernel-headers depend temporary added
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Thu, 25 Jan 2007 14:59:18 +0200
+
+glibc (2.5.0-1osso2) unstable; urgency=low
+
+  * Added optimized functions 
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Tue, 16 Jan 2007 13:22:39 +0200
+
+glibc (2.5.0-1osso1) unstable; urgency=low
+
+  * New upstream release
+  * NPTL build
+  * pure EABI build
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Tue,  5 Dec 2006 12:29:34 +0200
+
+glibc (2.3.5cs2005q3.2-5.osso12) unstable; urgency=low
+
+  * Added linuxthreads-poll.diff. Fixes: NB#44468
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Fri, 17 Nov 2006 14:09:55 +0200
+
+glibc (2.3.5cs2005q3.2-5.osso11) unstable; urgency=low
+
+  * Fixed en_US and pl_PL locales
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Thu, 16 Nov 2006 20:31:05 +0200
+
+glibc (2.3.5cs2005q3.2-5.osso10) unstable; urgency=low
+
+  * Fix bashism in postinst
+  * Removed zone_banner calls to avoid use of busybox's date.
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Thu, 12 Oct 2006 14:26:45 +0300
+
+glibc (2.3.5cs2005q3.2-5.osso9) unstable; urgency=low
+
+  * Take away parallel build.
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Wed,  4 Oct 2006 14:40:05 +0300
+
+glibc (2.3.5cs2005q3.2-5.osso8) experimental; urgency=low
+
+  * Revert EABI syscalls patch
+  * Handle libpthread like a normal library. Thanks to Eero.
+    Fixes: NB#41486
+  * Fix DEB_BUILD_OPTIONS handling. Thanks to Eero.
+    Fixes: NB#40445
+  * Fix libc.so linker script search. Thanks to Eero.
+    Fixes: NB#40443
+  * applied tls_modid-assert-fix
+  * removed linux-kernel-headers build dependence
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Wed,  4 Oct 2006 11:23:29 +0300
+
+glibc (2.3.5cs2005q3.2-5.osso6) experimental; urgency=low
+
+  * Make arch minimum version 2.6.14 to fix scratchbox build.
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Wed, 27 Sep 2006 13:01:33 +0300
+
+glibc (2.3.5cs2005q3.2-5.osso5) experimental; urgency=low
+
+  * Depend of correct headers.
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Thu, 14 Sep 2006 18:46:08 +0300
+
+glibc (2.3.5cs2005q3.2-5.osso4) experimental; urgency=low
+
+  * Use EABI syscalls. Fixes: NB#38468
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Thu, 14 Sep 2006 18:33:01 +0300
+
+glibc (2.3.5cs2005q3.2-5.osso3) experimental; urgency=low
+
+  * use PLD. Fixes: NB#37628
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Mon, 21 Aug 2006 13:02:22 +0300
+
+glibc (2.3.5cs2005q3.2-5.osso2) experimental; urgency=low
+
+  * memset() optimization back for this branch. Fixes: NB#35862 
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Wed,  2 Aug 2006 11:45:54 +0300
+
+glibc (2.3.5cs2005q3.2-5.osso1) experimental; urgency=low
+
+  * Creating branch, 5.osso
+  * Added -fno-omit-frame-pointer to some functions to simplify debugging
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Mon, 31 Jul 2006 16:51:00 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso16) experimental; urgency=low
+
+  * Remove  memset() optimization. 
+  * Fixes: NB:#33654
+
+ -- Mathias Nyman <mathias.nyman@nokia.com>  Wed, 26 Jul 2006 12:01:33 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso15) experimental; urgency=low
+
+  * Added fixed optimized memset()
+  * Added back ffs without ARMv5 optimizations
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Tue, 27 Jun 2006 15:34:58 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso14) experimental; urgency=low
+
+  * Optimized functions fixed:
+    - added argument cleanup to memchr (and r1, r1, #ff)
+    - removed ffs, works incorrectly (count bits from wrong side)
+  * Optimezed functions back
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Tue, 27 Jun 2006 13:30:07 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso13) experimental; urgency=low
+
+  * Removed string/memory optimizations
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Fri, 16 Jun 2006 12:51:28 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso12) experimental; urgency=low
+
+  * Removed strchr and memchr optimized functions
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Wed, 14 Jun 2006 14:11:02 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso11) experimental; urgency=low
+
+  * Use parallel build
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Tue, 13 Jun 2006 19:38:19 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso10) experimental; urgency=low
+
+  * Fixed bcopy. Fixes: NB:#32574
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Tue, 13 Jun 2006 16:33:02 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso9) experimental; urgency=low
+
+  * Fixed memory functions 
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Mon,  5 Jun 2006 16:39:22 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso8) experimental; urgency=low
+
+  * updated optimized string functions 
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Thu,  1 Jun 2006 14:12:43 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso7) experimental; urgency=low
+
+  * armel fixes: use DEB_HOST_ARCH_OS instead of DEB_HOST_GNU_SYSTEM
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Mon, 29 May 2006 11:25:09 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso6) experimental; urgency=low
+
+  * fixed locales arch 
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Thu, 25 May 2006 16:01:56 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso5) experimental; urgency=low
+
+  * Fixed wrong relocation of thumb symbols in ld.so 
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Mon, 22 May 2006 12:49:40 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso4) experimental; urgency=low
+
+  * armel support
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Wed, 17 May 2006 18:50:37 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso3) experimental; urgency=low
+
+  * localedef utility moved to locales. Fixes: NB#28384.
+  * inst scripts cleanup
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Thu,  4 May 2006 19:24:49 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso2) experimental; urgency=low
+
+  * Removed po4a dependency
+  * Added --disable-force-install
+  * Fixed asm string functions for new RETINSTR
+
+ -- Yauheni Kaliuta <y.kaliuta@gmail.com>  Wed, 26 Apr 2006 14:22:15 +0300
+
+glibc (2.3.5cs2005q3.2-4.osso1) experimental; urgency=low
+
+  * Apllied osso patches
+  * Changelog cleanup
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Wed, 26 Apr 2006 13:13:16 +0300
+
+glibc (2.3.5cs2005q3.2-4) experimental; urgency=low
+
+  * fixed libc6-dev dependence on linux-kernel-headers
+  * fixed build architecture
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Fri,  7 Apr 2006 16:40:55 +0400
+
+glibc (2.3.5cs2005q3.2-3) experimental; urgency=low
+
+  * recompiled with cs2005q3.2-5 toolchain package
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Sat, 18 Mar 2006 02:45:06 +0300
+
+glibc (2.3.5cs2005q3.2-2) experimental; urgency=low
+
+  * recompiled with cs2005q3.2-4 toolchain package
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Wed, 15 Mar 2006 20:31:32 +0300
+
+glibc (2.3.5cs2005q3.2-1) experimental; urgency=low
+
+  * initial cs2005q3.2 release 
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Thu,  2 Mar 2006 19:50:57 +0300
+
+glibc (2.3.4cs2005q3.1-1) experimental; urgency=low
+
+  * Start debianised version glibc-2005q3-1 from CodeCourcery.
+
+ -- Yauheni Kaliuta <yauheni.kaliuta@nokia.com>  Wed, 11 Jan 2006 17:22:25 +0900
+

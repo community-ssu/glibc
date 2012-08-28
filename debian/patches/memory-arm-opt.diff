@@ -1,0 +1,103 @@
+#! /bin/sh -e
+
+# All lines beginning with `# DP:' are a description of the patch.
+# DP: Description: String Optimized ARM functions
+# DP: Related bugs: 24132
+# DP: Patch author: Salvatore Iovene <ext-salvatore.iovene@nokia.com>
+# DP: Upstream status: Not submitted
+# DP: Status Details: 
+# DP: Date: 2006-06-01
+
+PATCHLEVEL=1
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p$PATCHLEVEL < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p$PATCHLEVEL < $0;;
+    *)
+	echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+	exit 1
+esac
+exit 0
+
+# append the patch here and adjust the -p? flag in the patch calls.
+
+diff -urN glibc.orig/ports/sysdeps/arm/memchr.S glibc/ports/sysdeps/arm/memchr.S
+--- glibc.orig/ports/sysdeps/arm/memchr.S	1970-01-01 02:00:00.000000000 +0200
++++ glibc/ports/sysdeps/arm/memchr.S	2007-01-16 13:18:11.000000000 +0200
+@@ -0,0 +1,25 @@
++/*
++ *  linux/arch/arm/lib/memchr.S
++ *
++ *  Copyright (C) 1995-2000 Russell King
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ *  ASM optimised string functions
++ */
++#include <sysdep.h>
++
++ENTRY(memchr)
++	and	r1, r1, #0xff
++1:	subs	r2, r2, #1
++	bmi	2f
++	ldrb	r3, [r0], #1
++	teq	r3, r1
++	bne	1b
++	sub	r0, r0, #1
++2:	movne	r0, #0
++	RETINSTR(al,lr)
++END(memchr)
++libc_hidden_builtin_def (memchr)
+diff -ur glibc/ports.orig/sysdeps/arm/memcpy.S glibc/ports/sysdeps/arm/memcpy.S
+--- glibc/ports.orig/sysdeps/arm/memcpy.S	2006-10-31 19:07:54.000000000 +0200
++++ glibc/ports/sysdeps/arm/memcpy.S	2007-01-18 17:03:05.000000000 +0200
+@@ -25,8 +25,7 @@
+  */
+ #if (!defined (__ARM_ARCH_2__) && !defined (__ARM_ARCH_3__) \
+      && !defined (__ARM_ARCH_3M__) && !defined (__ARM_ARCH_4__) \
+-     && !defined (__ARM_ARCH_4T__) && !defined (__ARM_ARCH_5__) \
+-     && !defined (__ARM_ARCH_5T__))
++     && !defined (__ARM_ARCH_4T__) && !defined (__ARM_ARCH_5__))
+ #define PLD(code...)    code
+ #else
+ #define PLD(code...)
+diff -ur glibc/ports.orig/sysdeps/arm/memmove.S glibc/ports/sysdeps/arm/memmove.S
+--- glibc/ports.orig/sysdeps/arm/memmove.S	2006-10-31 19:07:54.000000000 +0200
++++ glibc/ports/sysdeps/arm/memmove.S	2007-01-18 17:02:24.000000000 +0200
+@@ -25,8 +25,7 @@
+  */
+ #if (!defined (__ARM_ARCH_2__) && !defined (__ARM_ARCH_3__) \
+      && !defined (__ARM_ARCH_3M__) && !defined (__ARM_ARCH_4__) \
+-     && !defined (__ARM_ARCH_4T__) && !defined (__ARM_ARCH_5__) \
+-     && !defined (__ARM_ARCH_5T__))
++     && !defined (__ARM_ARCH_4T__) && !defined (__ARM_ARCH_5__))
+ #define PLD(code...)    code
+ #else
+ #define PLD(code...)
+@@ -40,6 +39,8 @@
+ //#define CALGN(code...)        code
+ #define CALGN(code...)
+ 
++#define BCOPY_P (defined(memmove))
++
+ /*
+  * Endian independent macros for shifting bytes within registers.
+  */
+@@ -64,6 +65,11 @@
+ 
+ ENTRY(memmove)
+ 
++#if BCOPY_P
++		eor	r0, r1, r0
++		eor	r1, r0, r1
++		eor	r0, r1, r0
++#endif
+ 		subs	ip, r0, r1
+ 		cmphi	r2, ip
+ 		bls	memcpy

@@ -1,0 +1,33 @@
+#! /bin/sh -e
+
+# All lines beginning with `# DP:' are a description of the patch.
+# DP: Description: fix ioperm build error on arm
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p1 < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p1 < $0;;
+    *)
+	echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+	exit 1
+esac
+exit 0
+
+===================================================================
+RCS file: /cvs/glibc/libc/localedata/locales/pl_PL,v
+retrieving revision 1.14
+retrieving revision 1.15
+diff -u -r1.14 -r1.15
+--- libc/localedata/locales/pl_PL	2004/10/31 23:42:27	1.14
++++ libc/localedata/locales/pl_PL	2006/04/10 18:09:58	1.15
+@@ -2183,6 +2183,7 @@
+ date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
+ <U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
+ <U0025><U005A><U0020><U0025><U0059>"
++week	7;19971201;4
+ END LC_TIME
+ 
+ LC_PAPER

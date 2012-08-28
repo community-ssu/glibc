@@ -1,0 +1,632 @@
+
+#! /bin/sh -e
+
+# All lines beginning with `# DP:' are a description of the patch.
+# DP: Description: timezone data 2010e-1
+# DP: Related bugs: N/A
+# DP: Patch author: Juha Kallioinen <juha.kallioinen@nokia.com>
+# DP: Upstream status: Not submitted
+# DP: Status Details: N/A
+# DP: Date: 2010-03-17
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p0 < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p0 < $0;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+@DPATCH@
+Only in timezone.old: Makefile
+Only in timezone.old: README
+diff -aur timezone.old/asia timezone/asia
+--- timezone.old/asia	2010-03-17 10:58:36.000000000 +0200
++++ timezone/asia	2010-03-17 10:59:01.000000000 +0200
+@@ -1,4 +1,4 @@
+-# @(#)asia	8.44
++# @(#)asia	8.55
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ 
+@@ -196,6 +196,61 @@
+ # http://www.thaindian.com/newsportal/business/bangladesh-to-continue-indefinitely-with-advanced-time_100259987.html
+ # </a>
+ 
++# From Alexander Krivenyshev (2009-12-24):
++# According to Bangladesh newspaper "The Daily Star,"
++# Bangladesh will change its clock back to Standard Time on Dec 31, 2009.
++#
++# Clock goes back 1-hr on Dec 31 night.
++# <a href="http://www.thedailystar.net/newDesign/news-details.php?nid=119228">
++# http://www.thedailystar.net/newDesign/news-details.php?nid=119228
++# </a>
++# and
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_bangladesh05.html">
++# http://www.worldtimezone.com/dst_news/dst_news_bangladesh05.html
++# </a>
++#
++# "...The government yesterday decided to put the clock back by one hour
++# on December 31 midnight and the new time will continue until March 31,
++# 2010 midnight. The decision came at a cabinet meeting at the Prime
++# Minister's Office last night..."
++
++# From Danvin Ruangchan (2009-12-24):
++# ...the news mentions DST will be turned off again 7 months after March
++# 31st on Oct 31, 2010.
++
++# From Arthur David Olson (2009-12-26):
++# Indeed, "The government will advance again the Banglasdesh Standard
++# Time by one one hour on March 31 next year by enforcing the Daylight
++# Saving Time (DST) for seven months. It will continue till October 31
++# until further notice." I take that last sentence as the
++# establishment of a rule.
++
++# From Nobutomo Nakano (2010-02-19):
++# We received a report from Bangladesh saying that the start/end of
++# Bangladesh DST is incorrect. Currently we have only the Bengali version
++# of the official mail from BTRC which describes the following:
++#
++# "From 2010 each year when local standard time is about to reach
++# March 31 at 10:59:00 PM clocks are turned forward 1 hour (11:59:00 PM)
++# and when local daylight time is about to October 31 at 11:59:00 PM
++# clocks are turned backward 1 hour (10:59:00 PM)."
++#
++# So, DST will start/end 1 minute earlier.
++
++# From Arthur David Olson (2010-03-03):
++# The file
++# <a href=http://www.cabinet.gov/bd/file_upload/news_events/en_169.pdf>
++# http://www.cabinet.gov/bd/file_upload/news_events/en_169.pdf
++# </a>
++# is in Bengali; it does contain two "31"s as well as two "11.59"s and a "10.59"
++# which is consistent with the information provided by Nobutomo Nakano.
++
++# Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
++Rule	Dhaka	2009	only	-	Jun	19	23:00	1:00	S
++Rule	Dhaka	2009	only	-	Dec	31	23:59	0	-
++Rule	Dhaka	2010	max	-	Mar	31	22:59	1:00	S
++Rule	Dhaka	2010	max	-	Oct	31	23:59	0	-
++
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Asia/Dhaka	6:01:40 -	LMT	1890
+ 			5:53:20	-	HMT	1941 Oct    # Howrah Mean Time?
+@@ -203,8 +258,8 @@
+ 			5:30	-	IST	1942 Sep
+ 			6:30	-	BURT	1951 Sep 30
+ 			6:00	-	DACT	1971 Mar 26 # Dacca Time
+-			6:00	-	BDT	2009 Jun 19 23:00 # Bangladesh Time
+-			6:00	1:00	BDST
++			6:00	-	BDT	2009
++			6:00	Dhaka	BD%sT
+ 
+ # Bhutan
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+@@ -363,6 +418,69 @@
+ # West Xinjiang, including Aksu, Atushi, Yining, Hetian, Cele, Luopu, Nileke,
+ # Zhaosu, Tekesi, Gongliu, Chabuchaer, Huocheng, Bole, Pishan, Suiding,
+ # and Yarkand.
++
++# From Luther Ma (2009-10-17):
++# Almost all (>99.9%) ethnic Chinese (properly ethnic Han) living in
++# Xinjiang use Chinese Standard Time. Some are aware of Xinjiang time,
++# but have no need of it. All planes, trains, and schools function on
++# what is called "Beijing time." When Han make an appointment in Chinese
++# they implicitly use Beijing time.
++#
++# On the other hand, ethnic Uyghurs, who make up about half the
++# population of Xinjiang, typically use "Xinjiang time" which is two
++# hours behind Beijing time, or UTC +0600. The government of the Xinjiang
++# Uyghur Autonomous Region, (XAUR, or just Xinjiang for short) as well as
++# local governments such as the Urumqi city government use both times in
++# publications, referring to what is popularly called Xinjiang time as
++# "Urumqi time." When Uyghurs make an appointment in the Uyghur language
++# they almost invariably use Xinjiang time.
++#
++# (Their ethnic Han compatriots would typically have no clue of its
++# widespread use, however, because so extremely few of them are fluent in
++# Uyghur, comparable to the number of Anglo-Americans fluent in Navajo.)
++#
++# (...As with the rest of China there was a brief interval ending in 1990
++# or 1991 when summer time was in use.  The confusion was severe, with
++# the province not having dual times but four times in use at the same
++# time. Some areas remained on standard Xinjiang time or Beijing time and
++# others moving their clocks ahead.)
++#
++# ...an example of an official website using of Urumqi time.
++#
++# The first few lines of the Google translation of
++# <a href="http://www.fjysgl.gov.cn/show.aspx?id=2379&cid=39">
++# http://www.fjysgl.gov.cn/show.aspx?id=2379&cid=39
++# </a>
++# (retrieved 2009-10-13)
++# > Urumqi fire seven people are missing the alleged losses of at least
++# > 500 million yuan
++# >
++# > (Reporter Dong Liu) the day before 20:20 or so (Urumqi Time 18:20),
++# > Urumqi City Department of International Plaza Luther Qiantang River
++# > burst fire. As of yesterday, 18:30, Urumqi City Fire officers and men
++# > have worked continuously for 22 hours...
++
++# From Luther Ma (2009-11-19):
++# With the risk of being redundant to previous answers these are the most common
++# English "transliterations" (w/o using non-English symbols):
++#
++# 1. Wulumuqi...
++# 2. Kashi...
++# 3. Urumqi...
++# 4. Kashgar...
++# ...
++# 5. It seems that Uyghurs in Urumqi has been using Xinjiang since at least the
++# 1960's. I know of one Han, now over 50, who grew up in the surrounding
++# countryside and used Xinjiang time as a child.
++#
++# 6. Likewise for Kashgar and the rest of south Xinjiang I don't know of any
++# start date for Xinjiang time.
++#
++# Without having access to local historical records, nor the ability to legally
++# publish them, I would go with October 1, 1949, when Xinjiang became the Uyghur
++# Autonomous Region under the PRC. (Before that Uyghurs, of course, would also
++# not be using Beijing time, but some local time.)
++
+ Zone	Asia/Kashgar	5:03:56	-	LMT	1928 # or Kashi or Kaxgar
+ 			5:30	-	KAST	1940	 # Kashgar Time
+ 			5:00	-	KAST	1980 May
+@@ -370,8 +488,8 @@
+ 
+ 
+ # From Lee Yiu Chung (2009-10-24):
+-# I found there are some mistakes for the historial DST rule for Hong
+-# Kong. Accoring to the DST record from Hong Kong Observatory (actually,
++# I found there are some mistakes for the...DST rule for Hong
++# Kong. [According] to the DST record from Hong Kong Observatory (actually,
+ # it is not [an] observatory, but the official meteorological agency of HK,
+ # and also serves as the official timing agency), there are some missing
+ # and incorrect rules. Although the exact switch over time is missing, I
+diff -aur timezone.old/australasia timezone/australasia
+--- timezone.old/australasia	2010-03-17 10:58:36.000000000 +0200
++++ timezone/australasia	2010-03-17 10:59:01.000000000 +0200
+@@ -1,5 +1,5 @@
+ # <pre>
+-# @(#)australasia	8.15
++# @(#)australasia	8.16
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ 
+@@ -267,11 +267,30 @@
+ # <a href="http://www.fiji.gov.fj/publish/page_16198.shtml">
+ # http://www.fiji.gov.fj/publish/page_16198.shtml
+ # </a>
++
++# From Steffen Thorsen (2010-03-03):
++# The Cabinet in Fiji has decided to end DST about a month early, on
++# 2010-03-28 at 03:00.
++# The plan is to observe DST again, from 2010-10-24 to sometime in March
++# 2011 (last Sunday a good guess?).
++#
++# Official source:
++# <a href="http://www.fiji.gov.fj/index.php?option=com_content&view=article&id=1096:3310-cabinet-approves-change-in-daylight-savings-dates&catid=49:cabinet-releases&Itemid=166">
++# http://www.fiji.gov.fj/index.php?option=com_content&view=article&id=1096:3310-cabinet-approves-change-in-daylight-savings-dates&catid=49:cabinet-releases&Itemid=166
++# </a>
++#
++# A bit more background info here:
++# <a href="http://www.timeanddate.com/news/time/fiji-dst-ends-march-2010.html">
++# http://www.timeanddate.com/news/time/fiji-dst-ends-march-2010.html
++# </a>
++
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	Fiji	1998	1999	-	Nov	Sun>=1	2:00	1:00	S
+ Rule	Fiji	1999	2000	-	Feb	lastSun	3:00	0	-
+ Rule	Fiji	2009	only	-	Nov	29	2:00	1:00	S
+-Rule	Fiji	2010	only	-	Apr	25	3:00	0	-
++Rule	Fiji	2010	only	-	Mar	lastSun	3:00	0	-
++Rule	Fiji	2010	only	-	Oct	24	2:00	1:00	S
++Rule	Fiji	2011	only	-	Mar	lastSun 3:00	0	-
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Pacific/Fiji	11:53:40 -	LMT	1915 Oct 26	# Suva
+ 			12:00	Fiji	FJ%sT	# Fiji Time
+@@ -449,70 +468,30 @@
+ 
+ # Samoa
+ 
+-# From Alexander Krivenyshev (2008-12-06):
+-# The Samoa government (Western Samoa) may implement DST on the first Sunday of 
+-# October 2009 (October 4, 2009) until the last Sunday of March 2010 (March 28, 
+-# 2010). 
+-# 
+-# "Selected Committee reports to Cabinet on Daylight Saving Time",
+-# Government of Samoa:
+-# <a href="http://www.govt.ws/pr_article.cfm?pr_id=560">
+-# http://www.govt.ws/pr_article.cfm?pr_id=560
+-# </a>
+-# or
+-# <a href="http://www.worldtimezone.com/dst_news/dst_news_samoa01.html">
+-# http://www.worldtimezone.com/dst_news/dst_news_samoa01.html
+-# </a>
+-
+-# From Steffen Thorsen (2009-08-27):
+-# Samoa's parliament passed the Daylight Saving Bill 2009, and will start 
+-# daylight saving time on the first Sunday of October 2009 and end on the 
+-# last Sunday of March 2010. We hope that the full text will be published 
+-# soon, but we believe that the bill is only valid for 2009-2010. Samoa's 
+-# Daylight Saving Act 2009 will be enforced as soon as the Head of State 
+-# executes a proclamation publicizing this Act.
++# From Steffen Thorsen (2009-10-16):
++# We have been in contact with the government of Samoa again, and received
++# the following info:
++#
++# "Cabinet has now approved Daylight Saving to be effected next year
++# commencing from the last Sunday of September 2010 and conclude first
++# Sunday of April 2011."
+ #
+-# Some background information here, which will be updated once we have 
+-# more details:
++# Background info:
+ # <a href="http://www.timeanddate.com/news/time/samoa-dst-plan-2009.html">
+ # http://www.timeanddate.com/news/time/samoa-dst-plan-2009.html
+ # </a>
+-
+-# From Alexander Krivenyshev (2009-10-03):
+-# First, my deepest condolences to people of Samoa islands and all families and
+-# loved ones around the world who lost their lives in the earthquake and tsunami.
+-#
+-# Considering the recent devastation on Samoa by earthquake and tsunami and that
+-# many government offices/ ministers are closed- not sure if "Daylight Saving
+-# Bill 2009" will be implemented in next few days- on October 4, 2009.
+-#
+-# Here is reply from Consulate-General of Samoa in New Zealand
+-# ---------------------------
+-# Consul General
+-# consulgeneral@samoaconsulate.org.nz
+-#
+-# Talofa Alexander,
+-#
+-# Thank you for your sympathy for our country but at this time we have not
+-# been informed about the Daylight Savings Time Change.  Most Ministries in
+-# Apia are closed or relocating due to weather concerns.
+-#
+-# When we do find out if they are still proceeding with the time change we
+-# will advise you soonest.
+-#
+-# Kind Regards,
+-# Lana
+-# for: Consul General
+-
+-# From Steffen Thorsen (2009-10-05):
+-# We have called a hotel in Samoa and asked about local time there - they 
+-# are still on standard time.
++#
++# Samoa's Daylight Saving Time Act 2009 is available here, but does not
++# contain any dates:
++# <a href="http://www.parliament.gov.ws/documents/acts/Daylight%20Saving%20Act%20%202009%20%28English%29%20-%20Final%207-7-091.pdf">
++# http://www.parliament.gov.ws/documents/acts/Daylight%20Saving%20Act%20%202009%20%28English%29%20-%20Final%207-7-091.pdf
++# </a>
+ 
+ Zone Pacific/Apia	 12:33:04 -	LMT	1879 Jul  5
+ 			-11:26:56 -	LMT	1911
+ 			-11:30	-	SAMT	1950		# Samoa Time
+-			-11:00	-	WST	2009 Oct 4
+-			-11:00	1:00	WSDT	2010 Mar 28
++			-11:00	-	WST	2010 Oct 24
++			-11:00	1:00	WSDT	2011 Apr 3
+ 			-11:00	-	WST
+ 
+ # Solomon Is
+Only in timezone.old: checktab.awk
+diff -aur timezone.old/europe timezone/europe
+--- timezone.old/europe	2010-03-17 10:58:36.000000000 +0200
++++ timezone/europe	2010-03-17 10:59:01.000000000 +0200
+@@ -1,5 +1,5 @@
+ # <pre>
+-# @(#)europe	8.24
++# @(#)europe	8.25
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ 
+@@ -2130,12 +2130,20 @@
+ # From Oscar van Vlijmen (2003-10-18): [This region consists of]
+ # Aginskij Buryatskij avtonomnyj okrug, Amurskaya oblast',
+ # [parts of] Respublika Sakha (Yakutiya), Chitinskaya oblast'.
++
++# From Oscar van Vlijmen (2009-11-29):
++# ...some regions of RUssia were merged with others since 2005...
++# Some names were changed, no big deal, except for one instance: a new name.
++# YAK/YAKST: UTC+9 Zabajkal'skij kraj.
++
++# From Oscar van Vlijmen (2009-11-29):
+ # The Sakha districts are: Aldanskij, Amginskij, Anabarskij,
+-# Bulunskij, Verkhnekolymskij, Verkhnevilyujskij, Vilyujskij, Gornyj,
++# Verkhnevilyujskij, Vilyujskij, Gornyj,
+ # Zhiganskij, Kobyajskij, Lenskij, Megino-Kangalasskij, Mirninskij,
+-# Namskij, Nyurbinskij, Olenekskij, Olekminskij, Srednekolymskij,
++# Namskij, Nyurbinskij, Olenyokskij, Olyokminskij,
+ # Suntarskij, Tattinskij, Ust'-Aldanskij, Khangalasskij,
+-# Churapchinskij, Eveno-Bytantajskij.
++# Churapchinskij, Eveno-Bytantajskij Natsional'nij.
++
+ Zone Asia/Yakutsk	 8:38:40 -	LMT	1919 Dec 15
+ 			 8:00	-	YAKT	1930 Jun 21 # Yakutsk Time
+ 			 9:00	Russia	YAK%sT	1991 Mar 31 2:00s
+@@ -2145,7 +2153,9 @@
+ # From Oscar van Vlijmen (2003-10-18): [This region consists of]
+ # Evrejskaya avtonomnaya oblast', Khabarovskij kraj, Primorskij kraj,
+ # [parts of] Respublika Sakha (Yakutiya).
+-# The Sakha districts are: Verkhoyanskij, Tomponskij, Ust'-Majskij,
++
++# From Oscar van Vlijmen (2009-11-29):
++# The Sakha districts are: Bulunskij, Verkhoyanskij, Tomponskij, Ust'-Majskij,
+ # Ust'-Yanskij.
+ Zone Asia/Vladivostok	 8:47:44 -	LMT	1922 Nov 15
+ 			 9:00	-	VLAT	1930 Jun 21 # Vladivostok Time
+@@ -2166,8 +2176,10 @@
+ # From Oscar van Vlijmen (2003-10-18): [This region consists of]
+ # Magadanskaya oblast', Respublika Sakha (Yakutiya).
+ # Probably also: Kuril Islands.
+-# The Sakha districts are: Abyjskij, Allaikhovskij, Momskij,
+-# Nizhnekolymskij, Ojmyakonskij.
++
++# From Oscar van Vlijmen (2009-11-29):
++# The Sakha districts are: Abyjskij, Allaikhovskij, Verkhhhnekolymskij, Momskij,
++# Nizhnekolymskij, Ojmyakonskij, Srednekolymskij.
+ Zone Asia/Magadan	10:03:12 -	LMT	1924 May  2
+ 			10:00	-	MAGT	1930 Jun 21 # Magadan Time
+ 			11:00	Russia	MAG%sT	1991 Mar 31 2:00s
+Only in timezone.old: ialloc.c
+diff -aur timezone.old/northamerica timezone/northamerica
+--- timezone.old/northamerica	2010-03-17 10:58:36.000000000 +0200
++++ timezone/northamerica	2010-03-17 10:59:01.000000000 +0200
+@@ -1,5 +1,5 @@
+ # <pre>
+-# @(#)northamerica	8.28
++# @(#)northamerica	8.30
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ 
+@@ -1955,6 +1955,58 @@
+ # http://www.conae.gob.mx/ahorro/horaver2001_m1_2002.html (2002-02-20)
+ # confirms this.  Sonora as usual is the only state where DST is not applied.
+ 
++# From Steffen Thorsen (2009-12-28):
++#
++# Steffen Thorsen wrote:
++# > Mexico's House of Representatives has approved a proposal for northern
++# > Mexico's border cities to share the same daylight saving schedule as
++# > the United States.
++# Now this has passed both the Congress and the Senate, so starting from
++# 2010, some border regions will be the same:
++# <a href="http://www.signonsandiego.com/news/2009/dec/28/clocks-will-match-both-sides-border/">
++# http://www.signonsandiego.com/news/2009/dec/28/clocks-will-match-both-sides-border/
++# </a>
++# <a href="http://www.elmananarey.com/diario/noticia/nacional/noticias/empatan_horario_de_frontera_con_eu/621939">
++# http://www.elmananarey.com/diario/noticia/nacional/noticias/empatan_horario_de_frontera_con_eu/621939
++# </a>
++# (Spanish)
++#
++# Could not find the new law text, but the proposed law text changes are here:
++# <a href="http://gaceta.diputados.gob.mx/Gaceta/61/2009/dic/20091210-V.pdf">
++# http://gaceta.diputados.gob.mx/Gaceta/61/2009/dic/20091210-V.pdf
++# </a>
++# (Gaceta Parlamentaria)
++#
++# There is also a list of the votes here:
++# <a href="http://gaceta.diputados.gob.mx/Gaceta/61/2009/dic/V2-101209.html">
++# http://gaceta.diputados.gob.mx/Gaceta/61/2009/dic/V2-101209.html
++# </a>
++#
++# Our page:
++# <a href="http://www.timeanddate.com/news/time/north-mexico-dst-change.html">
++# http://www.timeanddate.com/news/time/north-mexico-dst-change.html
++# </a>
++
++# From Arthur David Olson (2010-01-20):
++# The page
++# <a href="http://dof.gob.mx/nota_detalle.php?codigo=5127480&fecha=06/01/2010">
++# http://dof.gob.mx/nota_detalle.php?codigo=5127480&fecha=06/01/2010
++# </a>
++# includes this text:
++# En los municipios fronterizos de Tijuana y Mexicali en Baja California;
++# Ju&aacute;rez y Ojinaga en Chihuahua; Acu&ntilde;a y Piedras Negras en Coahuila;
++# An&aacute;huac en Nuevo Le&oacute;n; y Nuevo Laredo, Reynosa y Matamoros en
++# Tamaulipas, la aplicaci&oacute;n de este horario estacional surtir&aacute; efecto
++# desde las dos horas del segundo domingo de marzo y concluir&aacute; a las dos
++# horas del primer domingo de noviembre.
++# En los municipios fronterizos que se encuentren ubicados en la franja
++# fronteriza norte en el territorio comprendido entre la l&iacute;nea
++# internacional y la l&iacute;nea paralela ubicada a una distancia de veinte
++# kil&oacute;metros, as&iacute; como la Ciudad de Ensenada, Baja California, hacia el
++# interior del pa&iacute;s, la aplicaci&oacute;n de este horario estacional surtir&aacute;
++# efecto desde las dos horas del segundo domingo de marzo y concluir&aacute; a
++# las dos horas del primer domingo de noviembre.
++
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	Mexico	1939	only	-	Feb	5	0:00	1:00	D
+ Rule	Mexico	1939	only	-	Jun	25	0:00	0	S
+@@ -1981,13 +2033,19 @@
+ 			-6:00	-	CST	1981 Dec 23
+ 			-5:00	-	EST	1982 Dec  2
+ 			-6:00	Mexico	C%sT
+-# Coahuila, Durango, Nuevo Leon, Tamaulipas
++# Coahuila, Durango, Nuevo Leon, Tamaulipas (near US border)
++Zone America/Matamoros	-6:40:00 -	LMT	1921 Dec 31 23:20:00
++			-6:00	-	CST	1988
++			-6:00	US	C%sT	1989
++			-6:00	Mexico	C%sT	2010
++			-6:00	US	C%sT
++# Coahuila, Durango, Nuevo Leon, Tamaulipas (away from US border)
+ Zone America/Monterrey	-6:41:16 -	LMT	1921 Dec 31 23:18:44
+ 			-6:00	-	CST	1988
+ 			-6:00	US	C%sT	1989
+ 			-6:00	Mexico	C%sT
+ # Central Mexico
+-Zone America/Mexico_City -6:36:36 -	LMT	1922 Jan  1  0:23:24
++Zone America/Mexico_City -6:36:36 -	LMT	1922 Jan  1 0:23:24
+ 			-7:00	-	MST	1927 Jun 10 23:00
+ 			-6:00	-	CST	1930 Nov 15
+ 			-7:00	-	MST	1931 May  1 23:00
+@@ -1996,7 +2054,19 @@
+ 			-6:00	Mexico	C%sT	2001 Sep 30 02:00
+ 			-6:00	-	CST	2002 Feb 20
+ 			-6:00	Mexico	C%sT
+-# Chihuahua
++# Chihuahua (near US border)
++Zone America/Ojinaga	-6:57:40 -	LMT	1922 Jan 1 0:02:20
++			-7:00	-	MST	1927 Jun 10 23:00
++			-6:00	-	CST	1930 Nov 15
++			-7:00	-	MST	1931 May  1 23:00
++			-6:00	-	CST	1931 Oct
++			-7:00	-	MST	1932 Apr  1
++			-6:00	-	CST	1996
++			-6:00	Mexico	C%sT	1998
++			-6:00	-	CST	1998 Apr Sun>=1 3:00
++			-7:00	Mexico	M%sT	2010
++			-7:00	US	M%sT
++# Chihuahua (away from US border)
+ Zone America/Chihuahua	-7:04:20 -	LMT	1921 Dec 31 23:55:40
+ 			-7:00	-	MST	1927 Jun 10 23:00
+ 			-6:00	-	CST	1930 Nov 15
+@@ -2030,7 +2100,7 @@
+ 			-7:00	-	MST	1949 Jan 14
+ 			-8:00	-	PST	1970
+ 			-7:00	Mexico	M%sT
+-# Baja California
++# Baja California (near US border)
+ Zone America/Tijuana	-7:48:04 -	LMT	1922 Jan  1  0:11:56
+ 			-7:00	-	MST	1924
+ 			-8:00	-	PST	1927 Jun 10 23:00
+@@ -2048,6 +2118,26 @@
+ 			-8:00	US	P%sT	1996
+ 			-8:00	Mexico	P%sT	2001
+ 			-8:00	US	P%sT	2002 Feb 20
++			-8:00	Mexico	P%sT	2010
++			-8:00	US	P%sT
++# Baja California (away from US border)
++Zone America/Santa_Isabel	-7:39:28 -	LMT	1922 Jan  1  0:20:32
++			-7:00	-	MST	1924
++			-8:00	-	PST	1927 Jun 10 23:00
++			-7:00	-	MST	1930 Nov 15
++			-8:00	-	PST	1931 Apr  1
++			-8:00	1:00	PDT	1931 Sep 30
++			-8:00	-	PST	1942 Apr 24
++			-8:00	1:00	PWT	1945 Aug 14 23:00u
++			-8:00	1:00	PPT	1945 Nov 12 # Peace
++			-8:00	-	PST	1948 Apr  5
++			-8:00	1:00	PDT	1949 Jan 14
++			-8:00	-	PST	1954
++			-8:00	CA	P%sT	1961
++			-8:00	-	PST	1976
++			-8:00	US	P%sT	1996
++			-8:00	Mexico	P%sT	2001
++			-8:00	US	P%sT	2002 Feb 20
+ 			-8:00	Mexico	P%sT
+ # From Paul Eggert (2006-03-22):
+ # Formerly there was an America/Ensenada zone, which differed from
+Only in timezone.old: private.h
+Only in timezone.old: scheck.c
+Only in timezone.old: simplebackw
+diff -aur timezone.old/southamerica timezone/southamerica
+--- timezone.old/southamerica	2010-03-17 10:58:36.000000000 +0200
++++ timezone/southamerica	2010-03-17 10:59:01.000000000 +0200
+@@ -1,5 +1,5 @@
+ # <pre>
+-# @(#)southamerica	8.40
++# @(#)southamerica	8.43
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ 
+@@ -1121,6 +1121,18 @@
+ # http://www.shoa.cl/noticias/2008/04hora/hora.htm
+ # </a>.
+ 
++# From Angel Chiang (2010-03-04):
++# Subject: DST in Chile exceptionally extended to 3 April due to earthquake
++# <a href="http://www.gobiernodechile.cl/viewNoticia.aspx?idArticulo=30098">
++# http://www.gobiernodechile.cl/viewNoticia.aspx?idArticulo=30098
++# </a>
++# (in Spanish, last paragraph).
++#
++# This is breaking news. There should be more information available later.
++
++# From Arthur Daivd Olson (2010-03-06):
++# Angel Chiang's message confirmed by Julio Pacheco; Julio provided a patch.
++
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	Chile	1927	1932	-	Sep	 1	0:00	1:00	S
+ Rule	Chile	1928	1932	-	Apr	 1	0:00	0	-
+@@ -1155,7 +1167,9 @@
+ # N.B.: the end of March 29 in Chile is March 30 in Universal time,
+ # which is used below in specifying the transition.
+ Rule	Chile	2008	only	-	Mar	30	3:00u	0	-
+-Rule	Chile	2009	max	-	Mar	Sun>=9	3:00u	0	-
++Rule	Chile	2009	only	-	Mar	Sun>=9	3:00u	0	-
++Rule	Chile	2010	only	-	Apr	 4	3:00u	0	-
++Rule	Chile	2011	max	-	Mar	Sun>=9	3:00u	0	-
+ # IATA SSIM anomalies: (1992-02) says 1992-03-14;
+ # (1996-09) says 1998-03-08.  Ignore these.
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+@@ -1364,8 +1378,24 @@
+ # Decree 1,867 (2004-03-05)
+ # From Carlos Raul Perasso via Jesper Norgaard Welen (2006-10-13)
+ # <http://www.presidencia.gov.py/decretos/D1867.pdf>
+-Rule	Para	2004	max	-	Oct	Sun>=15	0:00	1:00	S
+-Rule	Para	2005	max	-	Mar	Sun>=8	0:00	0	-
++Rule	Para	2004	2009	-	Oct	Sun>=15	0:00	1:00	S
++Rule	Para	2005	2009	-	Mar	Sun>=8	0:00	0	-
++# From Carlos Raul Perasso (2010-02-18):
++# By decree number 3958 issued yesterday (
++# <a href="http://www.presidencia.gov.py/v1/wp-content/uploads/2010/02/decreto3958.pdf">
++# http://www.presidencia.gov.py/v1/wp-content/uploads/2010/02/decreto3958.pdf
++# </a>
++# )
++# Paraguay changes its DST schedule, postponing the March rule to April and
++# modifying the October date. The decree reads:
++# ...
++# Art. 1. It is hereby established that from the second Sunday of the month of
++# April of this year (2010), the official time is to be set back 60 minutes,
++# and that on the first Sunday of the month of October, it is to be set
++# forward 60 minutes, in all the territory of the Paraguayan Republic.
++# ...
++Rule	Para	2010	max	-	Oct	Sun>=1	0:00	1:00	S
++Rule	Para	2010	max	-	Apr	Sun>=8	0:00	0	-
+ 
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone America/Asuncion	-3:50:40 -	LMT	1890
+Only in timezone.old: test-tz.c
+Only in timezone.old: tst-timezone.c
+Only in timezone.old: tzfile.h
+Only in timezone.old: tzselect.ksh
+Only in timezone.old: yearistype
+Only in timezone.old: zdump.c
+Only in timezone.old: zic.c
+diff -aur timezone.old/zone.tab timezone/zone.tab
+--- timezone.old/zone.tab	2010-03-17 10:58:36.000000000 +0200
++++ timezone/zone.tab	2010-03-17 10:59:01.000000000 +0200
+@@ -1,5 +1,5 @@
+ # <pre>
+-# @(#)zone.tab	8.29
++# @(#)zone.tab	8.33
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ #
+@@ -279,11 +279,14 @@
+ MX	+1924-09909	America/Mexico_City	Central Time - most locations
+ MX	+2105-08646	America/Cancun	Central Time - Quintana Roo
+ MX	+2058-08937	America/Merida	Central Time - Campeche, Yucatan
+-MX	+2540-10019	America/Monterrey	Central Time - Coahuila, Durango, Nuevo Leon, Tamaulipas
++MX	+2540-10019	America/Monterrey	Mexican Central Time - Coahuila, Durango, Nuevo Leon, Tamaulipas away from US border
++MX	+2550-09730	America/Matamoros	US Central Time - Coahuila, Durango, Nuevo Leon, Tamaulipas near US border
+ MX	+2313-10625	America/Mazatlan	Mountain Time - S Baja, Nayarit, Sinaloa
+-MX	+2838-10605	America/Chihuahua	Mountain Time - Chihuahua
++MX	+2838-10605	America/Chihuahua	Mexican Mountain Time - Chihuahua away from US border
++MX	+2934-10425	America/Ojinaga	US Mountain Time - Chihuahua near US border
+ MX	+2904-11058	America/Hermosillo	Mountain Standard Time - Sonora
+-MX	+3232-11701	America/Tijuana	Pacific Time
++MX	+3232-11701	America/Tijuana	US Pacific Time - Baja California near US border
++MX	+3018-11452	America/Santa_Isabel	Mexican Pacific Time - Baja California away from US border
+ MY	+0310+10142	Asia/Kuala_Lumpur	peninsular Malaysia
+ MY	+0133+11020	Asia/Kuching	Sabah & Sarawak
+ MZ	-2558+03235	Africa/Maputo

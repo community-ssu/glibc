@@ -1,0 +1,10 @@
+diff -Naur glibc-2.5.orig/config.h.in glibc-2.5/config.h.in
+--- glibc-2.5.orig/config.h.in	2008-11-04 15:01:14.000000000 +0200
++++ glibc-2.5/config.h.in	2008-11-04 15:04:23.000000000 +0200
+@@ -1,5 +1,5 @@
+ #if !defined __ASSEMBLER__ && !defined _ISOMAC && !defined __OPTIMIZE__
+-# error "glibc cannot be compiled without optimization"
++/* # error "glibc cannot be compiled without optimization" */
+ #endif
+ 
+ /* Another evil option when it comes to compiling the C library is

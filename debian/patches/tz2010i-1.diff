@@ -1,0 +1,565 @@
+
+#! /bin/sh -e
+
+# All lines beginning with `# DP:' are a description of the patch.
+# DP: Description: timezone data 2010i-1
+# DP: Related bugs: N/A
+# DP: Patch author: Juha Kallioinen <juha.kallioinen@nokia.com>
+# DP: Upstream status: Not submitted
+# DP: Status Details: N/A
+# DP: Date: 2010-04-26
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p0 < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p0 < $0;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+@DPATCH@
+
+Only in timezone.old: Makefile
+Only in timezone.old: README
+diff -aur timezone.old/africa timezone/africa
+--- timezone.old/africa	2010-04-26 15:07:39.000000000 +0300
++++ timezone/africa	2010-04-26 15:08:56.000000000 +0300
+@@ -1,5 +1,5 @@
+ # <pre>
+-# @(#)africa	8.23
++# @(#)africa	8.26
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ 
+@@ -680,6 +680,21 @@
+ # http://www.worldtimezone.com/dst_news/dst_news_morocco03.html
+ # </a>
+ 
++# From Steffen Thorsen (2010-04-13):
++# Several news media in Morocco report that the Ministry of Modernization
++# of Public Sectors has announced that Morocco will have DST from
++# 2010-05-02 to 2010-08-08.
++#
++# Example:
++# <a href="http://www.lavieeco.com/actualites/4099-le-maroc-passera-a-l-heure-d-ete-gmt1-le-2-mai.html">
++# http://www.lavieeco.com/actualites/4099-le-maroc-passera-a-l-heure-d-ete-gmt1-le-2-mai.html
++# </a>
++# (French)
++# Our page:
++# <a href="http://www.timeanddate.com/news/time/morocco-starts-dst-2010.html">
++# http://www.timeanddate.com/news/time/morocco-starts-dst-2010.html
++# </a>
++
+ # RULE	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ 
+ Rule	Morocco	1939	only	-	Sep	12	 0:00	1:00	S
+@@ -701,6 +716,8 @@
+ Rule	Morocco	2008	only	-	Sep	 1	 0:00	0	-
+ Rule	Morocco	2009	only	-	Jun	 1	 0:00	1:00	S
+ Rule	Morocco	2009	only	-	Aug	 21	 0:00	0	-
++Rule	Morocco	2010	only	-	May	 2	 0:00	1:00	S
++Rule	Morocco	2010	only	-	Aug	 8	 0:00	0	-
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone Africa/Casablanca	-0:30:20 -	LMT	1913 Oct 26
+ 			 0:00	Morocco	WE%sT	1984 Mar 16
+@@ -942,6 +959,24 @@
+ # Therefore, the standard time will be kept unchanged the whole year long."
+ # So foregoing DST seems to be an exception (albeit one that may be repeated in the  future).
+ 
++# From Alexander Krivenyshev (2010-03-27):
++# According to some news reports Tunis confirmed not to use DST in 2010
++#
++# (translation):
++# "The Tunisian government has decided to abandon DST, which was scheduled on
++# Sunday...
++# Tunisian authorities had suspended the DST for the first time last year also
++# coincided with the month of Ramadan..."
++#
++# (in Arabic)
++# <a href="http://www.moheet.com/show_news.aspx?nid=358861&pg=1">
++# http://www.moheet.com/show_news.aspx?nid=358861&pg=1
++# <a href="http://www.almadenahnews.com/newss/news.php?c=118&id=38036">
++# http://www.almadenahnews.com/newss/news.php?c=118&id=38036
++# or
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_tunis02.html">
++# http://www.worldtimezone.com/dst_news/dst_news_tunis02.html
++
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	Tunisia	1939	only	-	Apr	15	23:00s	1:00	S
+ Rule	Tunisia	1939	only	-	Nov	18	23:00s	0	-
+@@ -968,8 +1003,7 @@
+ Rule	Tunisia	2005	only	-	Sep	30	 1:00s	0	-
+ Rule	Tunisia	2006	2008	-	Mar	lastSun	 2:00s	1:00	S
+ Rule	Tunisia	2006	2008	-	Oct	lastSun	 2:00s	0	-
+-Rule	Tunisia	2010	max	-	Mar	lastSun	 2:00s	1:00	S
+-Rule	Tunisia	2010	max	-	Oct	lastSun	 2:00s	0	-
++
+ # Shanks & Pottenger give 0:09:20 for Paris Mean Time; go with Howse's
+ # more precise 0:09:21.
+ # Shanks & Pottenger say the 1911 switch was on Mar 9; go with Howse's Mar 11.
+diff -aur timezone.old/antarctica timezone/antarctica
+--- timezone.old/antarctica	2010-04-26 15:07:39.000000000 +0300
++++ timezone/antarctica	2010-04-26 15:08:56.000000000 +0300
+@@ -1,5 +1,5 @@
+ # <pre>
+-# @(#)antarctica	8.7
++# @(#)antarctica	8.8
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ 
+@@ -57,6 +57,33 @@
+ Rule	ChileAQ	1999	max	-	Oct	Sun>=9	4:00u	1:00	S
+ Rule	ChileAQ	2000	max	-	Mar	Sun>=9	3:00u	0	-
+ 
++# These rules are stolen from the `australasia' file.
++Rule	AusAQ	1917	only	-	Jan	 1	0:01	1:00	-
++Rule	AusAQ	1917	only	-	Mar	25	2:00	0	-
++Rule	AusAQ	1942	only	-	Jan	 1	2:00	1:00	-
++Rule	AusAQ	1942	only	-	Mar	29	2:00	0	-
++Rule	AusAQ	1942	only	-	Sep	27	2:00	1:00	-
++Rule	AusAQ	1943	1944	-	Mar	lastSun	2:00	0	-
++Rule	AusAQ	1943	only	-	Oct	 3	2:00	1:00	-
++Rule	ATAQ	1967	only	-	Oct	Sun>=1	2:00s	1:00	-
++Rule	ATAQ	1968	only	-	Mar	lastSun	2:00s	0	-
++Rule	ATAQ	1968	1985	-	Oct	lastSun	2:00s	1:00	-
++Rule	ATAQ	1969	1971	-	Mar	Sun>=8	2:00s	0	-
++Rule	ATAQ	1972	only	-	Feb	lastSun	2:00s	0	-
++Rule	ATAQ	1973	1981	-	Mar	Sun>=1	2:00s	0	-
++Rule	ATAQ	1982	1983	-	Mar	lastSun	2:00s	0	-
++Rule	ATAQ	1984	1986	-	Mar	Sun>=1	2:00s	0	-
++Rule	ATAQ	1986	only	-	Oct	Sun>=15	2:00s	1:00	-
++Rule	ATAQ	1987	1990	-	Mar	Sun>=15	2:00s	0	-
++Rule	ATAQ	1987	only	-	Oct	Sun>=22	2:00s	1:00	-
++Rule	ATAQ	1988	1990	-	Oct	lastSun	2:00s	1:00	-
++Rule	ATAQ	1991	1999	-	Oct	Sun>=1	2:00s	1:00	-
++Rule	ATAQ	1991	2005	-	Mar	lastSun	2:00s	0	-
++Rule	ATAQ	2000	only	-	Aug	lastSun	2:00s	1:00	-
++Rule	ATAQ	2001	max	-	Oct	Sun>=1	2:00s	1:00	-
++Rule	ATAQ	2006	only	-	Apr	Sun>=1	2:00s	0	-
++Rule	ATAQ	2007	only	-	Mar	lastSun	2:00s	0	-
++Rule	ATAQ	2008	max	-	Apr	Sun>=1	2:00s	0	-
+ 
+ # Argentina - year-round bases
+ # Belgrano II, Confin Coast, -770227-0343737, since 1972-02-05
+@@ -98,20 +125,52 @@
+ # http://www.timeanddate.com/news/time/antarctica-new-times.html
+ # </a>
+ 
++# From Steffen Thorsen (2010-03-10):
++# We got these changes from the Australian Antarctic Division:
++# - Macquarie Island will stay on UTC+11 for winter and therefore not
++# switch back from daylight savings time when other parts of Australia do
++# on 4 April.
++#
++# - Casey station reverted to its normal time of UTC+8 on 5 March 2010.
++# The change to UTC+11 is being considered as a regular summer thing but
++# has not been decided yet.
++#
++# - Davis station will revert to its normal time of UTC+7 at 10 March 2010
++# 20:00 UTC.
++#
++# - Mawson station stays on UTC+5.
++#
++# In addition to the Rule changes for Casey/Davis, it means that Macquarie
++# will no longer be like Hobart and will have to have its own Zone created.
++#
++# Background:
++# <a href="http://www.timeanddate.com/news/time/antartica-time-changes-2010.html">
++# http://www.timeanddate.com/news/time/antartica-time-changes-2010.html
++# </a>
++
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone Antarctica/Casey	0	-	zzz	1969
+ 			8:00	-	WST	2009 Oct 18 2:00
+ 						# Western (Aus) Standard Time
+-			11:00	-	CAST	# Casey Time
++			11:00	-	CAST	2010 Mar 5 2:00
++						# Casey Time
++			8:00	-	WST
+ Zone Antarctica/Davis	0	-	zzz	1957 Jan 13
+ 			7:00	-	DAVT	1964 Nov # Davis Time
+ 			0	-	zzz	1969 Feb
+ 			7:00	-	DAVT	2009 Oct 18 2:00
+-			5:00	-	DAVT
++			5:00	-	DAVT	2010 Mar 10 20:00u
++			7:00	-	DAVT
+ Zone Antarctica/Mawson	0	-	zzz	1954 Feb 13
+ 			6:00	-	MAWT	2009 Oct 18 2:00
+ 						# Mawson Time
+ 			5:00	-	MAWT
++Zone Antarctica/Macquarie 0	-	zzz	1911
++			10:00	-	EST	1916 Oct 1 2:00
++			10:00	1:00	EST	1917 Feb
++			10:00	AusAQ	EST	1967
++			10:00	ATAQ	EST	2010 Apr 4 3:00
++			11:00	-	MIST	# Macquarie Island Time
+ # References:
+ # <a href="http://www.antdiv.gov.au/aad/exop/sfo/casey/casey_aws.html">
+ # Casey Weather (1998-02-26)
+diff -aur timezone.old/asia timezone/asia
+--- timezone.old/asia	2010-04-26 15:07:39.000000000 +0300
++++ timezone/asia	2010-04-26 15:08:56.000000000 +0300
+@@ -1,4 +1,4 @@
+-# @(#)asia	8.55
++# @(#)asia	8.60
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ 
+@@ -214,42 +214,20 @@
+ # 2010 midnight. The decision came at a cabinet meeting at the Prime
+ # Minister's Office last night..."
+ 
+-# From Danvin Ruangchan (2009-12-24):
+-# ...the news mentions DST will be turned off again 7 months after March
+-# 31st on Oct 31, 2010.
+-
+-# From Arthur David Olson (2009-12-26):
+-# Indeed, "The government will advance again the Banglasdesh Standard
+-# Time by one one hour on March 31 next year by enforcing the Daylight
+-# Saving Time (DST) for seven months. It will continue till October 31
+-# until further notice." I take that last sentence as the
+-# establishment of a rule.
+-
+-# From Nobutomo Nakano (2010-02-19):
+-# We received a report from Bangladesh saying that the start/end of
+-# Bangladesh DST is incorrect. Currently we have only the Bengali version
+-# of the official mail from BTRC which describes the following:
+-#
+-# "From 2010 each year when local standard time is about to reach
+-# March 31 at 10:59:00 PM clocks are turned forward 1 hour (11:59:00 PM)
+-# and when local daylight time is about to October 31 at 11:59:00 PM
+-# clocks are turned backward 1 hour (10:59:00 PM)."
+-#
+-# So, DST will start/end 1 minute earlier.
+-
+-# From Arthur David Olson (2010-03-03):
+-# The file
+-# <a href=http://www.cabinet.gov/bd/file_upload/news_events/en_169.pdf>
+-# http://www.cabinet.gov/bd/file_upload/news_events/en_169.pdf
++# From Alexander Krivenyshev (2010-03-22):
++# According to Bangladesh newspaper "The Daily Star,"
++# Cabinet cancels Daylight Saving Time 
++# <a href="http://www.thedailystar.net/newDesign/latest_news.php?nid=22817">
++# http://www.thedailystar.net/newDesign/latest_news.php?nid=22817
++# </a>
++# or
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_bangladesh06.html">
++# http://www.worldtimezone.com/dst_news/dst_news_bangladesh06.html
+ # </a>
+-# is in Bengali; it does contain two "31"s as well as two "11.59"s and a "10.59"
+-# which is consistent with the information provided by Nobutomo Nakano.
+ 
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	Dhaka	2009	only	-	Jun	19	23:00	1:00	S
+ Rule	Dhaka	2009	only	-	Dec	31	23:59	0	-
+-Rule	Dhaka	2010	max	-	Mar	31	22:59	1:00	S
+-Rule	Dhaka	2010	max	-	Oct	31	23:59	0	-
+ 
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Asia/Dhaka	6:01:40 -	LMT	1890
+@@ -588,6 +566,28 @@
+ # was still controlled by Japan.  This is hard to believe, but we don't
+ # have any other information.
+ 
++# From smallufo (2010-04-03):
++# According to Taiwan's CWB,
++# <a href="http://www.cwb.gov.tw/V6/astronomy/cdata/summert.htm">
++# http://www.cwb.gov.tw/V6/astronomy/cdata/summert.htm
++# </a>
++# Taipei has DST in 1979 between July 1st and Sep 30.
++
++# From Arthur David Olson (2010-04-07):
++# Here's Google's translation of the table at the bottom of the "summert.htm" page:
++# Decade 	                                                    Name                      Start and end date
++# Republic of China 34 years to 40 years (AD 1945-1951 years) Summer Time               May 1 to September 30 
++# 41 years of the Republic of China (AD 1952)                 Daylight Saving Time      March 1 to October 31 
++# Republic of China 42 years to 43 years (AD 1953-1954 years) Daylight Saving Time      April 1 to October 31 
++# In the 44 years to 45 years (AD 1955-1956 years)            Daylight Saving Time      April 1 to September 30 
++# Republic of China 46 years to 48 years (AD 1957-1959)       Summer Time               April 1 to September 30 
++# Republic of China 49 years to 50 years (AD 1960-1961)       Summer Time               June 1 to September 30 
++# Republic of China 51 years to 62 years (AD 1962-1973 years) Stop Summer Time 
++# Republic of China 63 years to 64 years (1974-1975 AD)       Daylight Saving Time      April 1 to September 30 
++# Republic of China 65 years to 67 years (1976-1978 AD)       Stop Daylight Saving Time 
++# Republic of China 68 years (AD 1979)                        Daylight Saving Time      July 1 to September 30 
++# Republic of China since 69 years (AD 1980)                  Stop Daylight Saving Time
++
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	Taiwan	1945	1951	-	May	1	0:00	1:00	D
+ Rule	Taiwan	1945	1951	-	Oct	1	0:00	0	S
+@@ -598,8 +598,9 @@
+ Rule	Taiwan	1960	1961	-	Jun	1	0:00	1:00	D
+ Rule	Taiwan	1974	1975	-	Apr	1	0:00	1:00	D
+ Rule	Taiwan	1974	1975	-	Oct	1	0:00	0	S
+-Rule	Taiwan	1980	only	-	Jun	30	0:00	1:00	D
+-Rule	Taiwan	1980	only	-	Sep	30	0:00	0	S
++Rule	Taiwan	1979	only	-	Jun	30	0:00	1:00	D
++Rule	Taiwan	1979	only	-	Sep	30	0:00	0	S
++
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Asia/Taipei	8:06:00 -	LMT	1896 # or Taibei or T'ai-pei
+ 			8:00	Taiwan	C%sT
+@@ -1934,13 +1935,35 @@
+ # [T]he German Consulate General in Karachi reported me today that Pakistan
+ # will go back to standard time on 1st of November.
+ 
++# From Steffen Thorsen (2010-03-26):
++# Steffen Thorsen wrote:
++# > On Thursday (2010-03-25) it was announced that DST would start in
++# > Pakistan on 2010-04-01.
++# >
++# > Then today, the president said that they might have to revert the
++# > decision if it is not supported by the parliament. So at the time
++# > being, it seems unclear if DST will be actually observed or not - but
++# > April 1 could be a more likely date than April 15.
++# Now, it seems that the decision to not observe DST in final:
++#
++# "Govt Withdraws Plan To Advance Clocks"
++# <a href="http://www.apakistannews.com/govt-withdraws-plan-to-advance-clocks-172041">
++# http://www.apakistannews.com/govt-withdraws-plan-to-advance-clocks-172041
++# </a>
++#
++# "People laud PM's announcement to end DST"
++# <a href="http://www.app.com.pk/en_/index.php?option=com_content&task=view&id=99374&Itemid=2">
++# http://www.app.com.pk/en_/index.php?option=com_content&task=view&id=99374&Itemid=2
++# </a>
++
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule Pakistan	2002	only	-	Apr	Sun>=2	0:01	1:00	S
+ Rule Pakistan	2002	only	-	Oct	Sun>=2	0:01	0	-
+ Rule Pakistan	2008	only	-	Jun	1	0:00	1:00	S
+ Rule Pakistan	2008	only	-	Nov	1	0:00	0	-
+-Rule Pakistan	2009	max	-	Apr	15	0:00	1:00	S
+-Rule Pakistan	2009	max	-	Nov	1	0:00	0	-
++Rule Pakistan	2009	only	-	Apr	15	0:00	1:00	S
++Rule Pakistan	2009	only	-	Nov	1	0:00	0	-
++
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Asia/Karachi	4:28:12 -	LMT	1907
+ 			5:30	-	IST	1942 Sep
+@@ -2129,6 +2152,32 @@
+ # http://www.worldtimezone.com/dst_news/dst_news_gazastrip02.html
+ # </a>
+ 
++# From Alexander Krivenyshev (2010-03-19):
++# According to Voice of Palestine DST will last for 191 days, from March
++# 26, 2010 till "the last Sunday before the tenth day of Tishri
++# (October), each year" (October 03, 2010?)
++#
++# <a href="http://palvoice.org/forums/showthread.php?t=245697">
++# http://palvoice.org/forums/showthread.php?t=245697
++# </a>
++# (in Arabic)
++# or
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_westbank03.html">
++# http://www.worldtimezone.com/dst_news/dst_news_westbank03.html
++# </a>
++
++# From Steffen Thorsen (2010-03-24):
++# ...Ma'an News Agency reports that Hamas cabinet has decided it will
++# start one day later, at 12:01am. Not sure if they really mean 12:01am or
++# noon though:
++#
++# <a href="http://www.maannews.net/eng/ViewDetails.aspx?ID=271178">
++# http://www.maannews.net/eng/ViewDetails.aspx?ID=271178
++# </a>
++# (Ma'an News Agency)
++# "At 12:01am Friday, clocks in Israel and the West Bank will change to
++# 1:01am, while Gaza clocks will change at 12:01am Saturday morning."
++
+ # The rules for Egypt are stolen from the `africa' file.
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule EgyptAsia	1957	only	-	May	10	0:00	1:00	S
+@@ -2146,7 +2195,8 @@
+ Rule Palestine	2006	only	-	Sep	22	0:00	0	-
+ Rule Palestine	2007	only	-	Sep	Thu>=8	2:00	0	-
+ Rule Palestine	2008	only	-	Aug	lastFri	2:00	0	-
+-Rule Palestine	2009	max	-	Mar	lastFri	0:00	1:00	S
++Rule Palestine	2009	only	-	Mar	lastFri	0:00	1:00	S
++Rule Palestine	2010	max	-	Mar	lastSat	0:01	1:00	S
+ Rule Palestine	2009	max	-	Sep	Fri>=1	2:00	0	-
+ 
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+@@ -2438,9 +2488,18 @@
+ # Thursday of the month or the start of the last Friday of the month or
+ # something else. For now, use the start of the last Friday.
+ 
++# From Steffen Thorsen (2010-03-17):
++# The "Syrian News Station" reported on 2010-03-16 that the Council of
++# Ministers has decided that Syria will start DST on midnight Thursday
++# 2010-04-01: (midnight between Thursday and Friday):
++# <a href="http://sns.sy/sns/?path=news/read/11421">
++# http://sns.sy/sns/?path=news/read/11421 (Arabic)
++# </a>
++
+ Rule	Syria	2008	only	-	Apr	Fri>=1	0:00	1:00	S
+ Rule	Syria	2008	only	-	Nov	1	0:00	0	-
+-Rule	Syria	2009	max	-	Mar	lastFri	0:00	1:00	S
++Rule	Syria	2009	only	-	Mar	lastFri	0:00	1:00	S
++Rule	Syria	2010	max	-	Apr	Fri>=1	0:00	1:00	S
+ Rule	Syria	2009	max	-	Oct	lastFri	0:00	0	-
+ 
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+diff -aur timezone.old/australasia timezone/australasia
+--- timezone.old/australasia	2010-04-26 15:07:39.000000000 +0300
++++ timezone/australasia	2010-04-26 15:08:56.000000000 +0300
+@@ -1,5 +1,5 @@
+ # <pre>
+-# @(#)australasia	8.16
++# @(#)australasia	8.17
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ 
+@@ -490,7 +490,7 @@
+ Zone Pacific/Apia	 12:33:04 -	LMT	1879 Jul  5
+ 			-11:26:56 -	LMT	1911
+ 			-11:30	-	SAMT	1950		# Samoa Time
+-			-11:00	-	WST	2010 Oct 24
++			-11:00	-	WST	2010 Sep 26
+ 			-11:00	1:00	WSDT	2011 Apr 3
+ 			-11:00	-	WST
+ 
+Only in timezone.old: checktab.awk
+diff -aur timezone.old/europe timezone/europe
+--- timezone.old/europe	2010-04-26 15:07:39.000000000 +0300
++++ timezone/europe	2010-04-26 15:08:56.000000000 +0300
+@@ -1,5 +1,5 @@
+ # <pre>
+-# @(#)europe	8.25
++# @(#)europe	8.26
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ 
+@@ -2041,7 +2041,9 @@
+ 			 3:00	Russia	KUY%sT	1991 Mar 31 2:00s
+ 			 2:00	Russia	KUY%sT	1991 Sep 29 2:00s
+ 			 3:00	-	KUYT	1991 Oct 20 3:00
+-			 4:00	Russia	SAM%sT	# Samara Time
++			 4:00	Russia	SAM%sT	2010 Mar 28 2:00s # Samara Time
++			 3:00	Russia	SAM%sT
++
+ #
+ # From Oscar van Vlijmen (2001-08-25): [This region consists of]
+ # Respublika Bashkortostan, Komi-Permyatskij avtonomnyj okrug,
+@@ -2194,7 +2196,8 @@
+ 			11:00	-	PETT	1930 Jun 21 # P-K Time
+ 			12:00	Russia	PET%sT	1991 Mar 31 2:00s
+ 			11:00	Russia	PET%sT	1992 Jan 19 2:00s
+-			12:00	Russia	PET%sT
++			12:00	Russia	PET%sT	2010 Mar 28 2:00s
++			11:00	Russia	PET%sT
+ #
+ # Chukotskij avtonomnyj okrug
+ Zone Asia/Anadyr	11:49:56 -	LMT	1924 May  2
+@@ -2202,7 +2205,8 @@
+ 			13:00	Russia	ANA%sT	1982 Apr  1 0:00s
+ 			12:00	Russia	ANA%sT	1991 Mar 31 2:00s
+ 			11:00	Russia	ANA%sT	1992 Jan 19 2:00s
+-			12:00	Russia	ANA%sT
++			12:00	Russia	ANA%sT	2010 Mar 28 2:00s
++			11:00	Russia	ANA%sT
+ 
+ # Serbia
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+Only in timezone.old: ialloc.c
+Only in timezone.old: private.h
+Only in timezone.old: scheck.c
+Only in timezone.old: simplebackw
+diff -aur timezone.old/southamerica timezone/southamerica
+--- timezone.old/southamerica	2010-04-26 15:07:39.000000000 +0300
++++ timezone/southamerica	2010-04-26 15:08:56.000000000 +0300
+@@ -1,5 +1,5 @@
+ # <pre>
+-# @(#)southamerica	8.43
++# @(#)southamerica	8.44
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ 
+@@ -437,6 +437,27 @@
+ # of the country calls it "ART".
+ # ...
+ 
++# From Alexander Krivenyshev (2010-04-09):
++# According to news reports from El Diario de la Republica Province San
++# Luis, Argentina (standard time UTC-04) will keep Daylight Saving Time
++# after April 11, 2010--will continue to have same time as rest of
++# Argentina (UTC-3) (no DST).
++#
++# Confirmaron la pr&oacute;rroga del huso horario de verano (Spanish)
++# <a href="http://www.eldiariodelarepublica.com/index.php?option=com_content&task=view&id=29383&Itemid=9">
++# http://www.eldiariodelarepublica.com/index.php?option=com_content&task=view&id=29383&Itemid=9
++# </a>
++# or (some English translation):
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_argentina08.html">
++# http://www.worldtimezone.com/dst_news/dst_news_argentina08.html
++# </a>
++
++# From Mariano Absatz (2010-04-12):
++# yes...I can confirm this...and given that San Luis keeps calling
++# UTC-03:00 "summer time", we should't just let San Luis go back to "Arg"
++# rules...San Luis is still using "Western ARgentina Time" and it got
++# stuck on Summer daylight savings time even though the summer is over.
++
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ #
+ # Buenos Aires (BA), Capital Federal (CF),
+@@ -570,8 +591,8 @@
+ #
+ # San Luis (SL)
+ 
+-Rule	SanLuis	2008	max	-	Mar	Sun>=8	0:00	0	-
+-Rule	SanLuis	2007	max	-	Oct	Sun>=8	0:00	1:00	S
++Rule	SanLuis	2008	2009	-	Mar	Sun>=8	0:00	0	-
++Rule	SanLuis	2007	2009	-	Oct	Sun>=8	0:00	1:00	S
+ 
+ Zone America/Argentina/San_Luis -4:25:24 - LMT	1894 Oct 31
+ 			-4:16:48 -	CMT	1920 May
+Only in timezone.old: test-tz.c
+Only in timezone.old: tst-timezone.c
+Only in timezone.old: tzfile.h
+Only in timezone.old: tzselect.ksh
+Only in timezone.old: yearistype
+Only in timezone.old: zdump.c
+Only in timezone.old: zic.c
+diff -aur timezone.old/zone.tab timezone/zone.tab
+--- timezone.old/zone.tab	2010-04-26 15:07:39.000000000 +0300
++++ timezone/zone.tab	2010-04-26 15:08:56.000000000 +0300
+@@ -1,5 +1,5 @@
+ # <pre>
+-# @(#)zone.tab	8.33
++# @(#)zone.tab	8.35
+ # This file is in the public domain, so clarified as of
+ # 2009-05-17 by Arthur David Olson.
+ #
+@@ -44,6 +44,7 @@
+ AQ	-7824+10654	Antarctica/Vostok	Vostok Station, S Magnetic Pole
+ AQ	-6640+14001	Antarctica/DumontDUrville	Dumont-d'Urville Station, Terre Adelie
+ AQ	-690022+0393524	Antarctica/Syowa	Syowa Station, E Ongul I
++AQ	-5430+15857	Antarctica/Macquarie	Macquarie Island Station, Macquarie Island
+ AR	-3436-05827	America/Argentina/Buenos_Aires	Buenos Aires (BA, CF)
+ AR	-3124-06411	America/Argentina/Cordoba	most locations (CB, CC, CN, ER, FM, MN, SE, SF)
+ AR	-2447-06525	America/Argentina/Salta	(SA, LP, NQ, RN)
+@@ -329,7 +330,7 @@
+ RU	+5443+02030	Europe/Kaliningrad	Moscow-01 - Kaliningrad
+ RU	+5545+03735	Europe/Moscow	Moscow+00 - west Russia
+ RU	+4844+04425	Europe/Volgograd	Moscow+00 - Caspian Sea
+-RU	+5312+05009	Europe/Samara	Moscow+01 - Samara, Udmurtia
++RU	+5312+05009	Europe/Samara	Moscow - Samara, Udmurtia
+ RU	+5651+06036	Asia/Yekaterinburg	Moscow+02 - Urals
+ RU	+5500+07324	Asia/Omsk	Moscow+03 - west Siberia
+ RU	+5502+08255	Asia/Novosibirsk	Moscow+03 - Novosibirsk
+@@ -340,8 +341,8 @@
+ RU	+4310+13156	Asia/Vladivostok	Moscow+07 - Amur River
+ RU	+4658+14242	Asia/Sakhalin	Moscow+07 - Sakhalin Island
+ RU	+5934+15048	Asia/Magadan	Moscow+08 - Magadan
+-RU	+5301+15839	Asia/Kamchatka	Moscow+09 - Kamchatka
+-RU	+6445+17729	Asia/Anadyr	Moscow+10 - Bering Sea
++RU	+5301+15839	Asia/Kamchatka	Moscow+08 - Kamchatka
++RU	+6445+17729	Asia/Anadyr	Moscow+08 - Bering Sea
+ RW	-0157+03004	Africa/Kigali
+ SA	+2438+04643	Asia/Riyadh
+ SB	-0932+16012	Pacific/Guadalcanal

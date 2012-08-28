@@ -1,0 +1,46 @@
+#! /bin/sh -e
+
+# All lines beginning with `## DP:' are a description of the patch.
+# DP: Compile exit.c and _exit.c with -O0
+PATCHLEVEL=1
+
+if [ $# -lt 1 ]; then
+    echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+    exit 1
+fi
+
+[ -f debian/patches/00patch-opts ] && . debian/patches/00patch-opts
+patch_opts="${patch_opts:--f --no-backup-if-mismatch} ${2:+-d $2}"
+
+case "$1" in
+    -patch) patch -p$PATCHLEVEL ${patch_opts} < $0;;
+    -unpatch) patch -R -p$PATCHLEVEL ${patch_opts} < $0;;
+    *)
+        echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+        exit 1;;
+esac
+
+exit 0
+
+diff -Naur glibc-2.5.orig/stdlib/Makefile glibc-2.5/stdlib/Makefile
+--- glibc-2.5.orig/stdlib/Makefile	2008-11-04 14:42:39.000000000 +0200
++++ glibc-2.5/stdlib/Makefile	2008-11-04 14:43:02.000000000 +0200
+@@ -99,6 +99,7 @@
+ CFLAGS-system.os = -fomit-frame-pointer
+ CFLAGS-fmtmsg.c = -fexceptions
+ CFLAGS-abort.c = -fno-omit-frame-pointer -mapcs-frame
++CFLAGS-exit.c = -fno-omit-frame-pointer -mapcs-frame
+
+ 
+ ifneq (,$(filter %REENTRANT, $(defines)))
+ CFLAGS-strfmon.c = -D_IO_MTSAFE_IO
+diff -Naur glibc-2.5.orig/sysdeps/generic/Makefile glibc-2.5/sysdeps/generic/Makefile
+--- glibc-2.5.orig/sysdeps/generic/Makefile	2008-11-04 14:42:40.000000000 +0200
++++ glibc-2.5/sysdeps/generic/Makefile	2008-11-04 14:43:31.000000000 +0200
+@@ -28,3 +28,6 @@
+ shared-only-routines += framestate unwind-pe
+ endif
+ endif
++
++CFLAGS-_exit.c = -fno-omit-frame-pointer -mapcs-frame
++

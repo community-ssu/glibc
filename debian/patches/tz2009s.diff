@@ -1,0 +1,2503 @@
+#! /bin/sh -e
+
+# All lines beginning with `# DP:' are a description of the patch.
+# DP: Description: timezone data 2009s
+# DP: Related bugs: N/A
+# DP: Patch author: Juha Kallioinen <juha.kallioinen@nokia.com>
+# DP: Upstream status: Not submitted
+# DP: Status Details: N/A
+# DP: Date: 2009-12-09
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p0 < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p0 < $0;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+@DPATCH@
+diff -Naur timezone.old/africa timezone/africa
+--- timezone.old/africa	2009-12-09 16:41:21.000000000 +0200
++++ timezone/africa	2009-10-21 16:12:43.000000000 +0300
+@@ -1,5 +1,7 @@
+-# @(#)africa	8.10
+ # <pre>
++# @(#)africa	8.23
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # This data is by no means authoritative; if you think you know better,
+ # go ahead and edit the file (and please send any changes to
+@@ -236,7 +238,65 @@
+ # unless discontinued, next DST may end Thursday 28 August 2008.
+ # From Paul Eggert (2007-08-17):
+ # For lack of better info, assume the new rule is last Thursday in August.
+-Rule	Egypt	2008	max	-	Aug	lastThu	23:00s	0	-
++
++# From Petr Machata (2009-04-06):
++# The following appeared in Red Hat bugzilla[1] (edited):
++#
++# > $ zdump -v /usr/share/zoneinfo/Africa/Cairo | grep 2009
++# > /usr/share/zoneinfo/Africa/Cairo  Thu Apr 23 21:59:59 2009 UTC = Thu =
++# Apr 23
++# > 23:59:59 2009 EET isdst=0 gmtoff=7200
++# > /usr/share/zoneinfo/Africa/Cairo  Thu Apr 23 22:00:00 2009 UTC = Fri =
++# Apr 24
++# > 01:00:00 2009 EEST isdst=1 gmtoff=10800
++# > /usr/share/zoneinfo/Africa/Cairo  Thu Aug 27 20:59:59 2009 UTC = Thu =
++# Aug 27
++# > 23:59:59 2009 EEST isdst=1 gmtoff=10800
++# > /usr/share/zoneinfo/Africa/Cairo  Thu Aug 27 21:00:00 2009 UTC = Thu =
++# Aug 27
++# > 23:00:00 2009 EET isdst=0 gmtoff=7200
++#
++# > end date should be Thu Sep 24 2009 (Last Thursday in September at 23:59=
++# :59)
++# > http://support.microsoft.com/kb/958729/
++#
++# timeanddate[2] and another site I've found[3] also support that.
++#
++# [1] <a href="https://bugzilla.redhat.com/show_bug.cgi?id=492263">
++# https://bugzilla.redhat.com/show_bug.cgi?id=492263
++# </a>
++# [2] <a href="http://www.timeanddate.com/worldclock/clockchange.html?n=53">
++# http://www.timeanddate.com/worldclock/clockchange.html?n=53
++# </a>
++# [3] <a href="http://wwp.greenwichmeantime.com/time-zone/africa/egypt/">
++# http://wwp.greenwichmeantime.com/time-zone/africa/egypt/
++# </a>
++
++# From Arthur David Olson (2009-04-20):
++# In 2009 (and for the next several years), Ramadan ends before the fourth
++# Thursday in September; Egypt is expected to revert to the last Thursday
++# in September.
++
++# From Steffen Thorsen (2009-08-11):
++# We have been able to confirm the August change with the Egyptian Cabinet 
++# Information and Decision Support Center:
++# <a href="http://www.timeanddate.com/news/time/egypt-dst-ends-2009.html">
++# http://www.timeanddate.com/news/time/egypt-dst-ends-2009.html
++# </a>
++# 
++# The Middle East News Agency
++# <a href="http://www.mena.org.eg/index.aspx">
++# http://www.mena.org.eg/index.aspx
++# </a>
++# also reports "Egypt starts winter time on August 21"
++# today in article numbered "71, 11/08/2009 12:25 GMT." 
++# Only the title above is available without a subscription to their service,
++# and can be found by searching for "winter" in their search engine
++# (at least today).
++
++Rule	Egypt	2008	only	-	Aug	lastThu	23:00s	0	-
++Rule	Egypt	2009	only	-	Aug	20	23:00s	0	-
++Rule	Egypt	2010	max	-	Sep	lastThu	23:00s	0	-
+ 
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Africa/Cairo	2:05:00 -	LMT	1900 Oct
+@@ -387,9 +447,110 @@
+ 			 0:00	-	GMT
+ 
+ # Mauritius
++
++# From Steffen Thorsen (2008-06-25):
++# Mauritius plans to observe DST from 2008-11-01 to 2009-03-31 on a trial
++# basis....
++# It seems that Mauritius observed daylight saving time from 1982-10-10 to 
++# 1983-03-20 as well, but that was not successful....
++# http://www.timeanddate.com/news/time/mauritius-daylight-saving-time.html
++
++# From Alex Krivenyshev (2008-06-25):
++# http://economicdevelopment.gov.mu/portal/site/Mainhomepage/menuitem.a42b24128104d9845dabddd154508a0c/?content_id=0a7cee8b5d69a110VgnVCM1000000a04a8c0RCRD
++
++# From Arthur David Olson (2008-06-30):
++# The www.timeanddate.com article cited by Steffen Thorsen notes that "A
++# final decision has yet to be made on the times that daylight saving
++# would begin and end on these dates." As a place holder, use midnight.
++
++# From Paul Eggert (2008-06-30):
++# Follow Thorsen on DST in 1982/1983, instead of Shanks & Pottenger.
++
++# From Steffen Thorsen (2008-07-10):
++# According to
++# <a href="http://www.lexpress.mu/display_article.php?news_id=111216">
++# http://www.lexpress.mu/display_article.php?news_id=111216
++# </a>
++# (in French), Mauritius will start and end their DST a few days earlier
++# than previously announced (2008-11-01 to 2009-03-31).  The new start
++# date is 2008-10-26 at 02:00 and the new end date is 2009-03-27 (no time
++# given, but it is probably at either 2 or 3 wall clock time).
++# 
++# A little strange though, since the article says that they moved the date 
++# to align itself with Europe and USA which also change time on that date, 
++# but that means they have not paid attention to what happened in 
++# USA/Canada last year (DST ends first Sunday in November). I also wonder 
++# why that they end on a Friday, instead of aligning with Europe which 
++# changes two days later.
++
++# From Alex Krivenyshev (2008-07-11):
++# Seems that English language article "The revival of daylight saving
++# time:  Energy conservation?"-# No. 16578 (07/11/2008) was originally
++# published on Monday, June 30, 2008...
++#
++# I guess that article in French "Le gouvernement avance l'introduction
++# de l'heure d'ete" stating that DST in Mauritius starting on October 26
++# and ending on March 27, 2009 is the most recent one.
++# ...
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_mauritius02.html">
++# http://www.worldtimezone.com/dst_news/dst_news_mauritius02.html
++# </a>
++
++# From Riad M. Hossen Ally (2008-08-03):
++# The Government of Mauritius weblink
++# <a href="http://www.gov.mu/portal/site/pmosite/menuitem.4ca0efdee47462e7440a600248a521ca/?content_id=4728ca68b2a5b110VgnVCM1000000a04a8c0RCRD">
++# http://www.gov.mu/portal/site/pmosite/menuitem.4ca0efdee47462e7440a600248a521ca/?content_id=4728ca68b2a5b110VgnVCM1000000a04a8c0RCRD
++# </a>
++# Cabinet Decision of July 18th, 2008 states as follows:
++#
++# 4. ...Cabinet has agreed to the introduction into the National Assembly
++# of the Time Bill which provides for the introduction of summer time in
++# Mauritius. The summer time period which will be of one hour ahead of
++# the standard time, will be aligned with that in Europe and the United
++# States of America. It will start at two o'clock in the morning on the
++# last Sunday of October and will end at two o'clock in the morning on
++# the last Sunday of March the following year. The summer time for the
++# year 2008 - 2009 will, therefore, be effective as from 26 October 2008
++# and end on 29 March 2009.
++
++# From Ed Maste (2008-10-07):
++# THE TIME BILL (No. XXVII of 2008) Explanatory Memorandum states the
++# beginning / ending of summer time is 2 o'clock standard time in the
++# morning of the last Sunday of October / last Sunday of March.
++# <a href="http://www.gov.mu/portal/goc/assemblysite/file/bill2708.pdf">
++# http://www.gov.mu/portal/goc/assemblysite/file/bill2708.pdf
++# </a>
++
++# From Steffen Thorsen (2009-06-05):
++# According to several sources, Mauritius will not continue to observe
++# DST the coming summer...
++#
++# Some sources, in French:
++# <a href="http://www.defimedia.info/news/946/Rashid-Beebeejaun-:-%C2%AB-L%E2%80%99heure-d%E2%80%99%C3%A9t%C3%A9-ne-sera-pas-appliqu%C3%A9e-cette-ann%C3%A9e-%C2%BB">
++# http://www.defimedia.info/news/946/Rashid-Beebeejaun-:-%C2%AB-L%E2%80%99heure-d%E2%80%99%C3%A9t%C3%A9-ne-sera-pas-appliqu%C3%A9e-cette-ann%C3%A9e-%C2%BB
++# </a>
++# <a href="http://lexpress.mu/Story/3398~Beebeejaun---Les-objectifs-d-%C3%A9conomie-d-%C3%A9nergie-de-l-heure-d-%C3%A9t%C3%A9-ont-%C3%A9t%C3%A9-atteints-">
++# http://lexpress.mu/Story/3398~Beebeejaun---Les-objectifs-d-%C3%A9conomie-d-%C3%A9nergie-de-l-heure-d-%C3%A9t%C3%A9-ont-%C3%A9t%C3%A9-atteints-
++# </a>
++#
++# Our wrap-up:
++# <a href="http://www.timeanddate.com/news/time/mauritius-dst-will-not-repeat.html">
++# http://www.timeanddate.com/news/time/mauritius-dst-will-not-repeat.html
++# </a>
++
++# From Arthur David Olson (2009-07-11):
++# The "mauritius-dst-will-not-repeat" wrapup includes this: 
++# "The trial ended on March 29, 2009, when the clocks moved back by one hour
++# at 2am (or 02:00) local time..."
++
++# Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
++Rule Mauritius	1982	only	-	Oct	10	0:00	1:00	S
++Rule Mauritius	1983	only	-	Mar	21	0:00	0	-
++Rule Mauritius	2008	only	-	Oct	lastSun	2:00	1:00	S
++Rule Mauritius	2009	only	-	Mar	lastSun	2:00	0	-
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone Indian/Mauritius	3:50:00 -	LMT	1907		# Port Louis
+-			4:00	-	MUT	# Mauritius Time
++			4:00 Mauritius	MU%sT	# Mauritius Time
+ # Agalega Is, Rodriguez
+ # no information; probably like Indian/Mauritius
+ 
+@@ -400,7 +561,127 @@
+ 
+ # Morocco
+ # See the `europe' file for Spanish Morocco (Africa/Ceuta).
++
++# From Alex Krivenyshev (2008-05-09):
++# Here is an article that Morocco plan to introduce Daylight Saving Time between
++# 1 June, 2008 and 27 September, 2008.
++#
++# "... Morocco is to save energy by adjusting its clock during summer so it will
++# be one hour ahead of GMT between 1 June and 27 September, according to
++# Communication Minister and Gov ernment Spokesman, Khalid Naciri...."
++#
++# <a href="http://www.worldtimezone.net/dst_news/dst_news_morocco01.html">
++# http://www.worldtimezone.net/dst_news/dst_news_morocco01.html
++# </a>
++# OR
++# <a href="http://en.afrik.com/news11892.html">
++# http://en.afrik.com/news11892.html
++# </a>
++
++# From Alex Krivenyshev (2008-05-09):
++# The Morocco time change can be confirmed on Morocco web site Maghreb Arabe Presse:
++# <a href="http://www.map.ma/eng/sections/box3/morocco_shifts_to_da/view">
++# http://www.map.ma/eng/sections/box3/morocco_shifts_to_da/view
++# </a>
++#
++# Morocco shifts to daylight time on June 1st through September 27, Govt.
++# spokesman.
++
++# From Patrice Scattolin (2008-05-09):
++# According to this article:
++# <a href="http://www.avmaroc.com/actualite/heure-dete-comment-a127896.html">
++# http://www.avmaroc.com/actualite/heure-dete-comment-a127896.html
++# </a>
++# (and republished here:
++# <a href="http://www.actu.ma/heure-dete-comment_i127896_0.html">
++# http://www.actu.ma/heure-dete-comment_i127896_0.html
++# </a>
++# )
++# the changes occurs at midnight:
++#
++# saturday night may 31st at midnight (which in french is to be
++# intrepreted as the night between saturday and sunday)
++# sunday night the 28th  at midnight
++#
++# Seeing that the 28th is monday, I am guessing that she intends to say
++# the midnight of the 28th which is the midnight between sunday and
++# monday, which jives with other sources that say that it's inclusive
++# june1st to sept 27th.
++#
++# The decision was taken by decree *2-08-224 *but I can't find the decree
++# published on the web.
++#
++# It's also confirmed here:
++# <a href="http://www.maroc.ma/NR/exeres/FACF141F-D910-44B0-B7FA-6E03733425D1.htm">
++# http://www.maroc.ma/NR/exeres/FACF141F-D910-44B0-B7FA-6E03733425D1.htm
++# </a>
++# on a government portal as being  between june 1st and sept 27th (not yet
++# posted in english).
++#
++# The following google query will generate many relevant hits:
++# <a href="http://www.google.com/search?hl=en&q=Conseil+de+gouvernement+maroc+heure+avance&btnG=Search">
++# http://www.google.com/search?hl=en&q=Conseil+de+gouvernement+maroc+heure+avance&btnG=Search
++# </a>
++
++# From Alex Krivenyshev (2008-05-09):
++# Is Western Sahara (part which administrated by Morocco) going to follow
++# Morocco DST changes?  Any information?  What about other part of
++# Western Sahara - under administration of POLISARIO Front (also named
++# SADR Saharawi Arab Democratic Republic)?
++
++# From Arthur David Olson (2008-05-09):
++# XXX--guess that it is only Morocco for now; guess only 2008 for now.
++
++# From Steffen Thorsen (2008-08-27):
++# Morocco will change the clocks back on the midnight between August 31 
++# and September 1. They originally planned to observe DST to near the end 
++# of September:
++#
++# One article about it (in French):
++# <a href="http://www.menara.ma/fr/Actualites/Maroc/Societe/ci.retour_a_l_heure_gmt_a_partir_du_dimanche_31_aout_a_minuit_officiel_.default">
++# http://www.menara.ma/fr/Actualites/Maroc/Societe/ci.retour_a_l_heure_gmt_a_partir_du_dimanche_31_aout_a_minuit_officiel_.default
++# </a>
++#
++# We have some further details posted here:
++# <a href="http://www.timeanddate.com/news/time/morocco-ends-dst-early-2008.html">
++# http://www.timeanddate.com/news/time/morocco-ends-dst-early-2008.html
++# </a>
++
++# From Steffen Thorsen (2009-03-17):
++# Morocco will observe DST from 2009-06-01 00:00 to 2009-08-21 00:00 according
++# to many sources, such as
++# <a href="http://news.marweb.com/morocco/entertainment/morocco-daylight-saving.html">
++# http://news.marweb.com/morocco/entertainment/morocco-daylight-saving.html
++# </a>
++# <a href="http://www.medi1sat.ma/fr/depeche.aspx?idp=2312">
++# http://www.medi1sat.ma/fr/depeche.aspx?idp=2312
++# </a>
++# (French)
++#
++# Our summary:
++# <a href="http://www.timeanddate.com/news/time/morocco-starts-dst-2009.html">
++# http://www.timeanddate.com/news/time/morocco-starts-dst-2009.html
++# </a>
++
++# From Alexander Krivenyshev (2009-03-17):
++# Here is a link to official document from Royaume du Maroc Premier Ministre,
++# Ministere de la Modernisation des Secteurs Publics
++#
++# Under Article 1 of Royal Decree No. 455-67 of Act 23 safar 1387 (2 june 1967)
++# concerning the amendment of the legal time, the Ministry of Modernization of
++# Public Sectors announced that the official time in the Kingdom will be
++# advanced 60 minutes from Sunday 31 May 2009 at midnight.
++#
++# <a href="http://www.mmsp.gov.ma/francais/Actualites_fr/PDF_Actualites_Fr/HeureEte_FR.pdf">
++# http://www.mmsp.gov.ma/francais/Actualites_fr/PDF_Actualites_Fr/HeureEte_FR.pdf
++# </a>
++#
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_morocco03.html">
++# http://www.worldtimezone.com/dst_news/dst_news_morocco03.html
++# </a>
++
+ # RULE	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
++
+ Rule	Morocco	1939	only	-	Sep	12	 0:00	1:00	S
+ Rule	Morocco	1939	only	-	Nov	19	 0:00	0	-
+ Rule	Morocco	1940	only	-	Feb	25	 0:00	1:00	S
+@@ -416,11 +697,15 @@
+ Rule	Morocco	1977	only	-	Sep	28	 0:00	0	-
+ Rule	Morocco	1978	only	-	Jun	 1	 0:00	1:00	S
+ Rule	Morocco	1978	only	-	Aug	 4	 0:00	0	-
++Rule	Morocco	2008	only	-	Jun	 1	 0:00	1:00	S
++Rule	Morocco	2008	only	-	Sep	 1	 0:00	0	-
++Rule	Morocco	2009	only	-	Jun	 1	 0:00	1:00	S
++Rule	Morocco	2009	only	-	Aug	 21	 0:00	0	-
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone Africa/Casablanca	-0:30:20 -	LMT	1913 Oct 26
+ 			 0:00	Morocco	WE%sT	1984 Mar 16
+ 			 1:00	-	CET	1986
+-			 0:00	-	WET
++			 0:00	Morocco	WE%sT
+ # Western Sahara
+ Zone Africa/El_Aaiun	-0:52:48 -	LMT	1934 Jan
+ 			-1:00	-	WAT	1976 Apr 14
+@@ -620,6 +905,43 @@
+ # Ending         : the last Sunday of October at 03:00 ...
+ # http://www.tap.info.tn/en/index.php?option=com_content&task=view&id=1188&Itemid=50
+ 
++# From Steffen Thorsen (2009-03-16):
++# According to several news sources, Tunisia will not observe DST this year.
++# (Arabic)
++# <a href="http://www.elbashayer.com/?page=viewn&nid=42546">
++# http://www.elbashayer.com/?page=viewn&nid=42546
++# </a>
++# <a href="http://www.babnet.net/kiwidetail-15295.asp">
++# http://www.babnet.net/kiwidetail-15295.asp
++# </a>
++#
++# We have also confirmed this with the US embassy in Tunisia.
++# We have a wrap-up about this on the following page:
++# <a href="http://www.timeanddate.com/news/time/tunisia-cancels-dst-2009.html">
++# http://www.timeanddate.com/news/time/tunisia-cancels-dst-2009.html
++# </a>
++
++# From Alexander Krivenyshev (2009-03-17):
++# Here is a link to Tunis Afrique Presse News Agency
++#
++# Standard time to be kept the whole year long (tap.info.tn):
++#
++# (in English)
++# <a href="http://www.tap.info.tn/en/index.php?option=com_content&task=view&id=26813&Itemid=157">
++# http://www.tap.info.tn/en/index.php?option=com_content&task=view&id=26813&Itemid=157
++# </a>
++#
++# (in Arabic)
++# <a href="http://www.tap.info.tn/ar/index.php?option=com_content&task=view&id=61240&Itemid=1">
++# http://www.tap.info.tn/ar/index.php?option=com_content&task=view&id=61240&Itemid=1
++# </a>
++
++# From Arthur David Olson (2009--3-18):
++# The Tunis Afrique Presse News Agency notice contains this: "This measure is due to the fact
++# that the fasting month of ramadan coincides with the period concerned by summer time.
++# Therefore, the standard time will be kept unchanged the whole year long."
++# So foregoing DST seems to be an exception (albeit one that may be repeated in the  future).
++
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	Tunisia	1939	only	-	Apr	15	23:00s	1:00	S
+ Rule	Tunisia	1939	only	-	Nov	18	23:00s	0	-
+@@ -644,8 +966,10 @@
+ Rule	Tunisia	1990	only	-	May	 1	 0:00s	1:00	S
+ Rule	Tunisia	2005	only	-	May	 1	 0:00s	1:00	S
+ Rule	Tunisia	2005	only	-	Sep	30	 1:00s	0	-
+-Rule	Tunisia	2006	max	-	Mar	lastSun	 2:00s	1:00	S
+-Rule	Tunisia	2006	max	-	Oct	lastSun	 2:00s	0	-
++Rule	Tunisia	2006	2008	-	Mar	lastSun	 2:00s	1:00	S
++Rule	Tunisia	2006	2008	-	Oct	lastSun	 2:00s	0	-
++Rule	Tunisia	2010	max	-	Mar	lastSun	 2:00s	1:00	S
++Rule	Tunisia	2010	max	-	Oct	lastSun	 2:00s	0	-
+ # Shanks & Pottenger give 0:09:20 for Paris Mean Time; go with Howse's
+ # more precise 0:09:21.
+ # Shanks & Pottenger say the 1911 switch was on Mar 9; go with Howse's Mar 11.
+diff -Naur timezone.old/antarctica timezone/antarctica
+--- timezone.old/antarctica	2009-12-09 16:41:21.000000000 +0200
++++ timezone/antarctica	2009-11-14 17:26:32.000000000 +0200
+@@ -1,5 +1,7 @@
+-# @(#)antarctica	8.4
+ # <pre>
++# @(#)antarctica	8.7
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # From Paul Eggert (1999-11-15):
+ # To keep things manageable, we list only locations occupied year-round; see
+@@ -78,15 +80,38 @@
+ # Davis, Vestfold Hills, -6835+07759, since 1957-01-13
+ #	(except 1964-11 - 1969-02)
+ # Mawson, Holme Bay, -6736+06253, since 1954-02-13
++
++# From Steffen Thorsen (2009-03-11):
++# Three Australian stations in Antarctica have changed their time zone:
++# Casey moved from UTC+8 to UTC+11
++# Davis moved from UTC+7 to UTC+5
++# Mawson moved from UTC+6 to UTC+5
++# The changes occurred on 2009-10-18 at 02:00 (local times).
++#
++# Government source: (Australian Antarctic Division)
++# <a href="http://www.aad.gov.au/default.asp?casid=37079">
++# http://www.aad.gov.au/default.asp?casid=37079
++# </a>
++#
++# We have more background information here:
++# <a href="http://www.timeanddate.com/news/time/antarctica-new-times.html">
++# http://www.timeanddate.com/news/time/antarctica-new-times.html
++# </a>
++
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone Antarctica/Casey	0	-	zzz	1969
+-			8:00	-	WST	# Western (Aus) Standard Time
++			8:00	-	WST	2009 Oct 18 2:00
++						# Western (Aus) Standard Time
++			11:00	-	CAST	# Casey Time
+ Zone Antarctica/Davis	0	-	zzz	1957 Jan 13
+ 			7:00	-	DAVT	1964 Nov # Davis Time
+ 			0	-	zzz	1969 Feb
+-			7:00	-	DAVT
++			7:00	-	DAVT	2009 Oct 18 2:00
++			5:00	-	DAVT
+ Zone Antarctica/Mawson	0	-	zzz	1954 Feb 13
+-			6:00	-	MAWT	# Mawson Time
++			6:00	-	MAWT	2009 Oct 18 2:00
++						# Mawson Time
++			5:00	-	MAWT
+ # References:
+ # <a href="http://www.antdiv.gov.au/aad/exop/sfo/casey/casey_aws.html">
+ # Casey Weather (1998-02-26)
+diff -Naur timezone.old/asia timezone/asia
+--- timezone.old/asia	2009-12-09 16:41:21.000000000 +0200
++++ timezone/asia	2009-10-29 13:12:14.000000000 +0200
+@@ -1,5 +1,6 @@
+-# @(#)asia	8.18
+-# <pre>
++# @(#)asia	8.44
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # This data is by no means authoritative; if you think you know better,
+ # go ahead and edit the file (and please send any changes to
+@@ -125,6 +126,76 @@
+ 			3:00	-	AST
+ 
+ # Bangladesh
++# From Alexander Krivenyshev (2009-05-13):
++# According to newspaper Asian Tribune (May 6, 2009) Bangladesh may introduce
++# Daylight Saving Time from June 16 to Sept 30
++#
++# Bangladesh to introduce daylight saving time likely from June 16
++# <a href="http://www.asiantribune.com/?q=node/17288">
++# http://www.asiantribune.com/?q=node/17288
++# </a>
++# or
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_bangladesh02.html">
++# http://www.worldtimezone.com/dst_news/dst_news_bangladesh02.html
++# </a>
++#
++# "... Bangladesh government has decided to switch daylight saving time from
++# June
++# 16 till September 30 in a bid to ensure maximum use of daylight to cope with
++# crippling power crisis. "
++#
++# The switch will remain in effect from June 16 to Sept 30 (2009) but if
++# implemented the next year, it will come in force from April 1, 2010
++
++# From Steffen Thorsen (2009-06-02):
++# They have finally decided now, but changed the start date to midnight between
++# the 19th and 20th, and they have not set the end date yet.
++#
++# Some sources:
++# <a href="http://in.reuters.com/article/southAsiaNews/idINIndia-40017620090601">
++# http://in.reuters.com/article/southAsiaNews/idINIndia-40017620090601
++# </a>
++# <a href="http://bdnews24.com/details.php?id=85889&cid=2">
++# http://bdnews24.com/details.php?id=85889&cid=2
++# </a>
++#
++# Our wrap-up:
++# <a href="http://www.timeanddate.com/news/time/bangladesh-daylight-saving-2009.html">
++# http://www.timeanddate.com/news/time/bangladesh-daylight-saving-2009.html
++# </a>
++
++# From A. N. M. Kamrus Saadat (2009-06-15):
++# Finally we've got the official mail regarding DST start time where DST start 
++# time is mentioned as Jun 19 2009, 23:00 from BTRC (Bangladesh 
++# Telecommunication Regulatory Commission). 
++#
++# No DST end date has been announced yet.
++
++# From Alexander Krivenyshev (2009-09-25):
++# Bangladesh won't go back to Standard Time from October 1, 2009, 
++# instead it will continue DST measure till the cabinet makes a fresh decision. 
++#
++# Following report by same newspaper-"The Daily Star Friday":
++# "DST change awaits cabinet decision-Clock won't go back by 1-hr from Oct 1"
++# <a href="http://www.thedailystar.net/newDesign/news-details.php?nid=107021">
++# http://www.thedailystar.net/newDesign/news-details.php?nid=107021
++# </a>
++# or
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_bangladesh04.html">
++# http://www.worldtimezone.com/dst_news/dst_news_bangladesh04.html
++# </a>
++
++# From Steffen Thorsen (2009-10-13):
++# IANS (Indo-Asian News Service) now reports:
++# Bangladesh has decided that the clock advanced by an hour to make 
++# maximum use of daylight hours as an energy saving measure would 
++# "continue for an indefinite period."
++#
++# One of many places where it is published:
++# <a href="http://www.thaindian.com/newsportal/business/bangladesh-to-continue-indefinitely-with-advanced-time_100259987.html">
++# http://www.thaindian.com/newsportal/business/bangladesh-to-continue-indefinitely-with-advanced-time_100259987.html
++# </a>
++
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Asia/Dhaka	6:01:40 -	LMT	1890
+ 			5:53:20	-	HMT	1941 Oct    # Howrah Mean Time?
+@@ -132,7 +203,8 @@
+ 			5:30	-	IST	1942 Sep
+ 			6:30	-	BURT	1951 Sep 30
+ 			6:00	-	DACT	1971 Mar 26 # Dacca Time
+-			6:00	-	BDT	# Bangladesh Time
++			6:00	-	BDT	2009 Jun 19 23:00 # Bangladesh Time
++			6:00	1:00	BDST
+ 
+ # Bhutan
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+@@ -229,6 +301,28 @@
+ # (could be true), for the moment I am assuming that those two
+ # counties are mistakes in the astro.com data.
+ 
++# From Paul Eggert (2008-02-11):
++# I just now checked Google News for western news sources that talk
++# about China's single time zone, and couldn't find anything before 1986
++# talking about China being in one time zone.  (That article was: Jim
++# Mann, "A clumsy embrace for another western custom: China on daylight
++# time--sort of", Los Angeles Times, 1986-05-05.  By the way, this
++# article confirms the tz database's data claiming that China began
++# observing daylight saving time in 1986.
++#
++# From Thomas S. Mullaney (2008-02-11):
++# I think you're combining two subjects that need to treated 
++# separately: daylight savings (which, you're correct, wasn't 
++# implemented until the 1980s) and the unified time zone centered near 
++# Beijing (which was implemented in 1949). Briefly, there was also a 
++# "Lhasa Time" in Tibet and "Urumqi Time" in Xinjiang. The first was 
++# ceased, and the second eventually recognized (again, in the 1980s).
++#
++# From Paul Eggert (2008-06-30):
++# There seems to be a good chance China switched to a single time zone in 1949
++# rather than in 1980 as Shanks & Pottenger have it, but we don't have a
++# reliable documentary source saying so yet, so for now we still go with
++# Shanks & Pottenger.
+ 
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ # Changbai Time ("Long-white Time", Long-white = Heilongjiang area)
+@@ -274,14 +368,84 @@
+ 			5:00	-	KAST	1980 May
+ 			8:00	PRC	C%sT
+ 
++
++# From Lee Yiu Chung (2009-10-24):
++# I found there are some mistakes for the historial DST rule for Hong
++# Kong. Accoring to the DST record from Hong Kong Observatory (actually,
++# it is not [an] observatory, but the official meteorological agency of HK,
++# and also serves as the official timing agency), there are some missing
++# and incorrect rules. Although the exact switch over time is missing, I
++# think 3:30 is correct. The official DST record for Hong Kong can be
++# obtained from
++# <a href="http://www.hko.gov.hk/gts/time/Summertime.htm">
++# http://www.hko.gov.hk/gts/time/Summertime.htm
++# </a>.
++
++# From Arthur David Olson (2009-10-28):
++# Here are the dates given at
++# <a href="http://www.hko.gov.hk/gts/time/Summertime.htm">
++# http://www.hko.gov.hk/gts/time/Summertime.htm
++# </a>
++# as of 2009-10-28:
++# Year        Period
++# 1941        1 Apr to 30 Sep
++# 1942        Whole year 
++# 1943        Whole year
++# 1944        Whole year
++# 1945        Whole year
++# 1946        20 Apr to 1 Dec
++# 1947        13 Apr to 30 Dec
++# 1948        2 May to 31 Oct
++# 1949        3 Apr to 30 Oct
++# 1950        2 Apr to 29 Oct
++# 1951        1 Apr to 28 Oct
++# 1952        6 Apr to 25 Oct
++# 1953        5 Apr to 1 Nov
++# 1954        21 Mar to 31 Oct
++# 1955        20 Mar to 6 Nov
++# 1956        18 Mar to 4 Nov
++# 1957        24 Mar to 3 Nov
++# 1958        23 Mar to 2 Nov
++# 1959        22 Mar to 1 Nov
++# 1960        20 Mar to 6 Nov
++# 1961        19 Mar to 5 Nov
++# 1962        18 Mar to 4 Nov
++# 1963        24 Mar to 3 Nov
++# 1964        22 Mar to 1 Nov
++# 1965        18 Apr to 17 Oct
++# 1966        17 Apr to 16 Oct
++# 1967        16 Apr to 22 Oct
++# 1968        21 Apr to 20 Oct
++# 1969        20 Apr to 19 Oct
++# 1970        19 Apr to 18 Oct
++# 1971        18 Apr to 17 Oct
++# 1972        16 Apr to 22 Oct
++# 1973        22 Apr to 21 Oct
++# 1973/74     30 Dec 73 to 20 Oct 74
++# 1975        20 Apr to 19 Oct
++# 1976        18 Apr to 17 Oct
++# 1977        Nil
++# 1978        Nil
++# 1979        13 May to 21 Oct
++# 1980 to Now Nil
++# The page does not give start or end times of day.
++# The page does not give a start date for 1942.
++# The page does not givw an end date for 1945.
++# The Japanese occupation of Hong Kong began on 1941-12-25.
++# The Japanese surrender of Hong Kong was signed 1945-09-15.
++# For lack of anything better, use start of those days as the transition times.
++
+ # Hong Kong (Xianggang)
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
++Rule	HK	1941	only	-	Apr	1	3:30	1:00	S
++Rule	HK	1941	only	-	Sep	30	3:30	0	-
+ Rule	HK	1946	only	-	Apr	20	3:30	1:00	S
+ Rule	HK	1946	only	-	Dec	1	3:30	0	-
+ Rule	HK	1947	only	-	Apr	13	3:30	1:00	S
+ Rule	HK	1947	only	-	Dec	30	3:30	0	-
+ Rule	HK	1948	only	-	May	2	3:30	1:00	S
+-Rule	HK	1948	1952	-	Oct	lastSun	3:30	0	-
++Rule	HK	1948	1951	-	Oct	lastSun	3:30	0	-
++Rule	HK	1952	only	-	Oct	25	3:30	0	-
+ Rule	HK	1949	1953	-	Apr	Sun>=1	3:30	1:00	S
+ Rule	HK	1953	only	-	Nov	1	3:30	0	-
+ Rule	HK	1954	1964	-	Mar	Sun>=18	3:30	1:00	S
+@@ -289,13 +453,15 @@
+ Rule	HK	1955	1964	-	Nov	Sun>=1	3:30	0	-
+ Rule	HK	1965	1977	-	Apr	Sun>=16	3:30	1:00	S
+ Rule	HK	1965	1977	-	Oct	Sun>=16	3:30	0	-
+-Rule	HK	1979	1980	-	May	Sun>=8	3:30	1:00	S
+-Rule	HK	1979	1980	-	Oct	Sun>=16	3:30	0	-
++Rule	HK	1973	only	-	Dec	30	3:30	1:00	S
++Rule	HK	1979	only	-	May	Sun>=8	3:30	1:00	S
++Rule	HK	1979	only	-	Oct	Sun>=16	3:30	0	-
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Asia/Hong_Kong	7:36:36 -	LMT	1904 Oct 30
++			8:00	HK	HK%sT	1941 Dec 25
++			9:00	-	JST	1945 Sep 15
+ 			8:00	HK	HK%sT
+ 
+-
+ ###############################################################################
+ 
+ # Taiwan
+@@ -1027,6 +1193,40 @@
+ # http://www.petranews.gov.jo/nepras/2006/Sep/05/4000.htm
+ # "Jordan will switch to winter time on Friday, October 27".
+ #
++
++# From Phil Pizzey (2009-04-02):
++# ...I think I may have spotted an error in the timezone data for
++# Jordan.
++# The current (2009d) asia file shows Jordan going to daylight
++# saving
++# time on the last Thursday in March.
++#
++# Rule  Jordan      2000  max	-  Mar   lastThu     0:00s 1:00  S
++#
++# However timeanddate.com, which I usually find reliable, shows Jordan
++# going to daylight saving time on the last Friday in March since 2002.
++# Please see
++# <a href="http://www.timeanddate.com/worldclock/timezone.html?n=11">
++# http://www.timeanddate.com/worldclock/timezone.html?n=11
++# </a>
++
++# From Steffen Thorsen (2009-04-02):
++# This single one might be good enough, (2009-03-24, Arabic):
++# <a href="http://petra.gov.jo/Artical.aspx?Lng=2&Section=8&Artical=95279">
++# http://petra.gov.jo/Artical.aspx?Lng=2&Section=8&Artical=95279
++# </a>
++#
++# Google's translation:
++#
++# > The Council of Ministers decided in 2002 to adopt the principle of timely
++# > submission of the summer at 60 minutes as of midnight on the last Thursday
++# > of the month of March of each year.
++#
++# So - this means the midnight between Thursday and Friday since 2002.
++
++# From Arthur David Olson (2009-04-06):
++# We still have Jordan switching to DST on Thursdays in 2000 and 2001.
++
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	Jordan	1973	only	-	Jun	6	0:00	1:00	S
+ Rule	Jordan	1973	1975	-	Oct	1	0:00	0	-
+@@ -1049,8 +1249,9 @@
+ Rule	Jordan	1994	only	-	Sep	Fri>=15	0:00	0	-
+ Rule	Jordan	1995	1998	-	Sep	Fri>=15	0:00s	0	-
+ Rule	Jordan	1999	only	-	Jul	 1	0:00s	1:00	S
+-Rule	Jordan	1999	2002	-	Sep	lastThu	0:00s	0	-
+-Rule	Jordan	2000	max	-	Mar	lastThu	0:00s	1:00	S
++Rule	Jordan	1999	2002	-	Sep	lastFri	0:00s	0	-
++Rule	Jordan	2000	2001	-	Mar	lastThu	0:00s	1:00	S
++Rule	Jordan	2002	max	-	Mar	lastThu	24:00	1:00	S
+ Rule	Jordan	2003	only	-	Oct	24	0:00s	0	-
+ Rule	Jordan	2004	only	-	Oct	15	0:00s	0	-
+ Rule	Jordan	2005	only	-	Sep	lastFri	0:00s	0	-
+@@ -1376,6 +1577,42 @@
+ # They decided not to adopt daylight-saving time....
+ # http://www.mongolnews.mn/index.php?module=unuudur&sec=view&id=15742
+ 
++# From Deborah Goldsmith (2008-03-30):
++# We received a bug report claiming that the tz database UTC offset for
++# Asia/Choibalsan (GMT+09:00) is incorrect, and that it should be GMT
++# +08:00 instead. Different sources appear to disagree with the tz
++# database on this, e.g.:
++#
++# <a href="http://www.timeanddate.com/worldclock/city.html?n=1026">
++# http://www.timeanddate.com/worldclock/city.html?n=1026
++# </a>
++# <a href="http://www.worldtimeserver.com/current_time_in_MN.aspx">
++# http://www.worldtimeserver.com/current_time_in_MN.aspx
++# </a>
++#
++# both say GMT+08:00.
++
++# From Steffen Thorsen (2008-03-31):
++# eznis airways, which operates several domestic flights, has a flight
++# schedule here:
++# <a href="http://www.eznis.com/Container.jsp?id=112">
++# http://www.eznis.com/Container.jsp?id=112
++# </a>
++# (click the English flag for English)
++#
++# There it appears that flights between Choibalsan and Ulaanbatar arrive
++# about 1:35 - 1:50 hours later in local clock time, no matter the
++# direction, while Ulaanbaatar-Khvod takes 2 hours in the Eastern
++# direction and 3:35 back, which indicates that Ulaanbatar and Khvod are
++# in different time zones (like we know about), while Choibalsan and
++# Ulaanbatar are in the same time zone (correction needed).
++
++# From Arthur David Olson (2008-05-19):
++# Assume that Choibalsan is indeed offset by 8:00.
++# XXX--in the absence of better information, assume that transition
++# was at the start of 2008-03-31 (the day of Steffen Thorsen's report);
++# this is almost surely wrong.
++
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	Mongol	1983	1984	-	Apr	1	0:00	1:00	S
+ Rule	Mongol	1983	only	-	Oct	1	0:00	0	-
+@@ -1411,11 +1648,12 @@
+ Zone	Asia/Choibalsan	7:38:00 -	LMT	1905 Aug
+ 			7:00	-	ULAT	1978
+ 			8:00	-	ULAT	1983 Apr
+-			9:00	Mongol	CHO%sT	# Choibalsan Time
++			9:00	Mongol	CHO%sT	2008 Mar 31 # Choibalsan Time
++			8:00	Mongol	CHO%sT
+ 
+ # Nepal
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+-Zone	Asia/Katmandu	5:41:16 -	LMT	1920
++Zone	Asia/Kathmandu	5:41:16 -	LMT	1920
+ 			5:30	-	IST	1986
+ 			5:45	-	NPT	# Nepal Time
+ 
+@@ -1461,10 +1699,130 @@
+ # The minister told a news conference that the experiment had rather
+ # shown 8 per cent higher consumption of electricity.
+ 
++# From Alex Krivenyshev (2008-05-15):
++# 
++# Here is an article that Pakistan plan to introduce Daylight Saving Time 
++# on June 1, 2008 for 3 months.
++# 
++# "... The federal cabinet on Wednesday announced a new conservation plan to help 
++# reduce load shedding by approving the closure of commercial centres at 9pm and 
++# moving clocks forward by one hour for the next three months. 
++# ...."
++# 
++# <a href="http://www.worldtimezone.net/dst_news/dst_news_pakistan01.html">
++# http://www.worldtimezone.net/dst_news/dst_news_pakistan01.html
++# </a>
++# OR
++# <a href="http://www.dailytimes.com.pk/default.asp?page=2008%5C05%5C15%5Cstory_15-5-2008_pg1_4">
++# http://www.dailytimes.com.pk/default.asp?page=2008%5C05%5C15%5Cstory_15-5-2008_pg1_4
++# </a>
++
++# From Arthur David Olson (2008-05-19):
++# XXX--midnight transitions is a guess; 2008 only is a guess.
++
++# From Alexander Krivenyshev (2008-08-28):
++# Pakistan government has decided to keep the watches one-hour advanced
++# for another 2 months--plan to return to Standard Time on October 31
++# instead of August 31.
++#
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_pakistan02.html">
++# http://www.worldtimezone.com/dst_news/dst_news_pakistan02.html
++# </a>
++# OR
++# <a href="http://dailymailnews.com/200808/28/news/dmbrn03.html">
++# http://dailymailnews.com/200808/28/news/dmbrn03.html
++# </a>
++
++# From Alexander Krivenyshev (2009-04-08):
++# Based on previous media reports that "... proposed plan to
++# advance clocks by one hour from May 1 will cause disturbance
++# to the working schedules rather than bringing discipline in
++# official working."
++# <a href="http://www.thenews.com.pk/daily_detail.asp?id=171280">
++# http://www.thenews.com.pk/daily_detail.asp?id=171280
++# </a>
++#
++# recent news that instead of May 2009 - Pakistan plan to
++# introduce DST from April 15, 2009
++#
++# FYI: Associated Press Of Pakistan
++# April 08, 2009
++# Cabinet okays proposal to advance clocks by one hour from April 15
++# <a href="http://www.app.com.pk/en_/index.php?option=com_content&task=view&id=73043&Itemid=1">
++# http://www.app.com.pk/en_/index.php?option=com_content&task=view&id=73043&Itemid=1
++# </a>
++#
++# or
++#
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_pakistan05.html">
++# http://www.worldtimezone.com/dst_news/dst_news_pakistan05.html
++# </a>
++#
++# ....
++# The Federal Cabinet on Wednesday approved the proposal to
++# advance clocks in the country by one hour from April 15 to
++# conserve energy"
++
++# From Steffen Thorsen (2009-09-17):
++# "The News International," Pakistan reports that: "The Federal
++# Government has decided to restore the previous time by moving the
++# clocks backward by one hour from October 1. A formal announcement to
++# this effect will be made after the Prime Minister grants approval in
++# this regard." 
++# <a href="http://www.thenews.com.pk/updates.asp?id=87168">
++# http://www.thenews.com.pk/updates.asp?id=87168
++# </a>
++
++# From Alexander Krivenyshev (2009-09-28):
++# According to Associated Press Of Pakistan, it is confirmed that
++# Pakistan clocks across the country would be turned back by an hour from October
++# 1, 2009.
++#
++# "Clocks to go back one hour from 1 Oct"
++# <a href="http://www.app.com.pk/en_/index.php?option=com_content&task=view&id=86715&Itemid=2">
++# http://www.app.com.pk/en_/index.php?option=com_content&task=view&id=86715&Itemid=2
++# </a>
++# or
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_pakistan07.htm">
++# http://www.worldtimezone.com/dst_news/dst_news_pakistan07.htm
++# </a>
++
++# From Steffen Thorsen (2009-09-29):
++# Alexander Krivenyshev wrote:
++# > According to Associated Press Of Pakistan, it is confirmed that
++# > Pakistan clocks across the country would be turned back by an hour from October
++# > 1, 2009.
++#
++# Now they seem to have changed their mind, November 1 is the new date:
++# <a href="http://www.thenews.com.pk/top_story_detail.asp?Id=24742">
++# http://www.thenews.com.pk/top_story_detail.asp?Id=24742
++# </a>
++# "The country's clocks will be reversed by one hour on November 1.
++# Officials of Federal Ministry for Interior told this to Geo News on
++# Monday."
++#
++# And more importantly, it seems that these dates will be kept every year:
++# "It has now been decided that clocks will be wound forward by one hour
++# on April 15 and reversed by an hour on November 1 every year without
++# obtaining prior approval, the officials added."
++#
++# We have confirmed this year's end date with both with the Ministry of
++# Water and Power and the Pakistan Electric Power Company:
++# <a href="http://www.timeanddate.com/news/time/pakistan-ends-dst09.html">
++# http://www.timeanddate.com/news/time/pakistan-ends-dst09.html
++# </a>
++
++# From Christoph Goehre (2009-10-01):
++# [T]he German Consulate General in Karachi reported me today that Pakistan
++# will go back to standard time on 1st of November.
+ 
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule Pakistan	2002	only	-	Apr	Sun>=2	0:01	1:00	S
+ Rule Pakistan	2002	only	-	Oct	Sun>=2	0:01	0	-
++Rule Pakistan	2008	only	-	Jun	1	0:00	1:00	S
++Rule Pakistan	2008	only	-	Nov	1	0:00	0	-
++Rule Pakistan	2009	max	-	Apr	15	0:00	1:00	S
++Rule Pakistan	2009	max	-	Nov	1	0:00	0	-
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Asia/Karachi	4:28:12 -	LMT	1907
+ 			5:30	-	IST	1942 Sep
+@@ -1584,6 +1942,75 @@
+ # For lack of better information, predict that future changes will be
+ # the 2nd Thursday of September at 02:00.
+ 
++# From Alexander Krivenyshev (2008-08-28):
++# Here is an article, that Mideast running on different clocks at Ramadan.
++#
++# Gaza Strip (as Egypt) ended DST at midnight Thursday (Aug 28, 2008), while
++# the West Bank will end Daylight Saving Time at midnight Sunday (Aug 31, 2008).
++#
++# <a href="http://www.guardian.co.uk/world/feedarticle/7759001">
++# http://www.guardian.co.uk/world/feedarticle/7759001
++# </a>
++# <a href="http://www.abcnews.go.com/International/wireStory?id=5676087">
++# http://www.abcnews.go.com/International/wireStory?id=5676087
++# </a>
++# or
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_gazastrip01.html">
++# http://www.worldtimezone.com/dst_news/dst_news_gazastrip01.html
++# </a>
++
++# From Alexander Krivenyshev (2009-03-26):
++# According to the Palestine News Network (arabic.pnn.ps), Palestinian
++# government decided to start Daylight Time on Thursday night March
++# 26 and continue until the night of 27 September 2009.
++#
++# (in Arabic)
++# <a href="http://arabic.pnn.ps/index.php?option=com_content&task=view&id=50850">
++# http://arabic.pnn.ps/index.php?option=com_content&task=view&id=50850
++# </a>
++#
++# or
++# (English translation)
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_westbank01.html">
++# http://www.worldtimezone.com/dst_news/dst_news_westbank01.html
++# </a>
++
++# From Steffen Thorsen (2009-08-31):
++# Palestine's Council of Ministers announced that they will revert back to
++# winter time on Friday, 2009-09-04.
++#
++# One news source:
++# <a href="http://www.safa.ps/ara/?action=showdetail&seid=4158">
++# http://www.safa.ps/ara/?action=showdetail&seid=4158
++# </a>
++# (Palestinian press agency, Arabic),
++# Google translate: "Decided that the Palestinian government in Ramallah
++# headed by Salam Fayyad, the start of work in time for the winter of
++# 2009, starting on Friday approved the fourth delay Sept. clock sixty
++# minutes per hour as of Friday morning."
++#
++# We are not sure if Gaza will do the same, last year they had a different
++# end date, we will keep this page updated:
++# <a href="http://www.timeanddate.com/news/time/westbank-gaza-dst-2009.html">
++# http://www.timeanddate.com/news/time/westbank-gaza-dst-2009.html
++# </a>
++
++# From Alexander Krivenyshev (2009-09-02):
++# Seems that Gaza Strip will go back to Winter Time same date as West Bank.
++#
++# According to Palestinian Ministry Of Interior, West Bank and Gaza Strip plan
++# to change time back to Standard time on September 4, 2009.
++#
++# "Winter time unite the West Bank and Gaza"
++# (from Palestinian National Authority):
++# <a href="http://www.moi.gov.ps/en/?page=633167343250594025&nid=11505
++# http://www.moi.gov.ps/en/?page=633167343250594025&nid=11505
++# </a>
++# or
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_gazastrip02.html>
++# http://www.worldtimezone.com/dst_news/dst_news_gazastrip02.html
++# </a>
++
+ # The rules for Egypt are stolen from the `africa' file.
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule EgyptAsia	1957	only	-	May	10	0:00	1:00	S
+@@ -1597,9 +2024,12 @@
+ Rule Palestine	1999	2003	-	Oct	Fri>=15	0:00	0	-
+ Rule Palestine	2004	only	-	Oct	 1	1:00	0	-
+ Rule Palestine	2005	only	-	Oct	 4	2:00	0	-
+-Rule Palestine	2006	max	-	Apr	 1	0:00	1:00	S
++Rule Palestine	2006	2008	-	Apr	 1	0:00	1:00	S
+ Rule Palestine	2006	only	-	Sep	22	0:00	0	-
+-Rule Palestine	2007	max	-	Sep	Thu>=8	2:00	0	-
++Rule Palestine	2007	only	-	Sep	Thu>=8	2:00	0	-
++Rule Palestine	2008	only	-	Aug	lastFri	2:00	0	-
++Rule Palestine	2009	max	-	Mar	lastFri	0:00	1:00	S
++Rule Palestine	2009	max	-	Sep	Fri>=1	2:00	0	-
+ 
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Asia/Gaza	2:17:52	-	LMT	1900 Oct
+@@ -1845,8 +2275,55 @@
+ # compilers can't handle  or having multiple Rules (a la Israel).
+ # For now, use "Apr Fri>=1", and go with IATA on a uniform Sep 30 end.
+ 
+-Rule	Syria	2008	max	-	Apr	Fri>=1	0:00	1:00	S
+-Rule	Syria	2008	max	-	Oct	1	0:00	0	-
++# From Steffen Thorsen (2008-10-07):
++# Syria has now officially decided to end DST on 2008-11-01 this year,
++# according to the following article in the Syrian Arab News Agency (SANA).
++#
++# The article is in Arabic, and seems to tell that they will go back to
++# winter time on 2008-11-01 at 00:00 local daylight time (delaying/setting
++# clocks back 60 minutes).
++#
++# <a href="http://sana.sy/ara/2/2008/10/07/195459.htm">
++# http://sana.sy/ara/2/2008/10/07/195459.htm
++# </a>
++
++# From Steffen Thorsen (2009-03-19):
++# Syria will start DST on 2009-03-27 00:00 this year according to many sources,
++# two examples:
++#
++# <a href="http://www.sana.sy/eng/21/2009/03/17/217563.htm">
++# http://www.sana.sy/eng/21/2009/03/17/217563.htm
++# </a>
++# (English, Syrian Arab News # Agency)
++# <a href="http://thawra.alwehda.gov.sy/_View_news2.asp?FileName=94459258720090318012209">
++# http://thawra.alwehda.gov.sy/_View_news2.asp?FileName=94459258720090318012209
++# </a>
++# (Arabic, gov-site)
++#
++# We have not found any sources saying anything about when DST ends this year.
++#
++# Our summary
++# <a href="http://www.timeanddate.com/news/time/syria-dst-starts-march-27-2009.html">
++# http://www.timeanddate.com/news/time/syria-dst-starts-march-27-2009.html
++# </a>
++
++# From Steffen Thorsen (2009-10-27):
++# The Syrian Arab News Network on 2009-09-29 reported that Syria will 
++# revert back to winter (standard) time on midnight between Thursday 
++# 2009-10-29 and Friday 2009-10-30:
++# <a href="http://www.sana.sy/ara/2/2009/09/29/247012.htm">
++# http://www.sana.sy/ara/2/2009/09/29/247012.htm (Arabic)
++# </a>
++
++# From Arthur David Olson (2009-10-28):
++# We'll see if future DST switching times turn out to be end of the last
++# Thursday of the month or the start of the last Friday of the month or
++# something else. For now, use the start of the last Friday.
++
++Rule	Syria	2008	only	-	Apr	Fri>=1	0:00	1:00	S
++Rule	Syria	2008	only	-	Nov	1	0:00	0	-
++Rule	Syria	2009	max	-	Mar	lastFri	0:00	1:00	S
++Rule	Syria	2009	max	-	Oct	lastFri	0:00	0	-
+ 
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Asia/Damascus	2:25:12 -	LMT	1920	# Dimashq
+diff -Naur timezone.old/australasia timezone/australasia
+--- timezone.old/australasia	2009-12-09 16:41:21.000000000 +0200
++++ timezone/australasia	2009-11-14 17:26:09.000000000 +0200
+@@ -1,5 +1,7 @@
+-# @(#)australasia	8.8
+ # <pre>
++# @(#)australasia	8.15
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # This file also includes Pacific islands.
+ 
+@@ -246,9 +248,30 @@
+ 			6:30	-	CCT	# Cocos Islands Time
+ 
+ # Fiji
++# From Alexander Krivenyshev (2009-11-10):
++# According to Fiji Broadcasting Corporation,  Fiji plans to re-introduce DST
++# from November 29th 2009  to April 25th 2010.
++#
++# "Daylight savings to commence this month"
++# <a href="http://www.radiofiji.com.fj/fullstory.php?id=23719">
++# http://www.radiofiji.com.fj/fullstory.php?id=23719
++# </a>
++# or
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_fiji01.html">
++# http://www.worldtimezone.com/dst_news/dst_news_fiji01.html
++# </a>
++
++# From Steffen Thorsen (2009-11-10):
++# The Fiji Government has posted some more details about the approved
++# amendments:
++# <a href="http://www.fiji.gov.fj/publish/page_16198.shtml">
++# http://www.fiji.gov.fj/publish/page_16198.shtml
++# </a>
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	Fiji	1998	1999	-	Nov	Sun>=1	2:00	1:00	S
+ Rule	Fiji	1999	2000	-	Feb	lastSun	3:00	0	-
++Rule	Fiji	2009	only	-	Nov	29	2:00	1:00	S
++Rule	Fiji	2010	only	-	Apr	25	3:00	0	-
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Pacific/Fiji	11:53:40 -	LMT	1915 Oct 26	# Suva
+ 			12:00	Fiji	FJ%sT	# Fiji Time
+@@ -425,10 +448,72 @@
+ 			-11:00	-	SST			# S=Samoa
+ 
+ # Samoa
++
++# From Alexander Krivenyshev (2008-12-06):
++# The Samoa government (Western Samoa) may implement DST on the first Sunday of 
++# October 2009 (October 4, 2009) until the last Sunday of March 2010 (March 28, 
++# 2010). 
++# 
++# "Selected Committee reports to Cabinet on Daylight Saving Time",
++# Government of Samoa:
++# <a href="http://www.govt.ws/pr_article.cfm?pr_id=560">
++# http://www.govt.ws/pr_article.cfm?pr_id=560
++# </a>
++# or
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_samoa01.html">
++# http://www.worldtimezone.com/dst_news/dst_news_samoa01.html
++# </a>
++
++# From Steffen Thorsen (2009-08-27):
++# Samoa's parliament passed the Daylight Saving Bill 2009, and will start 
++# daylight saving time on the first Sunday of October 2009 and end on the 
++# last Sunday of March 2010. We hope that the full text will be published 
++# soon, but we believe that the bill is only valid for 2009-2010. Samoa's 
++# Daylight Saving Act 2009 will be enforced as soon as the Head of State 
++# executes a proclamation publicizing this Act.
++#
++# Some background information here, which will be updated once we have 
++# more details:
++# <a href="http://www.timeanddate.com/news/time/samoa-dst-plan-2009.html">
++# http://www.timeanddate.com/news/time/samoa-dst-plan-2009.html
++# </a>
++
++# From Alexander Krivenyshev (2009-10-03):
++# First, my deepest condolences to people of Samoa islands and all families and
++# loved ones around the world who lost their lives in the earthquake and tsunami.
++#
++# Considering the recent devastation on Samoa by earthquake and tsunami and that
++# many government offices/ ministers are closed- not sure if "Daylight Saving
++# Bill 2009" will be implemented in next few days- on October 4, 2009.
++#
++# Here is reply from Consulate-General of Samoa in New Zealand
++# ---------------------------
++# Consul General
++# consulgeneral@samoaconsulate.org.nz
++#
++# Talofa Alexander,
++#
++# Thank you for your sympathy for our country but at this time we have not
++# been informed about the Daylight Savings Time Change.  Most Ministries in
++# Apia are closed or relocating due to weather concerns.
++#
++# When we do find out if they are still proceeding with the time change we
++# will advise you soonest.
++#
++# Kind Regards,
++# Lana
++# for: Consul General
++
++# From Steffen Thorsen (2009-10-05):
++# We have called a hotel in Samoa and asked about local time there - they 
++# are still on standard time.
++
+ Zone Pacific/Apia	 12:33:04 -	LMT	1879 Jul  5
+ 			-11:26:56 -	LMT	1911
+ 			-11:30	-	SAMT	1950		# Samoa Time
+-			-11:00	-	WST			# Samoa Time
++			-11:00	-	WST	2009 Oct 4
++			-11:00	1:00	WSDT	2010 Mar 28
++			-11:00	-	WST
+ 
+ # Solomon Is
+ # excludes Bougainville, for which see Papua New Guinea
+@@ -1119,6 +1204,27 @@
+ # From Paul Eggert (2007-07-23):
+ # See "southeast Australia" above for 2008 and later.
+ 
++# From Steffen Thorsen (2009-04-28):
++# According to the official press release, South Australia's extended daylight 
++# saving period will continue with the same rules as used during the 2008-2009 
++# summer (southern hemisphere).
++# 
++# From
++# <a href="http://www.safework.sa.gov.au/uploaded_files/DaylightDatesSet.pdf">
++# http://www.safework.sa.gov.au/uploaded_files/DaylightDatesSet.pdf
++# </a>
++# The extended daylight saving period that South Australia has been trialling 
++# for over the last year is now set to be ongoing.
++# Daylight saving will continue to start on the first Sunday in October each 
++# year and finish on the first Sunday in April the following year.
++# Industrial Relations Minister, Paul Caica, says this provides South Australia 
++# with a consistent half hour time difference with NSW, Victoria, Tasmania and 
++# the ACT for all 52 weeks of the year...
++# 
++# We have a wrap-up here:
++# <a href="http://www.timeanddate.com/news/time/south-australia-extends-dst.html">
++# http://www.timeanddate.com/news/time/south-australia-extends-dst.html
++# </a>
+ ###############################################################################
+ 
+ # New Zealand
+@@ -1346,7 +1452,7 @@
+ # * Tonga will introduce DST in November
+ #
+ # I was given this link by John Letts:
+-# <a hef="http://news.bbc.co.uk/hi/english/world/asia-pacific/newsid_424000/424764.stm">
++# <a href="http://news.bbc.co.uk/hi/english/world/asia-pacific/newsid_424000/424764.stm">
+ # http://news.bbc.co.uk/hi/english/world/asia-pacific/newsid_424000/424764.stm
+ # </a>
+ #
+@@ -1356,7 +1462,7 @@
+ # (12 + 1 hour DST).
+ 
+ # From Arthur David Olson (1999-09-20):
+-# According to <a href="http://www.tongaonline.com/news/sept1799.html>
++# According to <a href="http://www.tongaonline.com/news/sept1799.html">
+ # http://www.tongaonline.com/news/sept1799.html
+ # </a>:
+ # "Daylight Savings Time will take effect on Oct. 2 through April 15, 2000
+diff -Naur timezone.old/backward timezone/backward
+--- timezone.old/backward	2009-12-09 16:41:21.000000000 +0200
++++ timezone/backward	2009-10-21 16:12:44.000000000 +0300
+@@ -1,4 +1,7 @@
+-# @(#)backward	8.6
++# <pre>
++# @(#)backward	8.8
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # This file provides links between current names for time zones
+ # and their old names.  Many names changed in late 1993.
+@@ -24,6 +27,7 @@
+ Link	Asia/Ashgabat		Asia/Ashkhabad
+ Link	Asia/Chongqing		Asia/Chungking
+ Link	Asia/Dhaka		Asia/Dacca
++Link	Asia/Kathmandu		Asia/Katmandu
+ Link	Asia/Kolkata		Asia/Calcutta
+ Link	Asia/Macau		Asia/Macao
+ Link	Asia/Jerusalem		Asia/Tel_Aviv
+diff -Naur timezone.old/etcetera timezone/etcetera
+--- timezone.old/etcetera	2007-09-25 17:20:11.000000000 +0300
++++ timezone/etcetera	2009-10-21 16:12:44.000000000 +0300
+@@ -1,4 +1,7 @@
+-# @(#)etcetera	8.1
++# <pre>
++# @(#)etcetera	8.2
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # These entries are mostly present for historical reasons, so that
+ # people in areas not otherwise covered by the tz files could "zic -l"
+diff -Naur timezone.old/europe timezone/europe
+--- timezone.old/europe	2009-12-09 16:41:21.000000000 +0200
++++ timezone/europe	2009-10-29 13:14:18.000000000 +0200
+@@ -1,5 +1,7 @@
+-# @(#)europe	8.12
+ # <pre>
++# @(#)europe	8.24
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # This data is by no means authoritative; if you think you know better,
+ # go ahead and edit the file (and please send any changes to
+@@ -457,7 +459,7 @@
+ Rule	EU	1981	max	-	Mar	lastSun	 1:00u	1:00	S
+ Rule	EU	1996	max	-	Oct	lastSun	 1:00u	0	-
+ # The most recent directive covers the years starting in 2002.  See:
+-# <a href="http://europa.eu.int/eur-lex/en/lif/dat/2000/en_300L0084.html"
++# <a="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CELEX:32000L0084:EN:NOT">
+ # Directive 2000/84/EC of the European Parliament and of the Council
+ # of 19 January 2001 on summer-time arrangements.
+ # </a>
+@@ -480,9 +482,48 @@
+ Rule	C-Eur	1942	only	-	Nov	 2	 2:00s	0	-
+ Rule	C-Eur	1943	only	-	Mar	29	 2:00s	1:00	S
+ Rule	C-Eur	1943	only	-	Oct	 4	 2:00s	0	-
+-Rule	C-Eur	1944	only	-	Apr	 3	 2:00s	1:00	S
++Rule	C-Eur	1944	1945	-	Apr	Mon>=1	 2:00s	1:00	S
+ # Whitman gives 1944 Oct 7; go with Shanks & Pottenger.
+ Rule	C-Eur	1944	only	-	Oct	 2	 2:00s	0	-
++# From Jesper Norgaard Welen (2008-07-13):
++#
++# I found what is probably a typo of 2:00 which should perhaps be 2:00s
++# in the C-Eur rule from tz database version 2008d (this part was
++# corrected in version 2008d). The circumstancial evidence is simply the
++# tz database itself, as seen below:
++#
++# Zone Europe/Paris 0:09:21 - LMT 1891 Mar 15  0:01
++#    0:00 France WE%sT 1945 Sep 16  3:00
++#
++# Zone Europe/Monaco 0:29:32 - LMT 1891 Mar 15
++#    0:00 France WE%sT 1945 Sep 16 3:00
++#
++# Zone Europe/Belgrade 1:22:00 - LMT 1884
++#    1:00 1:00 CEST 1945 Sep 16  2:00s
++#
++# Rule France 1945 only - Sep 16  3:00 0 -
++# Rule Belgium 1945 only - Sep 16  2:00s 0 -
++# Rule Neth 1945 only - Sep 16 2:00s 0 -
++#
++# The rule line to be changed is:
++#
++# Rule C-Eur 1945 only - Sep 16  2:00 0 -
++#
++# It seems that Paris, Monaco, Rule France, Rule Belgium all agree on
++# 2:00 standard time, e.g. 3:00 local time.  However there are no
++# countries that use C-Eur rules in September 1945, so the only items
++# affected are apparently these ficticious zones that translates acronyms
++# CET and MET:
++#
++# Zone CET  1:00 C-Eur CE%sT
++# Zone MET  1:00 C-Eur ME%sT
++#
++# It this is right then the corrected version would look like:
++#
++# Rule C-Eur 1945 only - Sep 16  2:00s 0 -
++#
++# A small step for mankind though 8-)
++Rule	C-Eur	1945	only	-	Sep	16	 2:00s	0	-
+ Rule	C-Eur	1977	1980	-	Apr	Sun>=1	 2:00s	1:00	S
+ Rule	C-Eur	1977	only	-	Sep	lastSun	 2:00s	0	-
+ Rule	C-Eur	1978	only	-	Oct	 1	 2:00s	0	-
+@@ -725,7 +766,8 @@
+ Zone	Europe/Sofia	1:33:16 -	LMT	1880
+ 			1:56:56	-	IMT	1894 Nov 30 # Istanbul MT?
+ 			2:00	-	EET	1942 Nov  2  3:00
+-			1:00	C-Eur	CE%sT	1945 Apr  2  3:00
++			1:00	C-Eur	CE%sT	1945
++			1:00	-	CET	1945 Apr 2 3:00
+ 			2:00	-	EET	1979 Mar 31 23:00
+ 			2:00	Bulg	EE%sT	1982 Sep 26  2:00
+ 			2:00	C-Eur	EE%sT	1991
+@@ -1093,33 +1135,40 @@
+ # [See tz-link.htm for the URL.]
+ 
+ # From Joerg Schilling (2002-10-23):
+-# In 1945, Berlin was switched to Moscow Summer time (GMT+4) by <a
+-# href="http://www.dhm.de/lemo/html/biografien/BersarinNikolai/">
++# In 1945, Berlin was switched to Moscow Summer time (GMT+4) by
++# <a href="http://www.dhm.de/lemo/html/biografien/BersarinNikolai/">
+ # General [Nikolai] Bersarin</a>.
+ 
+ # From Paul Eggert (2003-03-08):
+ # <a href="http://www.parlament-berlin.de/pds-fraktion.nsf/727459127c8b66ee8525662300459099/defc77cb784f180ac1256c2b0030274b/$FILE/bersarint.pdf">
++# http://www.parlament-berlin.de/pds-fraktion.nsf/727459127c8b66ee8525662300459099/defc77cb784f180ac1256c2b0030274b/$FILE/bersarint.pdf
++# </a>
+ # says that Bersarin issued an order to use Moscow time on May 20.
+ # However, Moscow did not observe daylight saving in 1945, so
+ # this was equivalent to CEMT (GMT+3), not GMT+4.
+ 
+ 
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+-Rule	Germany	1945	only	-	Apr	 2	2:00s	1:00	S
+-Rule	Germany	1945	only	-	May	24	2:00	2:00	M # Midsummer
+-Rule	Germany	1945	only	-	Sep	24	3:00	1:00	S
+-Rule	Germany	1945	only	-	Nov	18	2:00s	0	-
+ Rule	Germany	1946	only	-	Apr	14	2:00s	1:00	S
+ Rule	Germany	1946	only	-	Oct	 7	2:00s	0	-
+ Rule	Germany	1947	1949	-	Oct	Sun>=1	2:00s	0	-
+-Rule	Germany	1947	only	-	Apr	 6	2:00s	1:00	S
++# http://www.ptb.de/de/org/4/44/441/salt.htm says the following transition
++# occurred at 3:00 MEZ, not the 2:00 MEZ given in Shanks & Pottenger.
++# Go with the PTB.
++Rule	Germany	1947	only	-	Apr	 6	3:00s	1:00	S
+ Rule	Germany	1947	only	-	May	11	2:00s	2:00	M
+ Rule	Germany	1947	only	-	Jun	29	3:00	1:00	S
+ Rule	Germany	1948	only	-	Apr	18	2:00s	1:00	S
+ Rule	Germany	1949	only	-	Apr	10	2:00s	1:00	S
++
++Rule SovietZone	1945	only	-	May	24	2:00	2:00	M # Midsummer
++Rule SovietZone	1945	only	-	Sep	24	3:00	1:00	S
++Rule SovietZone	1945	only	-	Nov	18	2:00s	0	-
++
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Europe/Berlin	0:53:28 -	LMT	1893 Apr
+-			1:00	C-Eur	CE%sT	1945 Apr 2 2:00
++			1:00	C-Eur	CE%sT	1945 May 24 2:00
++			1:00 SovietZone	CE%sT	1946
+ 			1:00	Germany	CE%sT	1980
+ 			1:00	EU	CE%sT
+ 
+@@ -1196,7 +1245,7 @@
+ Zone	Europe/Budapest	1:16:20 -	LMT	1890 Oct
+ 			1:00	C-Eur	CE%sT	1918
+ 			1:00	Hungary	CE%sT	1941 Apr  6  2:00
+-			1:00	C-Eur	CE%sT	1945 May  1 23:00
++			1:00	C-Eur	CE%sT	1945
+ 			1:00	Hungary	CE%sT	1980 Sep 28  2:00s
+ 			1:00	EU	CE%sT
+ 
+@@ -2023,9 +2072,43 @@
+ 			 6:00	Russia	NOV%sT	1992 Jan 19 2:00s
+ 			 7:00	Russia	NOV%sT	1993 May 23 # say Shanks & P.
+ 			 6:00	Russia	NOV%sT
++
++# From Alexander Krivenyshev (2009-10-13):
++# Kemerovo oblast' (Kemerovo region) in Russia will change current time zone on
++# March 28, 2010:
++# from current Russia Zone 6 - Krasnoyarsk Time Zone (KRA) UTC +0700
++# to Russia Zone 5 - Novosibirsk Time Zone (NOV) UTC +0600
++#
++# This is according to Government of Russia decree # 740, on September
++# 14, 2009 "Application in the territory of the Kemerovo region the Fifth
++# time zone." ("Russia Zone 5" or old "USSR Zone 5" is GMT +0600)
++#
++# Russian Government web site (Russian language)
++# <a href="http://www.government.ru/content/governmentactivity/rfgovernmentdecisions/archiv">
++# http://www.government.ru/content/governmentactivity/rfgovernmentdecisions/archive/2009/09/14/991633.htm
++# </a>
++# or Russian-English translation by WorldTimeZone.com with reference
++# map to local region and new Russia Time Zone map after March 28, 2010
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_russia03.html">
++# http://www.worldtimezone.com/dst_news/dst_news_russia03.html
++# </a>
++#
++# Thus, when Russia will switch to DST on the night of March 28, 2010
++# Kemerovo region (Kemerovo oblast') will not change the clock.
++#
++# As a result, Kemerovo oblast' will be in the same time zone as
++# Novosibirsk, Omsk, Tomsk, Barnaul and Altai Republic.
++
++Zone Asia/Novokuznetsk	 5:48:48 -	NMT	1920 Jan  6
++			 6:00	-	KRAT	1930 Jun 21 # Krasnoyarsk Time
++			 7:00	Russia	KRA%sT	1991 Mar 31 2:00s
++			 6:00	Russia	KRA%sT	1992 Jan 19 2:00s
++			 7:00	Russia	KRA%sT	2010 Mar 28 2:00s
++			 6:00	Russia	NOV%sT # Novosibirsk/Novokuznetsk Time
++
+ #
+ # From Oscar van Vlijmen (2001-08-25): [This region consists of]
+-# Kemerovskaya oblast', Krasnoyarskij kraj,
++# Krasnoyarskij kraj,
+ # Tajmyrskij (Dolgano-Nenetskij) avtonomnyj okrug,
+ # Respublika Tuva, Respublika Khakasiya, Evenkijskij avtonomnyj okrug.
+ Zone Asia/Krasnoyarsk	 6:11:20 -	LMT	1920 Jan  6
+@@ -2113,7 +2196,8 @@
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Europe/Belgrade	1:22:00	-	LMT	1884
+ 			1:00	-	CET	1941 Apr 18 23:00
+-			1:00	C-Eur	CE%sT	1945 May  8  2:00s
++			1:00	C-Eur	CE%sT	1945
++			1:00	-	CET	1945 May 8 2:00s
+ 			1:00	1:00	CEST	1945 Sep 16  2:00s
+ # Metod Kozelj reports that the legal date of
+ # transition to EU rules was 1982-11-27, for all of Yugoslavia at the time.
+@@ -2265,11 +2349,64 @@
+ # mean time in preference to apparent time -- Geneva from 1780 ....
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ # From Whitman (who writes ``Midnight?''):
+-Rule	Swiss	1940	only	-	Nov	 2	0:00	1:00	S
+-Rule	Swiss	1940	only	-	Dec	31	0:00	0	-
++# Rule	Swiss	1940	only	-	Nov	 2	0:00	1:00	S
++# Rule	Swiss	1940	only	-	Dec	31	0:00	0	-
+ # From Shanks & Pottenger:
+-Rule	Swiss	1941	1942	-	May	Sun>=1	2:00	1:00	S
+-Rule	Swiss	1941	1942	-	Oct	Sun>=1	0:00	0	-
++# Rule	Swiss	1941	1942	-	May	Sun>=1	2:00	1:00	S
++# Rule	Swiss	1941	1942	-	Oct	Sun>=1	0:00	0	-
++
++# From Alois Treindl (2008-12-17):
++# I have researched the DST usage in Switzerland during the 1940ies.
++#
++# As I wrote in an earlier message, I suspected the current tzdata values
++# to be wrong. This is now verified.
++#
++# I have found copies of the original ruling by the Swiss Federal
++# government, in 'Eidgen[o]ssische Gesetzessammlung 1941 and 1942' (Swiss
++# federal law collection)...
++#
++# DST began on Monday 5 May 1941, 1:00 am by shifting the clocks to 2:00 am
++# DST ended on Monday 6 Oct 1941, 2:00 am by shifting the clocks to 1:00 am.
++#
++# DST began on Monday, 4 May 1942 at 01:00 am
++# DST ended on Monday, 5 Oct 1942 at 02:00 am
++#
++# There was no DST in 1940, I have checked the law collection carefully.
++# It is also indicated by the fact that the 1942 entry in the law
++# collection points back to 1941 as a reference, but no reference to any
++# other years are made.
++#
++# Newspaper articles I have read in the archives on 6 May 1941 reported
++# about the introduction of DST (Sommerzeit in German) during the previous
++# night as an absolute novelty, because this was the first time that such
++# a thing had happened in Switzerland.
++#
++# I have also checked 1916, because one book source (Gabriel, Traite de
++# l'heure dans le monde) claims that Switzerland had DST in 1916. This is
++# false, no official document could be found. Probably Gabriel got misled
++# by references to Germany, which introduced DST in 1916 for the first time.
++#
++# The tzdata rules for Switzerland must be changed to:
++# Rule  Swiss   1941    1942    -       May     Mon>=1  1:00    1:00    S
++# Rule  Swiss   1941    1942    -       Oct     Mon>=1  2:00    0       -
++#
++# The 1940 rules must be deleted.
++#
++# One further detail for Switzerland, which is probably out of scope for
++# most users of tzdata:
++# The zone file
++# Zone    Europe/Zurich   0:34:08 -       LMT     1848 Sep 12
++#                          0:29:44 -       BMT     1894 Jun #Bern Mean Time
++#                          1:00    Swiss   CE%sT   1981
++#                          1:00    EU      CE%sT
++# describes all of Switzerland correctly, with the exception of
++# the Cantone Geneve (Geneva, Genf). Between 1848 and 1894 Geneve did not
++# follow Bern Mean Time but kept its own local mean time.
++# To represent this, an extra zone would be needed.
++
++# Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
++Rule	Swiss	1941	1942	-	May	Mon>=1	1:00	1:00	S
++Rule	Swiss	1941	1942	-	Oct	Mon>=1	2:00	0	-
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	Europe/Zurich	0:34:08 -	LMT	1848 Sep 12
+ 			0:29:44	-	BMT	1894 Jun # Bern Mean Time
+@@ -2305,6 +2442,27 @@
+ # (on a non-government server though) describing dates between 2002 and 2006:
+ # http://www.alomaliye.com/bkk_2002_3769.htm
+ 
++# From Sue Williams (2008-08-11):
++# I spotted this news article about a potential change in Turkey.
++#
++# <a href="http://www.hurriyet.com.tr/english/domestic/9626174.asp?scr=1">
++# http://www.hurriyet.com.tr/english/domestic/9626174.asp?scr=1
++# </a>
++
++# From Sue Williams (2008-08-20):
++# This article says that around the end of March 2011, Turkey wants to
++# adjust the clocks forward by 1/2 hour and stay that way permanently.
++# The article indicates that this is a change in timezone offset in addition
++# to stopping observance of DST.
++# This proposal has not yet been approved.
++#
++# Read more here...
++#
++# Turkey to abandon daylight saving time in 2011
++# <a href="http://www.turkishdailynews.com.tr/article.php?enewsid=112989">
++# http://www.turkishdailynews.com.tr/article.php?enewsid=112989
++# </a>
++
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	Turkey	1916	only	-	May	 1	0:00	1:00	S
+ Rule	Turkey	1916	only	-	Oct	 1	0:00	0	-
+diff -Naur timezone.old/factory timezone/factory
+--- timezone.old/factory	2007-09-25 17:20:11.000000000 +0300
++++ timezone/factory	2009-10-21 16:12:44.000000000 +0300
+@@ -1,4 +1,7 @@
+-# @(#)factory	8.1
++# <pre>
++# @(#)factory	8.2
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # For companies who don't want to put time zone specification in
+ # their installation procedures.  When users run date, they'll get the message.
+diff -Naur timezone.old/iso3166.tab timezone/iso3166.tab
+--- timezone.old/iso3166.tab	2009-12-09 16:41:21.000000000 +0200
++++ timezone/iso3166.tab	2009-10-21 16:12:44.000000000 +0300
+@@ -1,7 +1,9 @@
++# <pre>
++# @(#)iso3166.tab	8.6
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ # ISO 3166 alpha-2 country codes
+ #
+-# @(#)iso3166.tab	8.5
+-#
+ # From Paul Eggert (2006-09-27):
+ #
+ # This file contains a table with the following columns:
+diff -Naur timezone.old/leapseconds timezone/leapseconds
+--- timezone.old/leapseconds	2009-12-09 16:41:21.000000000 +0200
++++ timezone/leapseconds	2009-10-21 16:12:44.000000000 +0300
+@@ -1,4 +1,7 @@
+-# @(#)leapseconds	8.5
++# <pre>
++# @(#)leapseconds	8.9
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # Allowance for leapseconds added to each timezone file.
+ 
+@@ -44,33 +47,34 @@
+ Leap	1997	Jun	30	23:59:60	+	S
+ Leap	1998	Dec	31	23:59:60	+	S
+ Leap	2005	Dec	31	23:59:60	+	S
++Leap	2008	Dec	31	23:59:60	+	S
+ 
+ # INTERNATIONAL EARTH ROTATION AND REFERENCE SYSTEMS SERVICE (IERS)
+ #
+ # SERVICE INTERNATIONAL DE LA ROTATION TERRESTRE ET DES SYSTEMES DE REFERENCE
+ #
+ # SERVICE DE LA ROTATION TERRESTRE
+-# OBSERVATOIRE DE PARIS				
++# OBSERVATOIRE DE PARIS
+ # 61, Av. de l'Observatoire 75014 PARIS (France)
+ # Tel.      : 33 (0) 1 40 51 22 26
+ # FAX       : 33 (0) 1 40 51 22 91
+ # Internet  : services.iers@obspm.fr
+ #
+-# Paris, 18 January 2008
++# Paris, 4 July 2009
+ #
+-# Bulletin C 35
++# Bulletin C 38
+ #
+-# To authorities responsible		
++# To authorities responsible
+ # for the measurement and
+-# distribution of time	
++# distribution of time
+ #
+ # INFORMATION ON UTC - TAI
+ #
+-# NO positive leap second will be introduced at the end of June 2008.
++# NO positive leap second will be introduced at the end of December 2009.
+ # The difference between Coordinated Universal Time UTC and the
+ # International Atomic Time TAI is :		
+ #
+-# from 2006 January 1, 0h UTC, until further notice : UTC-TAI = -33 s
++# from 2009 January 1, 0h UTC, until further notice : UTC-TAI = -34 s
+ #
+ # Leap seconds can be introduced in UTC at the end of the months of December
+ # or June,  depending on the evolution of UT1-TAI. Bulletin C is mailed every
+@@ -78,6 +82,6 @@
+ # will be no time step at the next possible date.
+ #
+ # Daniel GAMBIS
+-# Head			
+-# Earth Orientation Center of the IERS
++# Director			
++# Earth Orientation Center of IERS
+ # Observatoire de Paris, France
+diff -Naur timezone.old/northamerica timezone/northamerica
+--- timezone.old/northamerica	2009-12-09 16:41:21.000000000 +0200
++++ timezone/northamerica	2009-10-21 16:12:43.000000000 +0300
+@@ -1,5 +1,7 @@
+-# @(#)northamerica	8.23
+ # <pre>
++# @(#)northamerica	8.28
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # also includes Central America and the Caribbean
+ 
+@@ -1742,9 +1744,13 @@
+ # The individual that answered the phone confirmed that the clocks did not
+ # move at the end of daylight saving on October 29/2006.  He also told me that
+ # the clocks did not move this past weekend (March 11/2007)....
+-#
+-# America/Resolute should use the "Canada" Rule up to October 29/2006.
+-# After that it should be fixed on Eastern Standard Time until further notice.
++
++# From Chris Walton (2008-11-13):
++# ...the residents of Resolute believe that they are changing "time zones"
++# twice a year.  In winter months, local time is qualified with "Eastern
++# Time" which is really "Eastern Standard Time (UTC-5)".  In summer
++# months, local time is qualified with "Central Time" which is really
++# "Central Daylight Time (UTC-5)"...
+ 
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	NT_YK	1918	only	-	Apr	14	2:00	1:00	D
+@@ -1772,11 +1778,14 @@
+ 			-6:00	Canada	C%sT	2000 Oct 29 2:00
+ 			-5:00	Canada	E%sT
+ # aka Qausuittuq
++# Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
++Rule	Resolute 2006	max	-	Nov	Sun>=1	2:00	0	ES
++Rule	Resolute 2007	max	-	Mar	Sun>=8	2:00	0	CD
+ Zone America/Resolute	0	-	zzz	1947 Aug 31 # Resolute founded
+ 			-6:00	NT_YK	C%sT	2000 Oct 29 2:00
+ 			-5:00	-	EST	2001 Apr  1 3:00
+ 			-6:00	Canada	C%sT	2006 Oct 29 2:00
+-			-5:00	-	EST
++			-5:00	Resolute	%sT
+ # aka Kangiqiniq
+ Zone America/Rankin_Inlet 0	-	zzz	1957 # Rankin Inlet founded
+ 			-6:00	NT_YK	C%sT	2000 Oct 29 2:00
+@@ -2076,8 +2085,8 @@
+ # http://www.jonesbahamas.com/?c=45&a=10412
+ 
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+-Rule	Bahamas	1964	2006	-	Oct	lastSun	2:00	0	S
+-Rule	Bahamas	1964	1986	-	Apr	lastSun	2:00	1:00	D
++Rule	Bahamas	1964	1975	-	Oct	lastSun	2:00	0	S
++Rule	Bahamas	1964	1975	-	Apr	lastSun	2:00	1:00	D
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	America/Nassau	-5:09:24 -	LMT	1912 Mar 2
+ 			-5:00	Bahamas	E%sT	1976
+@@ -2251,6 +2260,25 @@
+ # From Arthur David Olson (2008-03-12):
+ # Assume Sun>=15 (third Sunday) going forward.
+ 
++# From Alexander Krivenyshev (2009-03-04)
++# According to the Radio Reloj - Cuba will start Daylight Saving Time on
++# midnight between Saturday, March 07, 2009 and Sunday, March 08, 2009-
++# not on midnight March 14 / March 15 as previously thought.
++#
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_cuba05.html">
++# http://www.worldtimezone.com/dst_news/dst_news_cuba05.html
++# (in Spanish)
++# </a>
++
++# From Arthur David Olson (2009-03-09)
++# I listened over the Internet to
++# <a href="http://media.enet.cu/readioreloj">
++# http://media.enet.cu/readioreloj
++# </a>
++# this morning; when it was 10:05 a. m. here in Bethesda, Maryland the
++# the time was announced as "diez cinco"--the same time as here, indicating
++# that has indeed switched to DST. Assume second Sunday from 2009 forward.
++
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ Rule	Cuba	1928	only	-	Jun	10	0:00	1:00	D
+ Rule	Cuba	1928	only	-	Oct	10	0:00	0	S
+@@ -2280,10 +2308,11 @@
+ Rule	Cuba	1997	only	-	Oct	12	0:00s	0	S
+ Rule	Cuba	1998	1999	-	Mar	lastSun	0:00s	1:00	D
+ Rule	Cuba	1998	2003	-	Oct	lastSun	0:00s	0	S
+-Rule	Cuba	2000	2006	-	Apr	Sun>=1	0:00s	1:00	D
++Rule	Cuba	2000	2004	-	Apr	Sun>=1	0:00s	1:00	D
+ Rule	Cuba	2006	max	-	Oct	lastSun	0:00s	0	S
+ Rule	Cuba	2007	only	-	Mar	Sun>=8	0:00s	1:00	D
+-Rule	Cuba	2008	max	-	Mar	Sun>=15	0:00s	1:00	D
++Rule	Cuba	2008	only	-	Mar	Sun>=15	0:00s	1:00	D
++Rule	Cuba	2009	max	-	Mar	Sun>=8	0:00s	1:00	D
+ 
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ Zone	America/Havana	-5:29:28 -	LMT	1890
+diff -Naur timezone.old/pacificnew timezone/pacificnew
+--- timezone.old/pacificnew	2007-09-25 17:20:11.000000000 +0300
++++ timezone/pacificnew	2009-10-21 16:12:43.000000000 +0300
+@@ -1,4 +1,7 @@
+-# @(#)pacificnew	8.1
++# <pre>
++# @(#)pacificnew	8.2
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # From Arthur David Olson (1989-04-05):
+ # On 1989-04-05, the U. S. House of Representatives passed (238-154) a bill
+diff -Naur timezone.old/solar87 timezone/solar87
+--- timezone.old/solar87	2007-09-25 17:20:11.000000000 +0300
++++ timezone/solar87	2009-10-21 16:12:44.000000000 +0300
+@@ -1,4 +1,7 @@
+-# @(#)solar87	8.1
++# <pre>
++# @(#)solar87	8.2
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # So much for footnotes about Saudi Arabia.
+ # Apparent noon times below are for Riyadh; your mileage will vary.
+diff -Naur timezone.old/solar88 timezone/solar88
+--- timezone.old/solar88	2007-09-25 17:20:11.000000000 +0300
++++ timezone/solar88	2009-10-21 16:12:44.000000000 +0300
+@@ -1,4 +1,7 @@
+-# @(#)solar88	8.1
++# <pre>
++# @(#)solar88	8.2
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # Apparent noon times below are for Riyadh; they're a bit off for other places.
+ # Times were computed using formulas in the U.S. Naval Observatory's
+diff -Naur timezone.old/solar89 timezone/solar89
+--- timezone.old/solar89	2007-09-25 17:20:11.000000000 +0300
++++ timezone/solar89	2009-10-21 16:12:44.000000000 +0300
+@@ -1,4 +1,7 @@
+-# @(#)solar89	8.1
++# <pre>
++# @(#)solar89	8.2
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # Apparent noon times below are for Riyadh; they're a bit off for other places.
+ # Times were computed using a formula provided by the U. S. Naval Observatory:
+diff -Naur timezone.old/southamerica timezone/southamerica
+--- timezone.old/southamerica	2009-12-09 16:41:21.000000000 +0200
++++ timezone/southamerica	2009-10-23 22:05:27.000000000 +0300
+@@ -1,5 +1,7 @@
+-# @(#)southamerica	8.19
+ # <pre>
++# @(#)southamerica	8.40
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # This data is by no means authoritative; if you think you know better,
+ # go ahead and edit the file (and please send any changes to
+@@ -164,9 +166,72 @@
+ # From Paul Eggert (2007-12-22):
+ # For dates after mid-2008, the following rules are my guesses and
+ # are quite possibly wrong, but are more likely than no DST at all.
++
++# From Alexander Krivenyshev (2008-09-05):
++# As per message from Carlos Alberto Fonseca Arauz (Nicaragua),
++# Argentina will start DST on Sunday October 19, 2008.
++#
++# <a href="http://www.worldtimezone.com/dst_news/dst_news_argentina03.html">
++# http://www.worldtimezone.com/dst_news/dst_news_argentina03.html
++# </a>
++# OR
++# <a href="http://www.impulsobaires.com.ar/nota.php?id=57832 (in spanish)">
++# http://www.impulsobaires.com.ar/nota.php?id=57832 (in spanish)
++# </a>
++
++# From Rodrigo Severo (2008-10-06):
++# Here is some info available at a Gentoo bug related to TZ on Argentina's DST:
++# ...
++# ------- Comment #1 from [jmdocile]  2008-10-06 16:28 0000 -------
++# Hi, there is a problem with timezone-data-2008e and maybe with
++# timezone-data-2008f
++# Argentinian law [Number] 25.155 is no longer valid.
++# <a href="http://www.infoleg.gov.ar/infolegInternet/anexos/60000-64999/60036/norma.htm">
++# http://www.infoleg.gov.ar/infolegInternet/anexos/60000-64999/60036/norma.htm
++# </a>
++# The new one is law [Number] 26.350
++# <a href="http://www.infoleg.gov.ar/infolegInternet/anexos/135000-139999/136191/norma.htm">
++# http://www.infoleg.gov.ar/infolegInternet/anexos/135000-139999/136191/norma.htm
++# </a>
++# So there is no summer time in Argentina for now.
++
++# From Mariano Absatz (2008-10-20):
++# Decree 1693/2008 applies Law 26.350 for the summer 2008/2009 establishing DST in Argentina
++# From 2008-10-19 until 2009-03-15
++# <a href="http://www.boletinoficial.gov.ar/Bora.Portal/CustomControls/PdfContent.aspx?fp=16102008&pi=3&pf=4&s=0&sec=01">
++# http://www.boletinoficial.gov.ar/Bora.Portal/CustomControls/PdfContent.aspx?fp=16102008&pi=3&pf=4&s=0&sec=01
++# </a>
++#
++# Decree 1705/2008 excepting 12 Provinces from applying DST in the summer 2008/2009:
++# Catamarca, La Rioja, Mendoza, Salta, San Juan, San Luis, La Pampa, Neuquen, Rio Negro, Chubut, Santa Cruz
++# and Tierra del Fuego
++# <a href="http://www.boletinoficial.gov.ar/Bora.Portal/CustomControls/PdfContent.aspx?fp=17102008&pi=1&pf=1&s=0&sec=01">
++# http://www.boletinoficial.gov.ar/Bora.Portal/CustomControls/PdfContent.aspx?fp=17102008&pi=1&pf=1&s=0&sec=01
++# </a>
++#
++# Press release 235 dated Saturday October 18th, from the Government of the Province of Jujuy saying
++# it will not apply DST either (even when it was not included in Decree 1705/2008)
++# <a href="http://www.jujuy.gov.ar/index2/partes_prensa/18_10_08/235-181008.doc">
++# http://www.jujuy.gov.ar/index2/partes_prensa/18_10_08/235-181008.doc
++# </a>
++
++# From fullinet (2009-10-18):
++# As announced in
++# <a hef="http://www.argentina.gob.ar/argentina/portal/paginas.dhtml?pagina=356">
++# http://www.argentina.gob.ar/argentina/portal/paginas.dhtml?pagina=356
++# </a>
++# (an official .gob.ar) under title: "Sin Cambio de Hora" (english: "No hour change")
++#
++# "Por el momento, el Gobierno Nacional resolvio no modificar la hora
++# oficial, decision que estaba en estudio para su implementacion el
++# domingo 18 de octubre. Desde el Ministerio de Planificacion se anuncio
++# que la Argentina hoy, en estas condiciones meteorologicas, no necesita
++# la modificacion del huso horario, ya que 2009 nos encuentra con
++# crecimiento en la produccion y distribucion energetica."
++
+ Rule	Arg	2007	only	-	Dec	30	0:00	1:00	S
+-Rule	Arg	2008	max	-	Mar	Sun>=15	0:00	0	-
+-Rule	Arg	2008	max	-	Oct	Sun>=1	0:00	1:00	S
++Rule	Arg	2008	2009	-	Mar	Sun>=15	0:00	0	-
++Rule	Arg	2008	only	-	Oct	Sun>=15	0:00	1:00	S
+  
+ # From Mariano Absatz (2004-05-21):
+ # Today it was officially published that the Province of Mendoza is changing
+@@ -294,15 +359,84 @@
+ # back in 2004, when these provinces changed to UTC-4 for a few days, I
+ # mailed them personally and never got an answer).
+ 
+-# From Arthur David Olson (2008-03-15):
+-# Until there's better information, asssume San Luis was like San Juan
+-# rather than Mendoza (since San Juan has a simpler DST history).
+-
++# From Paul Eggert (2008-06-30):
+ # Unless otherwise specified, data are from Shanks & Pottenger through 1992,
+ # from the IATA otherwise.  As noted below, Shanks & Pottenger say that
+-# America/Cordoba split into 6 subregions during 1991/1992, but we
+-# haven't verified this yet so for now we'll keep it a single region.
+-#
++# America/Cordoba split into 6 subregions during 1991/1992, one of which
++# was America/San_Luis, but we haven't verified this yet so for now we'll
++# keep America/Cordoba a single region rather than splitting it into the
++# other 5 subregions.
++
++# From Mariano Absatz (2009-03-13):
++# Yesterday (with our usual 2-day notice) the Province of San Luis
++# decided that next Sunday instead of "staying" @utc-03:00 they will go
++# to utc-04:00 until the second Saturday in October...
++#
++# The press release is at
++# <a href="http://www.sanluis.gov.ar/SL/Paginas/NoticiaDetalle.asp?TemaId=1&InfoPrensaId=3102">
++# http://www.sanluis.gov.ar/SL/Paginas/NoticiaDetalle.asp?TemaId=1&InfoPrensaId=3102
++# </a>
++# (I couldn't find the decree, but
++# <a href="http://www.sanluis.gov.ar">
++# www.sanluis.gov.ar
++# <a/>
++# is the official page for the Province Government).
++#
++# There's also a note in only one of the major national papers (La Nación) at
++# <a href="http://www.lanacion.com.ar/nota.asp?nota_id=1107912">
++# http://www.lanacion.com.ar/nota.asp?nota_id=1107912
++# </a>
++# 
++# The press release says:
++#  (...) anunció que el próximo domingo a las 00:00 los puntanos deberán
++# atrasar una hora sus relojes.
++#
++# A partir de entonces, San Luis establecerá el huso horario propio de
++# la Provincia. De esta manera, durante el periodo del calendario anual
++# 2009, el cambio horario quedará comprendido entre las 00:00 del tercer
++# domingo de marzo y las 24:00 del segundo sábado de octubre.
++# Quick&dirty translation
++# (...) announced that next Sunday, at 00:00, Puntanos (the San Luis
++# inhabitants) will have to turn back one hour their clocks
++#
++# Since then, San Luis will establish its own Province timezone. Thus,
++# during 2009, this timezone change will run from 00:00 the third Sunday
++# in March until 24:00 of the second Saturday in October.
++
++# From Mariano Absatz (2009-10-16):
++# ...the Province of San Luis is a case in itself.
++#
++# The Law at
++# <a href="http://www.diputadossanluis.gov.ar/diputadosasp/paginas/verNorma.asp?NormaID=276>"
++# http://www.diputadossanluis.gov.ar/diputadosasp/paginas/verNorma.asp?NormaID=276
++# </a>
++# is ambiguous because establishes a calendar from the 2nd Sunday in
++# October at 0:00 thru the 2nd Saturday in March at 24:00 and the
++# complement of that starting on the 2nd Sunday of March at 0:00 and
++# ending on the 2nd Saturday of March at 24:00.
++#
++# This clearly breaks every time the 1st of March or October is a Sunday.
++#
++# IMHO, the "spirit of the Law" is to make the changes at 0:00 on the 2nd
++# Sunday of October and March.
++#
++# The problem is that the changes in the rest of the Provinces that did
++# change in 2007/2008, were made according to the Federal Law and Decrees
++# that did so on the 3rd Sunday of October and March.
++#
++# In fact, San Luis actually switched from UTC-4 to UTC-3 last Sunday
++# (October 11th) at 0:00.
++#
++# So I guess a new set of rules, besides "Arg", must be made and the last
++# America/Argentina/San_Luis entries should change to use these...
++#
++# I'm enclosing a patch that does what I say... regretfully, the San Luis
++# timezone must be called "WART/WARST" even when most of the time (like,
++# right now) WARST == ART... that is, since last Sunday, all the country
++# is using UTC-3, but in my patch, San Luis calls it "WARST" and the rest
++# of the country calls it "ART".
++# ...
++
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ #
+ # Buenos Aires (BA), Capital Federal (CF),
+@@ -314,16 +448,13 @@
+ 			-4:00	Arg	AR%sT	2000 Mar  3
+ 			-3:00	Arg	AR%sT
+ #
+-# Santa Fe (SF), Entre Rios (ER), Corrientes (CN), Misiones (MN), Chaco (CC),
+-# Formosa (FM), Salta (SA), Santiago del Estero (SE), Cordoba (CB),
+-# San Luis (SL), La Pampa (LP), Neuquen (NQ), Rio Negro (RN)
++# Cordoba (CB), Santa Fe (SF), Entre Rios (ER), Corrientes (CN), Misiones (MN),
++# Chaco (CC), Formosa (FM), Santiago del Estero (SE)
+ #
+ # Shanks & Pottenger also make the following claims, which we haven't verified:
+ # - Formosa switched to -3:00 on 1991-01-07.
+ # - Misiones switched to -3:00 on 1990-12-29.
+ # - Chaco switched to -3:00 on 1991-01-04.
+-# - San Luis switched to -4:00 on 1990-03-14, then to -3:00 on 1990-10-15,
+-#   then to -4:00 on 1991-03-01, then to -3:00 on 1991-06-01.
+ # - Santiago del Estero switched to -4:00 on 1991-04-01,
+ #   then to -3:00 on 1991-04-26.
+ #
+@@ -337,6 +468,18 @@
+ 			-4:00	Arg	AR%sT	2000 Mar  3
+ 			-3:00	Arg	AR%sT
+ #
++# Salta (SA), La Pampa (LP), Neuquen (NQ), Rio Negro (RN)
++Zone America/Argentina/Salta -4:21:40 - LMT	1894 Oct 31
++			-4:16:48 -	CMT	1920 May
++			-4:00	-	ART	1930 Dec
++			-4:00	Arg	AR%sT	1969 Oct  5
++			-3:00	Arg	AR%sT	1991 Mar  3
++			-4:00	-	WART	1991 Oct 20
++			-3:00	Arg	AR%sT	1999 Oct  3
++			-4:00	Arg	AR%sT	2000 Mar  3
++			-3:00	Arg	AR%sT	2008 Oct 18
++			-3:00	-	ART
++#
+ # Tucuman (TM)
+ Zone America/Argentina/Tucuman -4:20:52 - LMT	1894 Oct 31
+ 			-4:16:48 -	CMT	1920 May
+@@ -361,7 +504,8 @@
+ 			-4:00	Arg	AR%sT	2000 Mar  3
+ 			-3:00	-	ART	2004 Jun  1
+ 			-4:00	-	WART	2004 Jun 20
+-			-3:00	Arg	AR%sT
++			-3:00	Arg	AR%sT	2008 Oct 18
++			-3:00	-	ART
+ #
+ # San Juan (SJ)
+ Zone America/Argentina/San_Juan -4:34:04 - LMT	1894 Oct 31
+@@ -374,7 +518,8 @@
+ 			-4:00	Arg	AR%sT	2000 Mar  3
+ 			-3:00	-	ART	2004 May 31
+ 			-4:00	-	WART	2004 Jul 25
+-			-3:00	Arg	AR%sT
++			-3:00	Arg	AR%sT	2008 Oct 18
++			-3:00	-	ART
+ #
+ # Jujuy (JY)
+ Zone America/Argentina/Jujuy -4:21:12 -	LMT	1894 Oct 31
+@@ -388,7 +533,8 @@
+ 			-3:00	1:00	ARST	1992
+ 			-3:00	Arg	AR%sT	1999 Oct  3
+ 			-4:00	Arg	AR%sT	2000 Mar  3
+-			-3:00	Arg	AR%sT
++			-3:00	Arg	AR%sT	2008 Oct 18
++			-3:00	-	ART
+ #
+ # Catamarca (CT), Chubut (CH)
+ Zone America/Argentina/Catamarca -4:23:08 - LMT	1894 Oct 31
+@@ -401,7 +547,8 @@
+ 			-4:00	Arg	AR%sT	2000 Mar  3
+ 			-3:00	-	ART	2004 Jun  1
+ 			-4:00	-	WART	2004 Jun 20
+-			-3:00	Arg	AR%sT
++			-3:00	Arg	AR%sT	2008 Oct 18
++			-3:00	-	ART
+ #
+ # Mendoza (MZ)
+ Zone America/Argentina/Mendoza -4:35:16 - LMT	1894 Oct 31
+@@ -418,21 +565,29 @@
+ 			-4:00	Arg	AR%sT	2000 Mar  3
+ 			-3:00	-	ART	2004 May 23
+ 			-4:00	-	WART	2004 Sep 26
+-			-3:00	Arg	AR%sT
++			-3:00	Arg	AR%sT	2008 Oct 18
++			-3:00	-	ART
+ #
+ # San Luis (SL)
++
++Rule	SanLuis	2008	max	-	Mar	Sun>=8	0:00	0	-
++Rule	SanLuis	2007	max	-	Oct	Sun>=8	0:00	1:00	S
++
+ Zone America/Argentina/San_Luis -4:25:24 - LMT	1894 Oct 31
+ 			-4:16:48 -	CMT	1920 May
+ 			-4:00	-	ART	1930 Dec
+ 			-4:00	Arg	AR%sT	1969 Oct  5
+-			-3:00	Arg	AR%sT	1991 Mar  1
+-			-4:00	-	WART	1991 May  7
+-			-3:00	Arg	AR%sT	1999 Oct  3
+-			-4:00	Arg	AR%sT	2000 Mar  3
++			-3:00	Arg	AR%sT	1990
++			-3:00	1:00	ARST	1990 Mar 14
++			-4:00	-	WART	1990 Oct 15
++			-4:00	1:00	WARST	1991 Mar  1
++			-4:00	-	WART	1991 Jun  1
++			-3:00	-	ART	1999 Oct  3
++			-4:00	1:00	WARST	2000 Mar  3
+ 			-3:00	-	ART	2004 May 31
+ 			-4:00	-	WART	2004 Jul 25
+ 			-3:00	Arg	AR%sT	2008 Jan 21
+-			-3:00	-	ART
++			-4:00	SanLuis	WAR%sT
+ #
+ # Santa Cruz (SC)
+ Zone America/Argentina/Rio_Gallegos -4:36:52 - LMT 1894 Oct 31
+@@ -443,7 +598,8 @@
+ 			-4:00	Arg	AR%sT	2000 Mar  3
+ 			-3:00	-	ART	2004 Jun  1
+ 			-4:00	-	WART	2004 Jun 20
+-			-3:00	Arg	AR%sT
++			-3:00	Arg	AR%sT	2008 Oct 18
++			-3:00	-	ART
+ #
+ # Tierra del Fuego, Antartida e Islas del Atlantico Sur (TF)
+ Zone America/Argentina/Ushuaia -4:33:12 - LMT 1894 Oct 31
+@@ -454,7 +610,8 @@
+ 			-4:00	Arg	AR%sT	2000 Mar  3
+ 			-3:00	-	ART	2004 May 30
+ 			-4:00	-	WART	2004 Jun 20
+-			-3:00	Arg	AR%sT
++			-3:00	Arg	AR%sT	2008 Oct 18
++			-3:00	-	ART
+ 
+ # Aruba
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+@@ -540,12 +697,86 @@
+ # Brazil will start DST on 2007-10-14 00:00 and end on 2008-02-17 00:00:
+ # http://www.mme.gov.br/site/news/detail.do;jsessionid=BBA06811AFCAAC28F0285210913513DA?newsId=13975
+ 
++# From Paul Schulze (2008-06-24):
++# ...by law number 11.662 of April 24, 2008 (published in the "Diario
++# Oficial da Uniao"...) in Brazil there are changes in the timezones,
++# effective today (00:00am at June 24, 2008) as follows:
++#
++# a) The timezone UTC+5 is e[x]tinguished, with all the Acre state and the
++# part of the Amazonas state that had this timezone now being put to the
++# timezone UTC+4
++# b) The whole Para state now is put at timezone UTC+3, instead of just
++# part of it, as was before.
++#
++# This change follows a proposal of senator Tiao Viana of Acre state, that
++# proposed it due to concerns about open television channels displaying
++# programs inappropriate to youths in the states that had the timezone
++# UTC+5 too early in the night. In the occasion, some more corrections
++# were proposed, trying to unify the timezones of any given state. This
++# change modifies timezone rules defined in decree 2.784 of 18 June,
++# 1913.
++
++# From Rodrigo Severo (2008-06-24):
++# Just correcting the URL:
++# <a href="https://www.in.gov.br/imprensa/visualiza/index.jsp?jornal=do&secao=1&pagina=1&data=25/04/2008">
++# https://www.in.gov.br/imprensa/visualiza/index.jsp?jornal=do&secao=1&pagina=1&data=25/04/2008
++# </a>
++#
++# As a result of the above Decree I believe the America/Rio_Branco
++# timezone shall be modified from UTC-5 to UTC-4 and a new timezone shall
++# be created to represent the the west side of the Para State. I
++# suggest this new timezone be called Santarem as the most
++# important/populated city in the affected area.
++#
++# This new timezone would be the same as the Rio_Branco timezone up to
++# the 2008/06/24 change which would be to UTC-3 instead of UTC-4.
++
++# From Alex Krivenyshev (2008-06-24):
++# This is a quick reference page for New and Old Brazil Time Zones map.
++# <a href="http://www.worldtimezone.com/brazil-time-new-old.php">
++# http://www.worldtimezone.com/brazil-time-new-old.php
++# </a>
++#
++# - 4 time zones replaced by 3 time zones-eliminating time zone UTC- 05
++# (state Acre and the part of the Amazonas will be UTC/GMT- 04) - western
++# part of Par state is moving to one timezone UTC- 03 (from UTC -04).
++
+ # From Paul Eggert (2002-10-10):
+ # The official decrees referenced below are mostly taken from
+ # <a href="http://pcdsh01.on.br/DecHV.html">
+ # Decretos sobre o Horario de Verao no Brasil
+ # </a>.
+ 
++# From Steffen Thorsen (2008-08-29):
++# As announced by the government and many newspapers in Brazil late
++# yesterday, Brazil will start DST on 2008-10-19 (need to change rule) and
++# it will end on 2009-02-15 (current rule for Brazil is fine). Based on
++# past years experience with the elections, there was a good chance that
++# the start was postponed to November, but it did not happen this year.
++#
++# It has not yet been posted to http://pcdsh01.on.br/DecHV.html
++#
++# An official page about it:
++# <a href="http://www.mme.gov.br/site/news/detail.do?newsId=16722">
++# http://www.mme.gov.br/site/news/detail.do?newsId=16722
++# </a>
++# Note that this link does not always work directly, but must be accessed
++# by going to
++# <a href="http://www.mme.gov.br/first">
++# http://www.mme.gov.br/first
++# </a>
++#
++# One example link that works directly:
++# <a href="http://jornale.com.br/index.php?option=com_content&task=view&id=13530&Itemid=54">
++# http://jornale.com.br/index.php?option=com_content&task=view&id=13530&Itemid=54
++# (Portuguese)
++# </a>
++#
++# We have a written a short article about it as well:
++# <a href="http://www.timeanddate.com/news/time/brazil-dst-2008-2009.html">
++# http://www.timeanddate.com/news/time/brazil-dst-2008-2009.html
++# </a>
++
+ # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+ # Decree <a href="http://pcdsh01.on.br/HV20466.htm">20,466</a> (1931-10-01)
+ # Decree <a href="http://pcdsh01.on.br/HV21896.htm">21,896</a> (1932-01-10)
+@@ -662,13 +893,13 @@
+ Rule	Brazil	2000	2001	-	Oct	Sun>=8	 0:00	1:00	S
+ Rule	Brazil	2001	2006	-	Feb	Sun>=15	 0:00	0	-
+ # Decree 4,399 (2002-10-01) repeals DST in AL, CE, MA, PB, PE, PI, RN, SE.
+-# <a href="http://www.presidencia.gov.br/CCIVIL/decreto/2002/D4399.htm"></a>
++# <a href="http://www.presidencia.gov.br/CCIVIL/decreto/2002/D4399.htm">4,399</a>
+ Rule	Brazil	2002	only	-	Nov	 3	 0:00	1:00	S
+ # Decree 4,844 (2003-09-24; corrected 2003-09-26) repeals DST in BA, MT, TO.
+-# <a href="http://www.presidencia.gov.br/CCIVIL/decreto/2003/D4844.htm"></a>
++# <a href="http://www.presidencia.gov.br/CCIVIL/decreto/2003/D4844.htm">4,844</a>
+ Rule	Brazil	2003	only	-	Oct	19	 0:00	1:00	S
+ # Decree 5,223 (2004-10-01) reestablishes DST in MT.
+-# <a href="http://www.planalto.gov.br/ccivil_03/_Ato2004-2006/2004/Decreto/D5223.htm"></a>
++# <a href="http://www.planalto.gov.br/ccivil_03/_Ato2004-2006/2004/Decreto/D5223.htm">5,223</a>
+ Rule	Brazil	2004	only	-	Nov	 2	 0:00	1:00	S
+ # Decree <a href="http://pcdsh01.on.br/DecHV5539.gif">5,539</a> (2005-09-19),
+ # adopted by the same states as before.
+@@ -677,16 +908,36 @@
+ # adopted by the same states as before.
+ Rule	Brazil	2006	only	-	Nov	 5	 0:00	1:00	S
+ Rule	Brazil	2007	only	-	Feb	25	 0:00	0	-
+-# (Decree number not yet known)
+-# http://www.brasil.gov.br/noticias/ultimas_noticias/horario_verao070920/
+-# (2007-09-20) after a heads-up from Steffen Thorsen:
+-Rule	Brazil	2007	max	-	Oct	Sun>=8	 0:00	1:00	S
+-Rule	Brazil	2008	max	-	Feb	Sun>=15	 0:00	0	-
++# Decree <a href="http://pcdsh01.on.br/DecHV6212.gif">6,212</a> (2007-09-26),
++# adopted by the same states as before.
++Rule	Brazil	2007	only	-	Oct	Sun>=8	 0:00	1:00	S
++# From Frederico A. C. Neves (2008-09-10):
++# Acording to this decree
++# <a href="http://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2008/Decreto/D6558.htm">
++# http://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2008/Decreto/D6558.htm
++# </a>
++# [t]he DST period in Brazil now on will be from the 3rd Oct Sunday to the
++# 3rd Feb Sunday. There is an exception on the return date when this is
++# the Carnival Sunday then the return date will be the next Sunday...
++Rule	Brazil	2008	max	-	Oct	Sun>=15	0:00	1:00	S
++Rule	Brazil	2008	2011	-	Feb	Sun>=15	0:00	0	-
++Rule	Brazil	2012	only	-	Feb	Sun>=22	0:00	0	-
++Rule	Brazil	2013	2014	-	Feb	Sun>=15	0:00	0	-
++Rule	Brazil	2015	only	-	Feb	Sun>=22	0:00	0	-
++Rule	Brazil	2016	2022	-	Feb	Sun>=15	0:00	0	-
++Rule	Brazil	2023	only	-	Feb	Sun>=22	0:00	0	-
++Rule	Brazil	2024	2025	-	Feb	Sun>=15	0:00	0	-
++Rule	Brazil	2026	only	-	Feb	Sun>=22	0:00	0	-
++Rule	Brazil	2027	2033	-	Feb	Sun>=15	0:00	0	-
++Rule	Brazil	2034	only	-	Feb	Sun>=22	0:00	0	-
++Rule	Brazil	2035	2036	-	Feb	Sun>=15	0:00	0	-
++Rule	Brazil	2037	only	-	Feb	Sun>=22	0:00	0	-
++# From Arthur David Olson (2008-09-29):
++# The next is wrong in some years but is better than nothing.
++Rule	Brazil	2038	max	-	Feb	Sun>=15	0:00	0	-
++
+ # The latest ruleset listed above says that the following states observe DST:
+ # DF, ES, GO, MG, MS, MT, PR, RJ, RS, SC, SP.
+-# For dates after mid-2008, the above rules with TO="max" are guesses
+-# and are quite possibly wrong, but are more likely than no DST at all.
+-
+ 
+ # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+ #
+@@ -713,6 +964,13 @@
+ 			-3:00	Brazil	BR%sT	1988 Sep 12
+ 			-3:00	-	BRT
+ #
++# west Para (PA)
++# West Para includes Altamira, Oribidos, Prainha, Oriximina, and Santarem.
++Zone America/Santarem	-3:38:48 -	LMT	1914
++			-4:00	Brazil	AM%sT	1988 Sep 12
++			-4:00	-	AMT	2008 Jun 24 00:00
++			-3:00	-	BRT
++#
+ # Maranhao (MA), Piaui (PI), Ceara (CE), Rio Grande do Norte (RN),
+ # Paraiba (PB)
+ Zone America/Fortaleza	-2:34:00 -	LMT	1914
+@@ -775,8 +1033,7 @@
+ 			-4:00	-	AMT	2004 Oct  1
+ 			-4:00	Brazil	AM%sT
+ #
+-# west Para (PA), Rondonia (RO)
+-# West Para includes Altamira, Oribidos, Prainha, Oriximina, and Santarem.
++# Rondonia (RO)
+ Zone America/Porto_Velho -4:15:36 -	LMT	1914
+ 			-4:00	Brazil	AM%sT	1988 Sep 12
+ 			-4:00	-	AMT
+@@ -803,13 +1060,14 @@
+ 			-5:00	Brazil	AC%sT	1988 Sep 12
+ 			-5:00	-	ACT	1993 Sep 28
+ 			-5:00	Brazil	AC%sT	1994 Sep 22
+-			-5:00	-	ACT
++			-5:00	-	ACT	2008 Jun 24 00:00
++			-4:00	-	AMT
+ #
+ # Acre (AC)
+ Zone America/Rio_Branco	-4:31:12 -	LMT	1914
+ 			-5:00	Brazil	AC%sT	1988 Sep 12
+-			-5:00	-	ACT
+-
++			-5:00	-	ACT	2008 Jun 24 00:00
++			-4:00	-	AMT
+ 
+ # Chile
+ 
+@@ -856,7 +1114,7 @@
+ # http://www.horaoficial.cl/cambio.htm
+ # </a>.
+ 
+-# From José Miguel Garrido (2008-03-05):
++# From Jose Miguel Garrido (2008-03-05):
+ # ...
+ # You could see the announces of the change on 
+ # <a href="http://www.shoa.cl/noticias/2008/04hora/hora.htm">
+diff -Naur timezone.old/systemv timezone/systemv
+--- timezone.old/systemv	2007-09-25 17:20:11.000000000 +0300
++++ timezone/systemv	2009-10-21 16:12:44.000000000 +0300
+@@ -1,4 +1,7 @@
+-# @(#)systemv	8.1
++# <pre>
++# @(#)systemv	8.2
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ 
+ # Old rules, should the need arise.
+ # No attempt is made to handle Newfoundland, since it cannot be expressed
+diff -Naur timezone.old/yearistype.sh timezone/yearistype.sh
+--- timezone.old/yearistype.sh	1970-01-01 02:00:00.000000000 +0200
++++ timezone/yearistype.sh	2009-10-21 16:12:44.000000000 +0300
+@@ -0,0 +1,40 @@
++#! /bin/sh
++
++: 'This file is in the public domain, so clarified as of'
++: '2006-07-17 by Arthur David Olson.'
++
++: '@(#)yearistype.sh	8.2'
++
++case $#-$1 in
++	2-|2-0*|2-*[!0-9]*)
++		echo "$0: wild year - $1" >&2
++		exit 1 ;;
++esac
++
++case $#-$2 in
++	2-even)
++		case $1 in
++			*[24680])			exit 0 ;;
++			*)				exit 1 ;;
++		esac ;;
++	2-nonpres|2-nonuspres)
++		case $1 in
++			*[02468][048]|*[13579][26])	exit 1 ;;
++			*)				exit 0 ;;
++		esac ;;
++	2-odd)
++		case $1 in
++			*[13579])			exit 0 ;;
++			*)				exit 1 ;;
++		esac ;;
++	2-uspres)
++		case $1 in
++			*[02468][048]|*[13579][26])	exit 0 ;;
++			*)				exit 1 ;;
++		esac ;;
++	2-*)
++		echo "$0: wild type - $2" >&2 ;;
++esac
++
++echo "$0: usage is $0 year even|odd|uspres|nonpres|nonuspres" >&2
++exit 1
+diff -Naur timezone.old/zone.tab timezone/zone.tab
+--- timezone.old/zone.tab	2009-12-09 16:41:21.000000000 +0200
++++ timezone/zone.tab	2009-10-29 13:12:00.000000000 +0200
+@@ -1,4 +1,7 @@
+-# @(#)zone.tab	8.16
++# <pre>
++# @(#)zone.tab	8.29
++# This file is in the public domain, so clarified as of
++# 2009-05-17 by Arthur David Olson.
+ #
+ # TZ zone descriptions
+ #
+@@ -42,14 +45,15 @@
+ AQ	-6640+14001	Antarctica/DumontDUrville	Dumont-d'Urville Station, Terre Adelie
+ AQ	-690022+0393524	Antarctica/Syowa	Syowa Station, E Ongul I
+ AR	-3436-05827	America/Argentina/Buenos_Aires	Buenos Aires (BA, CF)
+-AR	-3124-06411	America/Argentina/Cordoba	most locations (CB, CC, CN, ER, FM, LP, MN, NQ, RN, SA, SE, SF)
+-AR	-3319-06621	America/Argentina/San_Luis	San Luis (SL)
++AR	-3124-06411	America/Argentina/Cordoba	most locations (CB, CC, CN, ER, FM, MN, SE, SF)
++AR	-2447-06525	America/Argentina/Salta	(SA, LP, NQ, RN)
+ AR	-2411-06518	America/Argentina/Jujuy	Jujuy (JY)
+ AR	-2649-06513	America/Argentina/Tucuman	Tucuman (TM)
+ AR	-2828-06547	America/Argentina/Catamarca	Catamarca (CT), Chubut (CH)
+ AR	-2926-06651	America/Argentina/La_Rioja	La Rioja (LR)
+ AR	-3132-06831	America/Argentina/San_Juan	San Juan (SJ)
+ AR	-3253-06849	America/Argentina/Mendoza	Mendoza (MZ)
++AR	-3319-06621	America/Argentina/San_Luis	San Luis (SL)
+ AR	-5138-06913	America/Argentina/Rio_Gallegos	Santa Cruz (SC)
+ AR	-5448-06818	America/Argentina/Ushuaia	Tierra del Fuego (TF)
+ AS	-1416-17042	Pacific/Pago_Pago
+@@ -92,14 +96,15 @@
+ BR	-2332-04637	America/Sao_Paulo	S & SE Brazil (GO, DF, MG, ES, RJ, SP, PR, SC, RS)
+ BR	-2027-05437	America/Campo_Grande	Mato Grosso do Sul
+ BR	-1535-05605	America/Cuiaba	Mato Grosso
+-BR	-0846-06354	America/Porto_Velho	W Para, Rondonia
++BR	-0226-05452	America/Santarem	W Para
++BR	-0846-06354	America/Porto_Velho	Rondonia
+ BR	+0249-06040	America/Boa_Vista	Roraima
+ BR	-0308-06001	America/Manaus	E Amazonas
+ BR	-0640-06952	America/Eirunepe	W Amazonas
+ BR	-0958-06748	America/Rio_Branco	Acre
+ BS	+2505-07721	America/Nassau
+ BT	+2728+08939	Asia/Thimphu
+-BW	-2545+02555	Africa/Gaborone
++BW	-2439+02555	Africa/Gaborone
+ BY	+5354+02734	Europe/Minsk
+ BZ	+1730-08812	America/Belize
+ CA	+4734-05243	America/St_Johns	Newfoundland Time, including SE Labrador
+@@ -114,7 +119,7 @@
+ CA	+4823-08915	America/Thunder_Bay	Eastern Time - Thunder Bay, Ontario
+ CA	+6344-06828	America/Iqaluit	Eastern Time - east Nunavut - most locations
+ CA	+6608-06544	America/Pangnirtung	Eastern Time - Pangnirtung, Nunavut
+-CA	+744144-0944945	America/Resolute	Eastern Time - Resolute, Nunavut
++CA	+744144-0944945	America/Resolute	Eastern Standard Time - Resolute, Nunavut
+ CA	+484531-0913718	America/Atikokan	Eastern Standard Time - Atikokan, Ontario and Southampton I, Nunavut
+ CA	+624900-0920459	America/Rankin_Inlet	Central Time - central Nunavut
+ CA	+4953-09709	America/Winnipeg	Central Time - Manitoba & west Ontario
+@@ -283,16 +288,16 @@
+ MY	+0133+11020	Asia/Kuching	Sabah & Sarawak
+ MZ	-2558+03235	Africa/Maputo
+ NA	-2234+01706	Africa/Windhoek
+-NC	-2216+16530	Pacific/Noumea
++NC	-2216+16627	Pacific/Noumea
+ NE	+1331+00207	Africa/Niamey
+ NF	-2903+16758	Pacific/Norfolk
+ NG	+0627+00324	Africa/Lagos
+ NI	+1209-08617	America/Managua
+ NL	+5222+00454	Europe/Amsterdam
+ NO	+5955+01045	Europe/Oslo
+-NP	+2743+08519	Asia/Katmandu
++NP	+2743+08519	Asia/Kathmandu
+ NR	-0031+16655	Pacific/Nauru
+-NU	-1901+16955	Pacific/Niue
++NU	-1901-16955	Pacific/Niue
+ NZ	-3652+17446	Pacific/Auckland	most locations
+ NZ	-4357-17633	Pacific/Chatham	Chatham Islands
+ OM	+2336+05835	Asia/Muscat
+@@ -325,6 +330,7 @@
+ RU	+5651+06036	Asia/Yekaterinburg	Moscow+02 - Urals
+ RU	+5500+07324	Asia/Omsk	Moscow+03 - west Siberia
+ RU	+5502+08255	Asia/Novosibirsk	Moscow+03 - Novosibirsk
++RU	+5345+08707	Asia/Novokuznetsk	Moscow+03 - Novokuznetsk
+ RU	+5601+09250	Asia/Krasnoyarsk	Moscow+04 - Yenisei River
+ RU	+5216+10420	Asia/Irkutsk	Moscow+05 - Lake Baikal
+ RU	+6200+12940	Asia/Yakutsk	Moscow+06 - Lena River
+@@ -363,7 +369,7 @@
+ TL	-0833+12535	Asia/Dili
+ TM	+3757+05823	Asia/Ashgabat
+ TN	+3648+01011	Africa/Tunis
+-TO	-2110+17510	Pacific/Tongatapu
++TO	-2110-17510	Pacific/Tongatapu
+ TR	+4101+02858	Europe/Istanbul
+ TT	+1039-06131	America/Port_of_Spain
+ TV	-0831+17913	Pacific/Funafuti
+@@ -383,13 +389,13 @@
+ US	+364947-0845057	America/Kentucky/Monticello	Eastern Time - Kentucky - Wayne County
+ US	+394606-0860929	America/Indiana/Indianapolis	Eastern Time - Indiana - most locations
+ US	+384038-0873143	America/Indiana/Vincennes	Eastern Time - Indiana - Daviess, Dubois, Knox & Martin Counties
+-US	+411745-0863730	America/Indiana/Knox	Eastern Time - Indiana - Starke County
+ US	+410305-0863611	America/Indiana/Winamac	Eastern Time - Indiana - Pulaski County
+ US	+382232-0862041	America/Indiana/Marengo	Eastern Time - Indiana - Crawford County
++US	+382931-0871643	America/Indiana/Petersburg	Eastern Time - Indiana - Pike County
+ US	+384452-0850402	America/Indiana/Vevay	Eastern Time - Indiana - Switzerland County
+ US	+415100-0873900	America/Chicago	Central Time
+ US	+375711-0864541	America/Indiana/Tell_City	Central Time - Indiana - Perry County
+-US	+382931-0871643	America/Indiana/Petersburg	Central Time - Indiana - Pike County
++US	+411745-0863730	America/Indiana/Knox	Central Time - Indiana - Starke County
+ US	+450628-0873651	America/Menominee	Central Time - Michigan - Dickinson, Gogebic, Iron & Menominee Counties
+ US	+470659-1011757	America/North_Dakota/Center	Central Time - North Dakota - Oliver County
+ US	+465042-1012439	America/North_Dakota/New_Salem	Central Time - North Dakota - Morton County (except Mandan area)
+@@ -407,7 +413,7 @@
+ UY	-3453-05611	America/Montevideo
+ UZ	+3940+06648	Asia/Samarkand	west Uzbekistan
+ UZ	+4120+06918	Asia/Tashkent	east Uzbekistan
+-VA	+4154+01227	Europe/Vatican
++VA	+415408+0122711	Europe/Vatican
+ VC	+1309-06114	America/St_Vincent
+ VE	+1030-06656	America/Caracas
+ VG	+1827-06437	America/Tortola

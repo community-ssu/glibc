@@ -1,0 +1,39 @@
+#! /bin/sh -e
+## 99-unnamed.dpatch by Yauheni Kaliuta <y.kaliuta@gmail.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+if [ $# -lt 1 ]; then
+    echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+    exit 1
+fi
+
+[ -f debian/patches/00patch-opts ] && . debian/patches/00patch-opts
+patch_opts="${patch_opts:--f --no-backup-if-mismatch} ${2:+-d $2}"
+
+case "$1" in
+    -patch) patch -p1 ${patch_opts} < $0;;
+    -unpatch) patch -R -p1 ${patch_opts} < $0;;
+    *)
+        echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+        exit 1;;
+esac
+
+exit 0
+
+@DPATCH@
+--- glibc-2.5.orig/elf/do-lookup.h	2006-09-04 23:40:11.000000000 +0300
++++ glibc-2.5/elf/do-lookup.h	2006-12-18 16:18:57.000000000 +0200
+@@ -87,7 +87,10 @@
+ 	     entries (and STT_TLS if TLS is supported) since these
+ 	     are no code/data definitions.  */
+ 	  return NULL;
+-
++        
++	if ((SHN_UNDEF == sym->st_shndx) && (1 == sym->st_value))
++		           return NULL;
++	
+ 	if (sym != ref && strcmp (strtab + sym->st_name, undef_name))
+ 	  /* Not the symbol we are looking for.  */
+ 	  return NULL;

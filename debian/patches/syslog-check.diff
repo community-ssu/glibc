@@ -1,0 +1,77 @@
+#! /bin/sh -e
+
+# All lines beginning with `# DP:' are a description of the patch.
+# DP: Checks is syslog installed before trying to process any syslog calls
+
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p0 < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p0 < $0;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+--- misc/syslog.c.orig	2007-09-25 17:19:59.000000000 +0300
++++ misc/syslog.c	2009-07-03 13:09:15.000000000 +0300
+@@ -71,6 +71,19 @@
+ static int	LogMask = 0xff;		/* mask of priorities to be logged */
+ extern char	*__progname;		/* Program name, from crt0. */
+ 
++#ifndef __MAEMO__
++#define __MAEMO__ 1
++#endif
++
++#if __MAEMO__
++/*
++ * Maemo addition: check presence of syslogd binary
++ * If not installed or not runnable, syslog() returns instantly
++ */
++static int syslogd_installed = -1;
++#define SYSLOGD_BINARY "/sbin/syslogd"
++#endif /* __MAEMO__ */
++
+ /* Define the lock.  */
+ __libc_lock_define_initialized (static, syslog_lock)
+ 
+@@ -149,6 +162,21 @@
+ 	int saved_errno = errno;
+ 	char failbuf[3 * sizeof (pid_t) + sizeof "out of memory []"];
+ 
++#if __MAEMO__
++	if (syslogd_installed == 0) {
++	    return;
++	}
++        else if (syslogd_installed == -1) {
++          if (access(SYSLOGD_BINARY, R_OK | X_OK)) {
++            syslogd_installed = 0;
++            return;
++          }
++          else {
++            syslogd_installed = 1;
++          }
++	}
++#endif /* __MAEMO__ */
++
+ #define	INTERNALLOG	LOG_ERR|LOG_CONS|LOG_PERROR|LOG_PID
+ 	/* Check for invalid bits. */
+ 	if (pri & ~(LOG_PRIMASK|LOG_FACMASK)) {
+@@ -338,6 +366,13 @@
+ 	if (ident != NULL)
+ 		LogTag = ident;
+ 	LogStat = logstat;
++#if __MAEMO__
++	/*
++	 * Maemo override: always have LOG_PERROR cleared.
++	 * writev to stderr may block.
++	 */
++	LogStat &= ~LOG_PERROR;
++#endif /* __MAEMO__ */
+ 	if (logfac != 0 && (logfac &~ LOG_FACMASK) == 0)
+ 		LogFacility = logfac;
+ 

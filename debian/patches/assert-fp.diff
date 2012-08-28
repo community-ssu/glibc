@@ -1,0 +1,35 @@
+#! /bin/sh -e
+
+# All lines beginning with `## DP:' are a description of the patch.
+# DP: Compile __assert.c, assert-perr.c and assert.c with 
+# DP: -O0 and __OPTIMIZE__
+
+if [ $# -lt 1 ]; then
+    echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+    exit 1
+fi
+
+[ -f debian/patches/00patch-opts ] && . debian/patches/00patch-opts
+patch_opts="${patch_opts:--f --no-backup-if-mismatch} ${2:+-d $2}"
+
+case "$1" in
+    -patch) patch -p0 ${patch_opts} < $0;;
+    -unpatch) patch -R -p0 ${patch_opts} < $0;;
+    *)
+        echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+        exit 1;;
+esac
+
+exit 0
+
+--- assert/Makefile~	2005-01-20 04:18:22.000000000 +0200
++++ assert/Makefile	2006-07-19 09:06:46.000000000 +0300
+@@ -29,3 +29,8 @@
+ 
+ test-assert-ENV = LANGUAGE=C
+ test-assert-perr-ENV = LANGUAGE=C
++
++CFLAGS-__assert.c =  -fno-omit-frame-pointer -mapcs-frame -D__OPTIMIZE__
++CFLAGS-assert-perr.c =  -fno-omit-frame-pointer -mapcs-frame -D__OPTIMIZE__
++CFLAGS-assert.c =  -fno-omit-frame-pointer -mapcs-frame -D__OPTIMIZE__
++

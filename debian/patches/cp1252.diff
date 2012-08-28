@@ -1,0 +1,35 @@
+#! /bin/sh -e
+
+# All lines beginning with `# DP:' are a description of the patch.
+# DP: Description: cp1252 addition
+# DP: Date: 2008-11-11
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p0 < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p0 < $0;;
+    *)
+	echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+	exit 1
+esac
+exit 0
+
+@DPATCH@
+diff --git a/debian/local/osso/trim-gconv.sh b/debian/local/osso/trim-gconv.sh
+old mode 100644
+new mode 100755
+index 92d499c..bfd47f3
+--- a/debian/local/osso/trim-gconv.sh
++++ b/debian/local/osso/trim-gconv.sh
+@@ -4,7 +4,7 @@
+ cd debian/tmp-libc/usr/lib/gconv/
+ mkdir tmp
+ 
+-COMMON="CP125[0134].so UNICODE.so UTF-16.so UTF-32.so ISO8859-[1279].so ISO8859-15.so KOI8-R.so"
++COMMON="CP125[01234].so UNICODE.so UTF-16.so UTF-32.so ISO8859-[1279].so ISO8859-15.so KOI8-R.so"
+ ALL="ISO646.so"
+ CN="BIG5.so BIG5HKSCS.so EUC-CN.so EUC-TW.so libCNS.so GB18030.so GBBIG5.so GBGBK.so GBK.so ISO-2022-CN-EXT.so ISO-2022-CN.so libGB.so libISOIR165.so"
+ JP="CP932.so EUC-JISX0213.so EUC-JP-MS.so EUC-JP.so IBM1390.so IBM1399.so IBM290.so IBM930.so IBM932.so IBM939.so IBM943.so ISO-2022-JP-3.so ISO-2022-JP.so SHIFT_JISX0213.so SJIS.so libJIS.so libJISX0213.so libGB.so libCNS.so libKSC.so"

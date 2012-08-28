@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+export LC_ALL=C
+ 
+[ -e /etc/localtime ] || ln -sf /usr/share/zoneinfo/UTC /etc/localtime || true
+/usr/sbin/iconvconfig || true 
+
+#DEBHELPER#
+
+exit 0

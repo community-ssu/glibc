@@ -1,0 +1,1130 @@
+#! /bin/sh -e
+
+# All lines beginning with `# DP:' are a description of the patch.
+# DP: Description: Iconv codec for 3GPP 23.038 alphabets
+# DP: Related bugs: N/A
+# DP: Patch author: Pekka Pessi <pekka.pessi@nokia.com>
+# DP: Upstream status: Not submitted
+# DP: Status Details: N/A
+# DP: Date: 2009-08-06
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p1 < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p1 < $0;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+@DPATCH@
+diff -Naur glibc-2.5.orig/iconvdata/Makefile glibc-2.5.new/iconvdata/Makefile
+--- glibc-2.5.orig/iconvdata/Makefile	2007-09-25 17:20:22.000000000 +0300
++++ glibc-2.5.new/iconvdata/Makefile	2009-08-05 16:25:29.000000000 +0300
+@@ -30,7 +30,7 @@
+ 	   BIG5 EUC-JP libGB EUC-CN libCNS EUC-TW ISO646 EBCDIC-DK-NO	 \
+ 	   EBCDIC-DK-NO-A EBCDIC-ES EBCDIC-ES-A EBCDIC-ES-S EBCDIC-FI-SE \
+ 	   EBCDIC-FI-SE-A EBCDIC-FR EBCDIC-IS-FRISS EBCDIC-IT EBCDIC-PT	 \
+-	   EBCDIC-UK EBCDIC-US IBM037 IBM038 IBM274 IBM275 IBM423	 \
++	   EBCDIC-UK EBCDIC-US GSM IBM037 IBM038 IBM274 IBM275 IBM423	 \
+ 	   IBM500 IBM870 IBM871 IBM891 IBM903 IBM904 IBM905 IBM1047	 \
+ 	   IBM874 CP737 CP775 ISO-2022-KR				 \
+ 	   KOI8-R LATIN-GREEK LATIN-GREEK-1 IBM256 IBM273 IBM277 IBM278	 \
+@@ -149,7 +149,7 @@
+ 	      ebcdic-fi-se-a.c ebcdic-is-friss.c ebcdic-it.c ebcdic-pt.c    \
+ 	      ebcdic-uk.c ebcdic-us.c ecma-cyrillic.c euc-cn.c euc-jp.c	    \
+ 	      euc-kr.c euc-tw.c gb2312.c gb2312.h gbk.c gost_19768-74.c	    \
+-	      greek-ccitt.c greek7.c greek7-old.c hp-roman8.c ibm037.c	    \
++	      greek-ccitt.c greek7.c greek7-old.c gsm.c hp-roman8.c ibm037.c \
+ 	      ibm038.c ibm256.c ibm273.c ibm274.c ibm275.c ibm277.c	    \
+ 	      ibm278.c ibm280.c ibm281.c ibm284.c ibm285.c ibm290.c	    \
+ 	      ibm297.c ibm420.c ibm423.c ibm424.c ibm437.c ibm500.c	    \
+diff -Naur glibc-2.5.orig/iconvdata/gconv-modules glibc-2.5.new/iconvdata/gconv-modules
+--- glibc-2.5.orig/iconvdata/gconv-modules	2007-09-25 17:20:22.000000000 +0300
++++ glibc-2.5.new/iconvdata/gconv-modules	2009-08-05 19:15:10.000000000 +0300
+@@ -580,6 +580,50 @@
+ module	EBCDIC-US//		INTERNAL		EBCDIC-US	1
+ module	INTERNAL		EBCDIC-US//		EBCDIC-US	1
+ 
++#	from			to			module	cost
++alias	GSM//			3GPP-23.038//
++alias	GSM7//			3GPP-23.038//
++alias	GSM-03.38//		3GPP-23.038//
++module	3GPP-23.038//		INTERNAL		GSM	1
++module	INTERNAL		3GPP-23.038//		GSM	1
++
++alias	GSM-SHIFTED-TU//	3GPP-23.038-A.2.1//
++module	3GPP-23.038-A.2.1//	INTERNAL		GSM	1
++module	INTERNAL		3GPP-23.038-A.2.1//	GSM	1
++
++alias	GSM-TU//		3GPP-23.038-A.3.1//
++alias	GSM-LOCKING-TU//	3GPP-23.038-A.3.1//
++module	3GPP-23.038-A.3.1//	INTERNAL		GSM	1
++module	INTERNAL		3GPP-23.038-A.3.1//	GSM	1
++
++alias	GSM-ES//		3GPP-23.038-A.2.2//
++alias	GSM-SHIFTED-ES//	3GPP-23.038-A.2.2//
++module	3GPP-23.038-A.2.2//	INTERNAL		GSM	1
++module	INTERNAL		3GPP-23.038-A.2.2//	GSM	1
++
++alias	GSM-SHIFTED-PT//	3GPP-23.038-A.2.3//
++module	3GPP-23.038-A.2.3//	INTERNAL		GSM	1
++module	INTERNAL		3GPP-23.038-A.2.3//	GSM	1
++
++alias	GSM-PT//		3GPP-23.038-A.3.3//
++alias	GSM-LOCKING-PT//	3GPP-23.038-A.3.3//
++module	3GPP-23.038-A.3.3//	INTERNAL		GSM	1
++module	INTERNAL		3GPP-23.038-A.3.3//	GSM	1
++
++module	3GPP-23.038-A.3.1-A.2.1//	INTERNAL	GSM	1
++module	INTERNAL	3GPP-23.038-A.3.1-A.2.1//	GSM	1
++module	3GPP-23.038-A.3.1-A.2.2//	INTERNAL	GSM	1
++module	INTERNAL	3GPP-23.038-A.3.1-A.2.2//	GSM	1
++module	3GPP-23.038-A.3.1-A.2.3//	INTERNAL	GSM	1
++module	INTERNAL	3GPP-23.038-A.3.1-A.2.3//	GSM	1
++
++module	3GPP-23.038-A.3.3-A.2.1//	INTERNAL	GSM	1
++module	INTERNAL	3GPP-23.038-A.3.3-A.2.1//	GSM	1
++module	3GPP-23.038-A.3.3-A.2.2//	INTERNAL	GSM	1
++module	INTERNAL	3GPP-23.038-A.3.3-A.2.2//	GSM	1
++module	3GPP-23.038-A.3.3-A.2.3//	INTERNAL	GSM	1
++module	INTERNAL	3GPP-23.038-A.3.3-A.2.3//	GSM	1
++
+ #	from			to			module		cost
+ alias	CP037//			IBM037//
+ alias	EBCDIC-CP-US//		IBM037//
+diff -Naur glibc-2.5.orig/iconvdata/gsm.c glibc-2.5.new/iconvdata/gsm.c
+--- glibc-2.5.orig/iconvdata/gsm.c	1970-01-01 02:00:00.000000000 +0200
++++ glibc-2.5.new/iconvdata/gsm.c	2009-08-05 19:34:01.000000000 +0300
+@@ -0,0 +1,1027 @@
++/* Conversion to and from the various GSM character sets.
++   Copyright (C) 2009 Nokia Corporation.
++   This file is part of the GNU C Library.
++   Contributed by Pekka Pessi <Pekka.Pessi@nokia.com>, 2009.
++   Original conversion tables by Aki Niemi <Aki.Niemi@nokia.com>.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <dlfcn.h>
++#include <gconv.h>
++#include <stdint.h>
++#include <stdlib.h>
++#include <string.h>
++
++#define ESC (0x1B)
++
++struct gsm_codepoint
++{
++  uint16_t ucs;
++  uint8_t  gsm;
++  uint8_t  esc;
++};
++
++/* Character conversion table from GSM to UCS alphabet.
++
++   The table contains unicode codepoints in numerical order so that the
++   value of the position of a given unicode character in this table
++   corresponds to the GSM 7bit character codepoint.
++*/
++static uint16_t const gsm_default_to_ucs[128] =
++  {
++    [0x00] = 0x0040, /* U+0040 COMMERCIAL AT */
++    [0x01] = 0x00A3, /* U+00A3 POUND SIGN */
++    [0x02] = 0x0024, /* U+0024 DOLLAR SIGN */
++    [0x03] = 0x00A5, /* U+00A5 YEN SIGN */
++    [0x04] = 0x00E8, /* U+00E8 LATIN SMALL LETTER E WITH GRAVE */
++    [0x05] = 0x00E9, /* U+00E9 LATIN SMALL LETTER E WITH ACUTE */
++    [0x06] = 0x00F9, /* U+00F9 LATIN SMALL LETTER U WITH GRAVE */
++    [0x07] = 0x00EC, /* U+00EC LATIN SMALL LETTER I WITH GRAVE */
++    [0x08] = 0x00F2, /* U+00F2 LATIN SMALL LETTER O WITH GRAVE */
++    [0x09] = 0x00C7, /* U+00C7 LATIN CAPITAL LETTER C WITH CEDILLA */
++    [0x0A] = 0x000A, /* LF */
++    [0x0B] = 0x00D8, /* U+00D8 LATIN CAPITAL LETTER O WITH STROKE */
++    [0x0C] = 0x00F8, /* U+00F8 LATIN SMALL LETTER O WITH STROKE */
++    [0x0D] = 0x000D, /* CR */
++    [0x0E] = 0x00C5, /* U+00C5 LATIN CAPITAL LETTER A WITH RING ABOVE */
++    [0x0F] = 0x00E5, /* U+00E5 LATIN SMALL LETTER A WITH RING ABOVE */
++    [0x10] = 0x0394, /* U+0394 GREEK CAPITAL LETTER DELTA */
++    [0x11] = 0x005F, /* U+005F LOW LINE */
++    [0x12] = 0x03A6, /* U+03A6 GREEK CAPITAL LETTER PHI */
++    [0x13] = 0x0393, /* U+0393 GREEK CAPITAL LETTER GAMMA */
++    [0x14] = 0x039B, /* U+039B GREEK CAPITAL LETTER LAMDA */
++    [0x15] = 0x03A9, /* U+03A9 GREEK CAPITAL LETTER OMEGA */
++    [0x16] = 0x03A0, /* U+03A0 GREEK CAPITAL LETTER PI */
++    [0x17] = 0x03A8, /* U+03A8 GREEK CAPITAL LETTER PSI */
++    [0x18] = 0x03A3, /* U+03A3 GREEK CAPITAL LETTER SIGMA */
++    [0x19] = 0x0398, /* U+0398 GREEK CAPITAL LETTER THETA */
++    [0x1A] = 0x039E, /* U+039E GREEK CAPITAL LETTER XI */
++    [0x1B] = 0x0000, /* ESC - extension character mark */
++    [0x1C] = 0x00C6, /* U+00C6 LATIN CAPITAL LETTER AE */
++    [0x1D] = 0x00E6, /* U+00E6 LATIN SMALL LETTER AE */
++    [0x1E] = 0x00DF, /* U+00DF LATIN SMALL LETTER SHARP S */
++    [0x1F] = 0x00C9, /* U+00C9 LATIN CAPITAL LETTER E WITH ACUTE */
++    [0x20] = 0x0020, /* U+0020 SPACE */
++    [0x21] = 0x0021, /* U+0021 EXCLAMATION MARK */
++    [0x22] = 0x0022, /* U+0022 QUOTATION MARK */
++    [0x23] = 0x0023, /* U+0023 NUMBER SIGN */
++    [0x24] = 0x00A4, /* U+00A4 CURRENCY SIGN */
++    [0x25] = 0x0025, /* U+0025 PERCENT SIGN */
++    [0x26] = 0x0026, /* U+0026 AMPERSAND */
++    [0x27] = 0x0027, /* U+0027 APOSTROPHE */
++    [0x28] = 0x0028, /* U+0028 LEFT PARENTHESIS */
++    [0x29] = 0x0029, /* U+0029 RIGHT PARENTHESIS */
++    [0x2A] = 0x002A, /* U+002A ASTERISK */
++    [0x2B] = 0x002B, /* U+002B PLUS SIGN */
++    [0x2C] = 0x002C, /* U+002C COMMA */
++    [0x2D] = 0x002D, /* U+002D HYPHEN-MINUS */
++    [0x2E] = 0x002E, /* U+002E FULL STOP */
++    [0x2F] = 0x002F, /* U+002F SOLIDUS */
++    [0x30] = 0x0030, /* U+0030 DIGIT ZERO */
++    [0x31] = 0x0031, /* U+0031 DIGIT ONE */
++    [0x32] = 0x0032, /* U+0032 DIGIT TWO */
++    [0x33] = 0x0033, /* U+0033 DIGIT THREE */
++    [0x34] = 0x0034, /* U+0034 DIGIT FOUR */
++    [0x35] = 0x0035, /* U+0035 DIGIT FIVE */
++    [0x36] = 0x0036, /* U+0036 DIGIT SIX */
++    [0x37] = 0x0037, /* U+0037 DIGIT SEVEN */
++    [0x38] = 0x0038, /* U+0038 DIGIT EIGHT */
++    [0x39] = 0x0039, /* U+0039 DIGIT NINE */
++    [0x3A] = 0x003A, /* U+003A COLON */
++    [0x3B] = 0x003B, /* U+003B SEMICOLON */
++    [0x3C] = 0x003C, /* U+003C LESS-THAN SIGN */
++    [0x3D] = 0x003D, /* U+003D EQUALS SIGN */
++    [0x3E] = 0x003E, /* U+003E GREATER-THAN SIGN */
++    [0x3F] = 0x003F, /* U+003F QUESTION MARK */
++    [0x40] = 0x00A1, /* U+00A1 INVERTED EXCLAMATION MARK */
++    [0x41] = 0x0041, /* U+0041 LATIN CAPITAL LETTER A */
++    [0x42] = 0x0042, /* U+0042 LATIN CAPITAL LETTER B */
++    [0x43] = 0x0043, /* U+0043 LATIN CAPITAL LETTER C */
++    [0x44] = 0x0044, /* U+0044 LATIN CAPITAL LETTER D */
++    [0x45] = 0x0045, /* U+0045 LATIN CAPITAL LETTER E */
++    [0x46] = 0x0046, /* U+0046 LATIN CAPITAL LETTER F */
++    [0x47] = 0x0047, /* U+0047 LATIN CAPITAL LETTER G */
++    [0x48] = 0x0048, /* U+0048 LATIN CAPITAL LETTER H */
++    [0x49] = 0x0049, /* U+0049 LATIN CAPITAL LETTER I */
++    [0x4A] = 0x004A, /* U+004A LATIN CAPITAL LETTER J */
++    [0x4B] = 0x004B, /* U+004B LATIN CAPITAL LETTER K */
++    [0x4C] = 0x004C, /* U+004C LATIN CAPITAL LETTER L */
++    [0x4D] = 0x004D, /* U+004D LATIN CAPITAL LETTER M */
++    [0x4E] = 0x004E, /* U+004E LATIN CAPITAL LETTER N */
++    [0x4F] = 0x004F, /* U+004F LATIN CAPITAL LETTER O */
++    [0x50] = 0x0050, /* U+0050 LATIN CAPITAL LETTER P */
++    [0x51] = 0x0051, /* U+0051 LATIN CAPITAL LETTER Q */
++    [0x52] = 0x0052, /* U+0052 LATIN CAPITAL LETTER R */
++    [0x53] = 0x0053, /* U+0053 LATIN CAPITAL LETTER S */
++    [0x54] = 0x0054, /* U+0054 LATIN CAPITAL LETTER T */
++    [0x55] = 0x0055, /* U+0055 LATIN CAPITAL LETTER U */
++    [0x56] = 0x0056, /* U+0056 LATIN CAPITAL LETTER V */
++    [0x57] = 0x0057, /* U+0057 LATIN CAPITAL LETTER W */
++    [0x58] = 0x0058, /* U+0058 LATIN CAPITAL LETTER X */
++    [0x59] = 0x0059, /* U+0059 LATIN CAPITAL LETTER Y */
++    [0x5A] = 0x005A, /* U+005A LATIN CAPITAL LETTER Z */
++    [0x5B] = 0x00C4, /* U+00C4 LATIN CAPITAL LETTER A WITH DIAERESIS */
++    [0x5C] = 0x00D6, /* U+00D6 LATIN CAPITAL LETTER O WITH DIAERESIS */
++    [0x5D] = 0x00D1, /* U+00D1 LATIN CAPITAL LETTER N WITH TILDE */
++    [0x5E] = 0x00DC, /* U+00DC LATIN CAPITAL LETTER U WITH DIAERESIS */
++    [0x5F] = 0x00A7, /* U+00A7 SECTION SIGN */
++    [0x60] = 0x00BF, /* U+00BF INVERTED QUESTION MARK */
++    [0x61] = 0x0061, /* U+0061 LATIN SMALL LETTER A */
++    [0x62] = 0x0062, /* U+0062 LATIN SMALL LETTER B */
++    [0x63] = 0x0063, /* U+0063 LATIN SMALL LETTER C */
++    [0x64] = 0x0064, /* U+0064 LATIN SMALL LETTER D */
++    [0x65] = 0x0065, /* U+0065 LATIN SMALL LETTER E */
++    [0x66] = 0x0066, /* U+0066 LATIN SMALL LETTER F */
++    [0x67] = 0x0067, /* U+0067 LATIN SMALL LETTER G */
++    [0x68] = 0x0068, /* U+0068 LATIN SMALL LETTER H */
++    [0x69] = 0x0069, /* U+0069 LATIN SMALL LETTER I */
++    [0x6A] = 0x006A, /* U+006A LATIN SMALL LETTER J */
++    [0x6B] = 0x006B, /* U+006B LATIN SMALL LETTER K */
++    [0x6C] = 0x006C, /* U+006C LATIN SMALL LETTER L */
++    [0x6D] = 0x006D, /* U+006D LATIN SMALL LETTER M */
++    [0x6E] = 0x006E, /* U+006E LATIN SMALL LETTER N */
++    [0x6F] = 0x006F, /* U+006F LATIN SMALL LETTER O */
++    [0x70] = 0x0070, /* U+0070 LATIN SMALL LETTER P */
++    [0x71] = 0x0071, /* U+0071 LATIN SMALL LETTER Q */
++    [0x72] = 0x0072, /* U+0072 LATIN SMALL LETTER R */
++    [0x73] = 0x0073, /* U+0073 LATIN SMALL LETTER S */
++    [0x74] = 0x0074, /* U+0074 LATIN SMALL LETTER T */
++    [0x75] = 0x0075, /* U+0075 LATIN SMALL LETTER U */
++    [0x76] = 0x0076, /* U+0076 LATIN SMALL LETTER V */
++    [0x77] = 0x0077, /* U+0077 LATIN SMALL LETTER W */
++    [0x78] = 0x0078, /* U+0078 LATIN SMALL LETTER X */
++    [0x79] = 0x0079, /* U+0079 LATIN SMALL LETTER Y */
++    [0x7A] = 0x007A, /* U+007A LATIN SMALL LETTER Z */
++    [0x7B] = 0x00E4, /* U+00E4 LATIN SMALL LETTER A WITH DIAERESIS */
++    [0x7C] = 0x00F6, /* U+00F6 LATIN SMALL LETTER O WITH DIAERESIS */
++    [0x7D] = 0x00F1, /* U+00F1 LATIN SMALL LETTER N WITH TILDE */
++    [0x7E] = 0x00FC, /* U+00FC LATIN SMALL LETTER U WITH DIAERESIS */
++    [0x7F] = 0x00E0, /* U+00E0 LATIN SMALL LETTER A WITH GRAVE */
++  };
++
++/* Character conversion table from UCS to GSM alphabet.
++ *
++ * The table contains only the entries where UCS and GSM codepoints differ.
++ * Each entry contains the UCS value, corresponding GSM codepoint and
++ * possible escape code. Table is sorted by UCS value.
++ */
++
++static struct gsm_codepoint const ucs_to_gsm_default[] =
++  {
++    { 0x0024, 0x02 }, /* U+0024 DOLLAR SIGN */
++    { 0x0040, 0x00 }, /* U+0040 COMMERCIAL AT */
++    { 0x005F, 0x11 }, /* U+005F LOW LINE */
++    { 0x00A1, 0x40 }, /* U+00A1 INVERTED EXCLAMATION MARK */
++    { 0x00A3, 0x01 }, /* U+00A3 POUND SIGN */
++    { 0x00A4, 0x24 }, /* U+00A4 CURRENCY SIGN */
++    { 0x00A5, 0x03 }, /* U+00A5 YEN SIGN */
++    { 0x00A7, 0x5F }, /* U+00A7 SECTION SIGN */
++    { 0x00BF, 0x60 }, /* U+00BF INVERTED QUESTION MARK */
++    { 0x00C4, 0x5B }, /* U+00C4 LATIN CAPITAL LETTER A WITH DIAERESIS */
++    { 0x00C5, 0x0E }, /* U+00C5 LATIN CAPITAL LETTER A WITH RING ABOVE */
++    { 0x00C6, 0x1C }, /* U+00C6 LATIN CAPITAL LETTER AE */
++    { 0x00C7, 0x09 }, /* U+00C7 LATIN CAPITAL LETTER C WITH CEDILLA */
++    { 0x00C9, 0x1F }, /* U+00C9 LATIN CAPITAL LETTER E WITH ACUTE */
++    { 0x00D1, 0x5D }, /* U+00D1 LATIN CAPITAL LETTER N WITH TILDE */
++    { 0x00D6, 0x5C }, /* U+00D6 LATIN CAPITAL LETTER O WITH DIAERESIS */
++    { 0x00D8, 0x0B }, /* U+00D8 LATIN CAPITAL LETTER O WITH STROKE */
++    { 0x00DC, 0x5E }, /* U+00DC LATIN CAPITAL LETTER U WITH DIAERESIS */
++    { 0x00DF, 0x1E }, /* U+00DF LATIN SMALL LETTER SHARP S */
++    { 0x00E0, 0x7F }, /* U+00E0 LATIN SMALL LETTER A WITH GRAVE */
++    { 0x00E4, 0x7B }, /* U+00E4 LATIN SMALL LETTER A WITH DIAERESIS */
++    { 0x00E5, 0x0F }, /* U+00E5 LATIN SMALL LETTER A WITH RING ABOVE */
++    { 0x00E6, 0x1D }, /* U+00E6 LATIN SMALL LETTER AE */
++    { 0x00E8, 0x04 }, /* U+00E8 LATIN SMALL LETTER E WITH GRAVE */
++    { 0x00E9, 0x05 }, /* U+00E9 LATIN SMALL LETTER E WITH ACUTE */
++    { 0x00EC, 0x07 }, /* U+00EC LATIN SMALL LETTER I WITH GRAVE */
++    { 0x00F1, 0x7D }, /* U+00F1 LATIN SMALL LETTER N WITH TILDE */
++    { 0x00F2, 0x08 }, /* U+00F2 LATIN SMALL LETTER O WITH GRAVE */
++    { 0x00F6, 0x7C }, /* U+00F6 LATIN SMALL LETTER O WITH DIAERESIS */
++    { 0x00F8, 0x0C }, /* U+00F8 LATIN SMALL LETTER O WITH STROKE */
++    { 0x00F9, 0x06 }, /* U+00F9 LATIN SMALL LETTER U WITH GRAVE */
++    { 0x00FC, 0x7E }, /* U+00FC LATIN SMALL LETTER U WITH DIAERESIS */
++    { 0x0393, 0x13 }, /* U+0393 GREEK CAPITAL LETTER GAMMA */
++    { 0x0394, 0x10 }, /* U+0394 GREEK CAPITAL LETTER DELTA */
++    { 0x0398, 0x19 }, /* U+0398 GREEK CAPITAL LETTER THETA */
++    { 0x039B, 0x14 }, /* U+039B GREEK CAPITAL LETTER LAMDA */
++    { 0x039E, 0x1A }, /* U+039E GREEK CAPITAL LETTER XI */
++    { 0x03A0, 0x16 }, /* U+03A0 GREEK CAPITAL LETTER PI */
++    { 0x03A3, 0x18 }, /* U+03A3 GREEK CAPITAL LETTER SIGMA */
++    { 0x03A6, 0x12 }, /* U+03A6 GREEK CAPITAL LETTER PHI */
++    { 0x03A8, 0x17 }, /* U+03A8 GREEK CAPITAL LETTER PSI */
++    { 0x03A9, 0x15 }, /* U+03A9 GREEK CAPITAL LETTER OMEGA */
++  };
++
++/* This table contains values that are presented in GSM 7 bit default alphabet
++ * with an escape escape character (0x1B) followed character by another character.
++ *
++ * The table is sorted by unicode codepoint.
++ * See 3GPP TS 23.038 for further details.
++ */
++static struct gsm_codepoint const gsm_default_shifted[] =
++  {
++    { 0x000C, 0x0A, ESC }, /* FF (page break) */
++    { 0x005B, 0x3C, ESC }, /* U+005B LEFT SQUARE BRACKET */
++    { 0x005C, 0x2F, ESC }, /* U+005C REVERSE SOLIDUS */
++    { 0x005D, 0x3E, ESC }, /* U+005D RIGHT SQUARE BRACKET */
++    { 0x005E, 0x14, ESC }, /* U+005E CIRCUMFLEX ACCENT */
++    { 0x007B, 0x28, ESC }, /* U+007B LEFT CURLY BRACKET */
++    { 0x007C, 0x40, ESC }, /* U+007C VERTICAL LINE */
++    { 0x007D, 0x29, ESC }, /* U+007D RIGHT CURLY BRACKET */
++    { 0x007E, 0x3D, ESC }, /* U+007E TILDE */
++    { 0x20AC, 0x65, ESC }, /* U+20AC EURO SIGN */
++  };
++
++/* National Language Tables */
++
++/* Turkish National Language Single Shift Table
++   3GPP TS 23.038, Annex A.2.1 */
++static struct gsm_codepoint const gsm_turkish_shifted[] =
++  {
++    { 0x000C, 0x0A, ESC }, /* FF (page break) */
++    { 0x005B, 0x3C, ESC }, /* U+005B LEFT SQUARE BRACKET */
++    { 0x005C, 0x2F, ESC }, /* U+005C REVERSE SOLIDUS */
++    { 0x005D, 0x3E, ESC }, /* U+005D RIGHT SQUARE BRACKET */
++    { 0x005E, 0x14, ESC }, /* U+005E CIRCUMFLEX ACCENT */
++    { 0x007B, 0x28, ESC }, /* U+007B LEFT CURLY BRACKET */
++    { 0x007C, 0x40, ESC }, /* U+007C VERTICAL LINE */
++    { 0x007D, 0x29, ESC }, /* U+007D RIGHT CURLY BRACKET */
++    { 0x007E, 0x3D, ESC }, /* U+007E TILDE */
++    { 0x00E7, 0x63, ESC }, /* U+00E7 LATIN SMALL LETTER C WITH CEDILLA */
++    { 0x011E, 0x47, ESC }, /* U+011E LATIN CAPITAL LETTER G WITH BREVE */
++    { 0x011F, 0x67, ESC }, /* U+011F LATIN SMALL LETTER G WITH BREVE */
++    { 0x0130, 0x49, ESC }, /* U+0130 LATIN CAPITAL LETTER I WITH DOT ABOVE */
++    { 0x0131, 0x69, ESC }, /* U+0131 LATIN SMALL LETTER DOTLESS I */
++    { 0x015E, 0x53, ESC }, /* U+015E LATIN CAPITAL LETTER S WITH CEDILLA */
++    { 0x015F, 0x73, ESC }, /* U+015F LATIN SMALL LETTER S WITH CEDILLA */
++    { 0x20AC, 0x65, ESC }, /* U+20AC EURO SIGN */
++  };
++
++/* Spanish National Language Single Shift Table
++   3GPP TS 23.038, Annex A.2.2 */
++static struct gsm_codepoint const gsm_spanish_shifted[] =
++  {
++    { 0x000C, 0x0A, ESC }, /* FF (page break) */
++    { 0x005B, 0x3C, ESC }, /* U+005B LEFT SQUARE BRACKET */
++    { 0x005C, 0x2F, ESC }, /* U+005C REVERSE SOLIDUS */
++    { 0x005D, 0x3E, ESC }, /* U+005D RIGHT SQUARE BRACKET */
++    { 0x005E, 0x14, ESC }, /* U+005E CIRCUMFLEX ACCENT */
++    { 0x007B, 0x28, ESC }, /* U+007B LEFT CURLY BRACKET */
++    { 0x007C, 0x40, ESC }, /* U+007C VERTICAL LINE */
++    { 0x007D, 0x29, ESC }, /* U+007D RIGHT CURLY BRACKET */
++    { 0x007E, 0x3D, ESC }, /* U+007E TILDE */
++    { 0x00C1, 0x41, ESC }, /* U+00C1 LATIN CAPITAL LETTER A WITH ACUTE */
++    { 0x00CD, 0x49, ESC }, /* U+00CD LATIN CAPITAL LETTER I WITH ACUTE */
++    { 0x00D3, 0x4F, ESC }, /* U+00D3 LATIN CAPITAL LETTER O WITH ACUTE */
++    { 0x00DA, 0x55, ESC }, /* U+00DA LATIN CAPITAL LETTER U WITH ACUTE */
++    { 0x00E1, 0x61, ESC }, /* U+00E1 LATIN SMALL LETTER A WITH ACUTE */
++    { 0x00E7, 0x09, ESC }, /* U+00E7 LATIN SMALL LETTER C WITH CEDILLA */
++    { 0x00ED, 0x69, ESC }, /* U+00ED LATIN SMALL LETTER I WITH ACUTE */
++    { 0x00F3, 0x6F, ESC }, /* U+00F3 LATIN SMALL LETTER O WITH ACUTE */
++    { 0x00FA, 0x75, ESC }, /* U+00FA LATIN SMALL LETTER U WITH ACUTE */
++    { 0x20AC, 0x65, ESC }, /* U+20AC EURO SIGN */
++  };
++
++/* Portuguese National Language Single Shift Table
++   3GPP TS 23.038, Annex A.2.3 */
++static struct gsm_codepoint const gsm_portuguese_shifted[] =
++  {
++    { 0x000C, 0x0A, ESC }, /* FF (page break) */
++    { 0x005B, 0x3C, ESC }, /* U+005B LEFT SQUARE BRACKET */
++    { 0x005C, 0x2F, ESC }, /* U+005C REVERSE SOLIDUS */
++    { 0x005D, 0x3E, ESC }, /* U+005D RIGHT SQUARE BRACKET */
++    { 0x005E, 0x14, ESC }, /* U+005E CIRCUMFLEX ACCENT */
++    { 0x007B, 0x28, ESC }, /* U+007B LEFT CURLY BRACKET */
++    { 0x007C, 0x40, ESC }, /* U+007C VERTICAL LINE */
++    { 0x007D, 0x29, ESC }, /* U+007D RIGHT CURLY BRACKET */
++    { 0x007E, 0x3D, ESC }, /* U+007E TILDE */
++
++    { 0x00C0, 0x41, ESC }, /* U+00C0 LATIN CAPITAL LETTER A WITH GRAVE */
++    { 0x00C1, 0x0E, ESC }, /* U+00C1 LATIN CAPITAL LETTER A WITH ACUTE */
++    { 0x00C2, 0x61, ESC }, /* U+00C2 LATIN CAPITAL LETTER A WITH CIRCUMFLEX */
++    { 0x00C3, 0x5B, ESC }, /* U+00C3 LATIN CAPITAL LETTER A WITH TILDE */
++    { 0x00CA, 0x1F, ESC }, /* U+00CA LATIN CAPITAL LETTER E WITH CIRCUMFLEX */
++    { 0x00CD, 0x49, ESC }, /* U+00CD LATIN CAPITAL LETTER I WITH ACUTE */
++    { 0x00D3, 0x4F, ESC }, /* U+00D3 LATIN CAPITAL LETTER O WITH ACUTE */
++    { 0x00D4, 0x0B, ESC }, /* U+00D4 LATIN CAPITAL LETTER O WITH CIRCUMFLEX */
++    { 0x00D5, 0x5C, ESC }, /* U+00D5 LATIN CAPITAL LETTER O WITH TILDE */
++    { 0x00DA, 0x55, ESC }, /* U+00DA LATIN CAPITAL LETTER U WITH ACUTE */
++    { 0x00E1, 0x0F, ESC }, /* U+00E1 LATIN SMALL LETTER A WITH ACUTE */
++    { 0x00E2, 0x7F, ESC }, /* U+00E2 LATIN SMALL LETTER A WITH CIRCUMFLEX */
++    { 0x00E3, 0x7B, ESC }, /* U+00E3 LATIN SMALL LETTER A WITH TILDE */
++    { 0x00E7, 0x09, ESC }, /* U+00E7 LATIN SMALL LETTER C WITH CEDILLA */
++    { 0x00EA, 0x05, ESC }, /* U+00EA LATIN SMALL LETTER E WITH CIRCUMFLEX */
++    { 0x00ED, 0x69, ESC }, /* U+00ED LATIN SMALL LETTER I WITH ACUTE */
++    { 0x00F3, 0x6F, ESC }, /* U+00F3 LATIN SMALL LETTER O WITH ACUTE */
++    { 0x00F4, 0x0C, ESC }, /* U+00F4 LATIN SMALL LETTER O WITH CIRCUMFLEX */
++    { 0x00F5, 0X7C, ESC }, /* U+00F5 LATIN SMALL LETTER O WITH TILDE */
++    { 0x00FA, 0x75, ESC }, /* U+00FA LATIN SMALL LETTER U WITH ACUTE */
++
++    { 0x0393, 0x13, ESC }, /* U+0393 GREEK CAPITAL LETTER GAMMA */
++    { 0x0398, 0x19, ESC }, /* U+0398 GREEK CAPITAL LETTER THETA */
++    { 0x03A0, 0x16, ESC }, /* U+03A0 GREEK CAPITAL LETTER PI */
++    { 0x03A3, 0x18, ESC }, /* U+03A3 GREEK CAPITAL LETTER SIGMA */
++    { 0x03A6, 0x12, ESC }, /* U+03A6 GREEK CAPITAL LETTER PHI */
++    { 0x03A8, 0x17, ESC }, /* U+03A8 GREEK CAPITAL LETTER PSI */
++    { 0x03A9, 0x15, ESC }, /* U+03A9 GREEK CAPITAL LETTER OMEGA */
++
++    { 0x20AC, 0x65, ESC }, /* U+20AC EURO SIGN */
++  };
++
++/* Turkish National Language Locking Shift Table
++   3GPP TS 23.038, Annex A.3.1 */
++static uint16_t const gsm_turkish_to_ucs[128] =
++  {
++    [0x00] = 0x0040, /* U+0040 COMMERCIAL AT */
++    [0x01] = 0x00A3, /* U+00A3 POUND SIGN */
++    [0x02] = 0x0024, /* U+0024 DOLLAR SIGN */
++    [0x03] = 0x00A5, /* U+00A5 YEN SIGN */
++    [0x04] = 0x20AC, /* U+20AC EURO SIGN */
++    [0x05] = 0x00E9, /* U+00E9 LATIN SMALL LETTER E WITH ACUTE */
++    [0x06] = 0x00F9, /* U+00F9 LATIN SMALL LETTER U WITH GRAVE */
++    [0x07] = 0x0131, /* U+0131 LATIN SMALL LETTER DOTLESS I */
++    [0x08] = 0x00F2, /* U+00F2 LATIN SMALL LETTER O WITH GRAVE */
++    [0x09] = 0x00C7, /* U+00C7 LATIN CAPITAL LETTER C WITH CEDILLA */
++    [0x0A] = 0x000A, /* LF */
++    [0x0B] = 0x011E, /* U+011E LATIN CAPITAL LETTER G WITH BREVE */
++    [0x0C] = 0x011F, /* U+011F LATIN SMALL LETTER G WITH BREVE */
++    [0x0D] = 0x000D, /* CR */
++    [0x0E] = 0x00C5, /* U+00C5 LATIN CAPITAL LETTER A WITH RING ABOVE */
++    [0x0F] = 0x00E5, /* U+00E5 LATIN SMALL LETTER A WITH RING ABOVE */
++    [0x10] = 0x0394, /* U+0394 GREEK CAPITAL LETTER DELTA */
++    [0x11] = 0x005F, /* U+005F LOW LINE */
++    [0x12] = 0x03A6, /* U+03A6 GREEK CAPITAL LETTER PHI */
++    [0x13] = 0x0393, /* U+0393 GREEK CAPITAL LETTER GAMMA */
++    [0x14] = 0x039B, /* U+039B GREEK CAPITAL LETTER LAMDA */
++    [0x15] = 0x03A9, /* U+03A9 GREEK CAPITAL LETTER OMEGA */
++    [0x16] = 0x03A0, /* U+03A0 GREEK CAPITAL LETTER PI */
++    [0x17] = 0x03A8, /* U+03A8 GREEK CAPITAL LETTER PSI */
++    [0x18] = 0x03A3, /* U+03A3 GREEK CAPITAL LETTER SIGMA */
++    [0x19] = 0x0398, /* U+0398 GREEK CAPITAL LETTER THETA */
++    [0x1A] = 0x039E, /* U+039E GREEK CAPITAL LETTER XI */
++    [0x1B] = 0x0000, /* is extension character mark */
++    [0x1C] = 0x015E, /* U+015E LATIN CAPITAL LETTER S WITH CEDILLA */
++    [0x1D] = 0x015F, /* U+015F LATIN SMALL LETTER S WITH CEDILLA */
++    [0x1E] = 0x00DF, /* U+00DF LATIN SMALL LETTER SHARP S */
++    [0x1F] = 0x00C9, /* U+00C9 LATIN CAPITAL LETTER E WITH ACUTE */
++    [0x20] = 0x0020, /* U+0020 SPACE */
++    [0x21] = 0x0021, /* U+0021 EXCLAMATION MARK */
++    [0x22] = 0x0022, /* U+0022 QUOTATION MARK */
++    [0x23] = 0x0023, /* U+0023 NUMBER SIGN */
++    [0x24] = 0x00A4, /* U+00A4 CURRENCY SIGN */
++    [0x25] = 0x0025, /* U+0025 PERCENT SIGN */
++    [0x26] = 0x0026, /* U+0026 AMPERSAND */
++    [0x27] = 0x0027, /* U+0027 APOSTROPHE */
++    [0x28] = 0x0028, /* U+0028 LEFT PARENTHESIS */
++    [0x29] = 0x0029, /* U+0029 RIGHT PARENTHESIS */
++    [0x2A] = 0x002A, /* U+002A ASTERISK */
++    [0x2B] = 0x002B, /* U+002B PLUS SIGN */
++    [0x2C] = 0x002C, /* U+002C COMMA */
++    [0x2D] = 0x002D, /* U+002D HYPHEN-MINUS */
++    [0x2E] = 0x002E, /* U+002E FULL STOP */
++    [0x2F] = 0x002F, /* U+002F SOLIDUS */
++    [0x30] = 0x0030, /* U+0030 DIGIT ZERO */
++    [0x31] = 0x0031, /* U+0031 DIGIT ONE */
++    [0x32] = 0x0032, /* U+0032 DIGIT TWO */
++    [0x33] = 0x0033, /* U+0033 DIGIT THREE */
++    [0x34] = 0x0034, /* U+0034 DIGIT FOUR */
++    [0x35] = 0x0035, /* U+0035 DIGIT FIVE */
++    [0x36] = 0x0036, /* U+0036 DIGIT SIX */
++    [0x37] = 0x0037, /* U+0037 DIGIT SEVEN */
++    [0x38] = 0x0038, /* U+0038 DIGIT EIGHT */
++    [0x39] = 0x0039, /* U+0039 DIGIT NINE */
++    [0x3A] = 0x003A, /* U+003A COLON */
++    [0x3B] = 0x003B, /* U+003B SEMICOLON */
++    [0x3C] = 0x003C, /* U+003C LESS-THAN SIGN */
++    [0x3D] = 0x003D, /* U+003D EQUALS SIGN */
++    [0x3E] = 0x003E, /* U+003E GREATER-THAN SIGN */
++    [0x3F] = 0x003F, /* U+003F QUESTION MARK */
++    [0x40] = 0x0130, /* U+0130 LATIN CAPITAL LETTER I WITH DOT ABOVE */
++    [0x41] = 0x0041, /* U+0041 LATIN CAPITAL LETTER A */
++    [0x42] = 0x0042, /* U+0042 LATIN CAPITAL LETTER B */
++    [0x43] = 0x0043, /* U+0043 LATIN CAPITAL LETTER C */
++    [0x44] = 0x0044, /* U+0044 LATIN CAPITAL LETTER D */
++    [0x45] = 0x0045, /* U+0045 LATIN CAPITAL LETTER E */
++    [0x46] = 0x0046, /* U+0046 LATIN CAPITAL LETTER F */
++    [0x47] = 0x0047, /* U+0047 LATIN CAPITAL LETTER G */
++    [0x48] = 0x0048, /* U+0048 LATIN CAPITAL LETTER H */
++    [0x49] = 0x0049, /* U+0049 LATIN CAPITAL LETTER I */
++    [0x4A] = 0x004A, /* U+004A LATIN CAPITAL LETTER J */
++    [0x4B] = 0x004B, /* U+004B LATIN CAPITAL LETTER K */
++    [0x4C] = 0x004C, /* U+004C LATIN CAPITAL LETTER L */
++    [0x4D] = 0x004D, /* U+004D LATIN CAPITAL LETTER M */
++    [0x4E] = 0x004E, /* U+004E LATIN CAPITAL LETTER N */
++    [0x4F] = 0x004F, /* U+004F LATIN CAPITAL LETTER O */
++    [0x50] = 0x0050, /* U+0050 LATIN CAPITAL LETTER P */
++    [0x51] = 0x0051, /* U+0051 LATIN CAPITAL LETTER Q */
++    [0x52] = 0x0052, /* U+0052 LATIN CAPITAL LETTER R */
++    [0x53] = 0x0053, /* U+0053 LATIN CAPITAL LETTER S */
++    [0x54] = 0x0054, /* U+0054 LATIN CAPITAL LETTER T */
++    [0x55] = 0x0055, /* U+0055 LATIN CAPITAL LETTER U */
++    [0x56] = 0x0056, /* U+0056 LATIN CAPITAL LETTER V */
++    [0x57] = 0x0057, /* U+0057 LATIN CAPITAL LETTER W */
++    [0x58] = 0x0058, /* U+0058 LATIN CAPITAL LETTER X */
++    [0x59] = 0x0059, /* U+0059 LATIN CAPITAL LETTER Y */
++    [0x5A] = 0x005A, /* U+005A LATIN CAPITAL LETTER Z */
++    [0x5B] = 0x00C4, /* U+00C4 LATIN CAPITAL LETTER A WITH DIAERESIS */
++    [0x5C] = 0x00D6, /* U+00D6 LATIN CAPITAL LETTER O WITH DIAERESIS */
++    [0x5D] = 0x00D1, /* U+00D1 LATIN CAPITAL LETTER N WITH TILDE */
++    [0x5E] = 0x00DC, /* U+00DC LATIN CAPITAL LETTER U WITH DIAERESIS */
++    [0x5F] = 0x00A7, /* U+00A7 SECTION SIGN */
++    [0x60] = 0x00E7, /* U+00E7 LATIN SMALL LETTER C WITH CEDILLA */
++    [0x61] = 0x0061, /* U+0061 LATIN SMALL LETTER A */
++    [0x62] = 0x0062, /* U+0062 LATIN SMALL LETTER B */
++    [0x63] = 0x0063, /* U+0063 LATIN SMALL LETTER C */
++    [0x64] = 0x0064, /* U+0064 LATIN SMALL LETTER D */
++    [0x65] = 0x0065, /* U+0065 LATIN SMALL LETTER E */
++    [0x66] = 0x0066, /* U+0066 LATIN SMALL LETTER F */
++    [0x67] = 0x0067, /* U+0067 LATIN SMALL LETTER G */
++    [0x68] = 0x0068, /* U+0068 LATIN SMALL LETTER H */
++    [0x69] = 0x0069, /* U+0069 LATIN SMALL LETTER I */
++    [0x6A] = 0x006A, /* U+006A LATIN SMALL LETTER J */
++    [0x6B] = 0x006B, /* U+006B LATIN SMALL LETTER K */
++    [0x6C] = 0x006C, /* U+006C LATIN SMALL LETTER L */
++    [0x6D] = 0x006D, /* U+006D LATIN SMALL LETTER M */
++    [0x6E] = 0x006E, /* U+006E LATIN SMALL LETTER N */
++    [0x6F] = 0x006F, /* U+006F LATIN SMALL LETTER O */
++    [0x70] = 0x0070, /* U+0070 LATIN SMALL LETTER P */
++    [0x71] = 0x0071, /* U+0071 LATIN SMALL LETTER Q */
++    [0x72] = 0x0072, /* U+0072 LATIN SMALL LETTER R */
++    [0x73] = 0x0073, /* U+0073 LATIN SMALL LETTER S */
++    [0x74] = 0x0074, /* U+0074 LATIN SMALL LETTER T */
++    [0x75] = 0x0075, /* U+0075 LATIN SMALL LETTER U */
++    [0x76] = 0x0076, /* U+0076 LATIN SMALL LETTER V */
++    [0x77] = 0x0077, /* U+0077 LATIN SMALL LETTER W */
++    [0x78] = 0x0078, /* U+0078 LATIN SMALL LETTER X */
++    [0x79] = 0x0079, /* U+0079 LATIN SMALL LETTER Y */
++    [0x7A] = 0x007A, /* U+007A LATIN SMALL LETTER Z */
++    [0x7B] = 0x00E4, /* U+00E4 LATIN SMALL LETTER A WITH DIAERESIS */
++    [0x7C] = 0x00F6, /* U+00F6 LATIN SMALL LETTER O WITH DIAERESIS */
++    [0x7D] = 0x00F1, /* U+00F1 LATIN SMALL LETTER N WITH TILDE */
++    [0x7E] = 0x00FC, /* U+00FC LATIN SMALL LETTER U WITH DIAERESIS */
++    [0x7F] = 0x00E0, /* U+00E0 LATIN SMALL LETTER A WITH GRAVE */
++  };
++
++static struct gsm_codepoint const ucs_to_gsm_turkish[] =
++  {
++    { 0x0024, 0x02 }, /* U+0024 DOLLAR SIGN */
++    { 0x0040, 0x00 }, /* U+0040 COMMERCIAL AT */
++    { 0x005F, 0x11 }, /* U+005F LOW LINE */
++    { 0x00A3, 0x01 }, /* U+00A3 POUND SIGN */
++    { 0x00A4, 0x24 }, /* U+00A4 CURRENCY SIGN */
++    { 0x00A5, 0x03 }, /* U+00A5 YEN SIGN */
++    { 0x00A7, 0x5F }, /* U+00A7 SECTION SIGN */
++    { 0x00C4, 0x5B }, /* U+00C4 LATIN CAPITAL LETTER A WITH DIAERESIS */
++    { 0x00C5, 0x0E }, /* U+00C5 LATIN CAPITAL LETTER A WITH RING ABOVE */
++    { 0x00C7, 0x09 }, /* U+00C7 LATIN CAPITAL LETTER C WITH CEDILLA */
++    { 0x00C9, 0x1F }, /* U+00C9 LATIN CAPITAL LETTER E WITH ACUTE */
++    { 0x00D1, 0x5D }, /* U+00D1 LATIN CAPITAL LETTER N WITH TILDE */
++    { 0x00D6, 0x5C }, /* U+00D6 LATIN CAPITAL LETTER O WITH DIAERESIS */
++    { 0x00DC, 0x5E }, /* U+00DC LATIN CAPITAL LETTER U WITH DIAERESIS */
++    { 0x00DF, 0x1E }, /* U+00DF LATIN SMALL LETTER SHARP S */
++    { 0x00E0, 0x7F }, /* U+00E0 LATIN SMALL LETTER A WITH GRAVE */
++    { 0x00E4, 0x7B }, /* U+00E4 LATIN SMALL LETTER A WITH DIAERESIS */
++    { 0x00E5, 0x0F }, /* U+00E5 LATIN SMALL LETTER A WITH RING ABOVE */
++    { 0x00E7, 0x60 }, /* U+00E7 LATIN SMALL LETTER C WITH CEDILLA */
++    { 0x00E9, 0x05 }, /* U+00E9 LATIN SMALL LETTER E WITH ACUTE */
++    { 0x00F1, 0x7D }, /* U+00F1 LATIN SMALL LETTER N WITH TILDE */
++    { 0x00F2, 0x08 }, /* U+00F2 LATIN SMALL LETTER O WITH GRAVE */
++    { 0x00F6, 0x7C }, /* U+00F6 LATIN SMALL LETTER O WITH DIAERESIS */
++    { 0x00F9, 0x06 }, /* U+00F9 LATIN SMALL LETTER U WITH GRAVE */
++    { 0x00FC, 0x7E }, /* U+00FC LATIN SMALL LETTER U WITH DIAERESIS */
++    { 0x011E, 0x0B }, /* U+011E LATIN CAPITAL LETTER G WITH BREVE */
++    { 0x011F, 0x0C }, /* U+011F LATIN SMALL LETTER G WITH BREVE */
++    { 0x0130, 0x40 }, /* U+0130 LATIN CAPITAL LETTER I WITH DOT ABOVE */
++    { 0x0131, 0x07 }, /* U+0131 LATIN SMALL LETTER DOTLESS I */
++    { 0x015E, 0x1C }, /* U+015E LATIN CAPITAL LETTER S WITH CEDILLA */
++    { 0x015F, 0x1D }, /* U+015F LATIN SMALL LETTER S WITH CEDILLA */
++    { 0x0393, 0x13 }, /* U+0393 GREEK CAPITAL LETTER GAMMA */
++    { 0x0394, 0x10 }, /* U+0394 GREEK CAPITAL LETTER DELTA */
++    { 0x0398, 0x19 }, /* U+0398 GREEK CAPITAL LETTER THETA */
++    { 0x039B, 0x14 }, /* U+039B GREEK CAPITAL LETTER LAMDA */
++    { 0x039E, 0x1A }, /* U+039E GREEK CAPITAL LETTER XI */
++    { 0x03A0, 0x16 }, /* U+03A0 GREEK CAPITAL LETTER PI */
++    { 0x03A3, 0x18 }, /* U+03A3 GREEK CAPITAL LETTER SIGMA */
++    { 0x03A6, 0x12 }, /* U+03A6 GREEK CAPITAL LETTER PHI */
++    { 0x03A8, 0x17 }, /* U+03A8 GREEK CAPITAL LETTER PSI */
++    { 0x03A9, 0x15 }, /* U+03A9 GREEK CAPITAL LETTER OMEGA */
++    { 0x20AC, 0x04 }, /* U+20AC EURO SIGN */
++  };
++
++/* Portuguese National Language Locking Shift Table
++   3GPP TS 23.038, Annex A.3.1 */
++static uint16_t const gsm_portuguese_to_ucs[128] =
++  {
++    [0x00] = 0x0040, /* U+0040 COMMERCIAL AT */
++    [0x01] = 0x00A3, /* U+00A3 POUND SIGN */
++    [0x02] = 0x0024, /* U+0024 DOLLAR SIGN */
++    [0x03] = 0x00A5, /* U+00A5 YEN SIGN */
++    [0x04] = 0x00EA, /* U+00EA LATIN SMALL LETTER E WITH CIRCUMFLEX */
++    [0x05] = 0x00E9, /* U+00E9 LATIN SMALL LETTER E WITH ACUTE */
++    [0x06] = 0x00FA, /* U+00FA LATIN SMALL LETTER U WITH ACUTE */
++    [0x07] = 0x00ED, /* U+00ED LATIN SMALL LETTER I WITH ACUTE */
++    [0x08] = 0x00F3, /* U+00F3 LATIN SMALL LETTER O WITH ACUTE */
++    [0x09] = 0x00E7, /* U+00E7 LATIN SMALL LETTER C WITH CEDILLA */
++    [0x0A] = 0x000A, /* LF */
++    [0x0B] = 0x00D4, /* U+00D4 LATIN CAPITAL LETTER O WITH CIRCUMFLEX */
++    [0x0C] = 0x00F4, /* U+00F4 LATIN SMALL LETTER O WITH CIRCUMFLEX */
++    [0x0D] = 0x000D, /* CR */
++    [0x0E] = 0x00C1, /* U+00C1 LATIN CAPITAL LETTER A WITH ACUTE */
++    [0x0F] = 0x00E1, /* U+00E1 LATIN SMALL LETTER A WITH ACUTE */
++    [0x10] = 0x0394, /* U+0394 GREEK CAPITAL LETTER DELTA */
++    [0x11] = 0x005F, /* U+005F LOW LINE */
++    [0x12] = 0x00AA, /* U+00AA FEMININE ORDINAL INDICATOR */
++    [0x13] = 0x00C7, /* U+00C7 LATIN CAPITAL LETTER C WITH CEDILLA */
++    [0x14] = 0x00C0, /* U+00C0 LATIN CAPITAL LETTER A WITH GRAVE */
++    [0x15] = 0x221E, /* U+221E INFINITY */
++    [0x16] = 0x005E, /* U+005E CIRCUMFLEX ACCENT */
++    [0x17] = 0x005C, /* U+005C REVERSE SOLIDUS */
++    [0x18] = 0x20AC, /* U+20AC EURO SIGN */
++    [0x19] = 0x00D3, /* U+00D3 LATIN CAPITAL LETTER O WITH ACUTE */
++    [0x1A] = 0x007C, /* U+007C VERTICAL LINE */
++    [0x1B] = 0x0000, /* ESC is extension character mark */
++    [0x1C] = 0x00C2, /* U+00C2 LATIN CAPITAL LETTER A WITH CIRCUMFLEX */
++    [0x1D] = 0x00E2, /* U+00E2 LATIN SMALL LETTER A WITH CIRCUMFLEX */
++    [0x1E] = 0x00CA, /* U+00CA LATIN CAPITAL LETTER E WITH CIRCUMFLEX */
++    [0x1F] = 0x00C9, /* U+00C9 LATIN CAPITAL LETTER E WITH ACUTE */
++    [0x20] = 0x0020, /* U+0020 SPACE */
++    [0x21] = 0x0021, /* U+0021 EXCLAMATION MARK */
++    [0x22] = 0x0022, /* U+0022 QUOTATION MARK */
++    [0x23] = 0x0023, /* U+0023 NUMBER SIGN */
++    [0x24] = 0x00BA, /* U+00BA MASCULINE ORDINAL INDICATOR */
++    [0x25] = 0x0025, /* U+0025 PERCENT SIGN */
++    [0x26] = 0x0026, /* U+0026 AMPERSAND */
++    [0x27] = 0x0027, /* U+0027 APOSTROPHE */
++    [0x28] = 0x0028, /* U+0028 LEFT PARENTHESIS */
++    [0x29] = 0x0029, /* U+0029 RIGHT PARENTHESIS */
++    [0x2A] = 0x002A, /* U+002A ASTERISK */
++    [0x2B] = 0x002B, /* U+002B PLUS SIGN */
++    [0x2C] = 0x002C, /* U+002C COMMA */
++    [0x2D] = 0x002D, /* U+002D HYPHEN-MINUS */
++    [0x2E] = 0x002E, /* U+002E FULL STOP */
++    [0x2F] = 0x002F, /* U+002F SOLIDUS */
++    [0x30] = 0x0030, /* U+0030 DIGIT ZERO */
++    [0x31] = 0x0031, /* U+0031 DIGIT ONE */
++    [0x32] = 0x0032, /* U+0032 DIGIT TWO */
++    [0x33] = 0x0033, /* U+0033 DIGIT THREE */
++    [0x34] = 0x0034, /* U+0034 DIGIT FOUR */
++    [0x35] = 0x0035, /* U+0035 DIGIT FIVE */
++    [0x36] = 0x0036, /* U+0036 DIGIT SIX */
++    [0x37] = 0x0037, /* U+0037 DIGIT SEVEN */
++    [0x38] = 0x0038, /* U+0038 DIGIT EIGHT */
++    [0x39] = 0x0039, /* U+0039 DIGIT NINE */
++    [0x3A] = 0x003A, /* U+003A COLON */
++    [0x3B] = 0x003B, /* U+003B SEMICOLON */
++    [0x3C] = 0x003C, /* U+003C LESS-THAN SIGN */
++    [0x3D] = 0x003D, /* U+003D EQUALS SIGN */
++    [0x3E] = 0x003E, /* U+003E GREATER-THAN SIGN */
++    [0x3F] = 0x003F, /* U+003F QUESTION MARK */
++    [0x40] = 0x00CD, /* U+00CD LATIN CAPITAL LETTER I WITH ACUTE */
++    [0x41] = 0x0041, /* U+0041 LATIN CAPITAL LETTER A */
++    [0x42] = 0x0042, /* U+0042 LATIN CAPITAL LETTER B */
++    [0x43] = 0x0043, /* U+0043 LATIN CAPITAL LETTER C */
++    [0x44] = 0x0044, /* U+0044 LATIN CAPITAL LETTER D */
++    [0x45] = 0x0045, /* U+0045 LATIN CAPITAL LETTER E */
++    [0x46] = 0x0046, /* U+0046 LATIN CAPITAL LETTER F */
++    [0x47] = 0x0047, /* U+0047 LATIN CAPITAL LETTER G */
++    [0x48] = 0x0048, /* U+0048 LATIN CAPITAL LETTER H */
++    [0x49] = 0x0049, /* U+0049 LATIN CAPITAL LETTER I */
++    [0x4A] = 0x004A, /* U+004A LATIN CAPITAL LETTER J */
++    [0x4B] = 0x004B, /* U+004B LATIN CAPITAL LETTER K */
++    [0x4C] = 0x004C, /* U+004C LATIN CAPITAL LETTER L */
++    [0x4D] = 0x004D, /* U+004D LATIN CAPITAL LETTER M */
++    [0x4E] = 0x004E, /* U+004E LATIN CAPITAL LETTER N */
++    [0x4F] = 0x004F, /* U+004F LATIN CAPITAL LETTER O */
++    [0x50] = 0x0050, /* U+0050 LATIN CAPITAL LETTER P */
++    [0x51] = 0x0051, /* U+0051 LATIN CAPITAL LETTER Q */
++    [0x52] = 0x0052, /* U+0052 LATIN CAPITAL LETTER R */
++    [0x53] = 0x0053, /* U+0053 LATIN CAPITAL LETTER S */
++    [0x54] = 0x0054, /* U+0054 LATIN CAPITAL LETTER T */
++    [0x55] = 0x0055, /* U+0055 LATIN CAPITAL LETTER U */
++    [0x56] = 0x0056, /* U+0056 LATIN CAPITAL LETTER V */
++    [0x57] = 0x0057, /* U+0057 LATIN CAPITAL LETTER W */
++    [0x58] = 0x0058, /* U+0058 LATIN CAPITAL LETTER X */
++    [0x59] = 0x0059, /* U+0059 LATIN CAPITAL LETTER Y */
++    [0x5A] = 0x005A, /* U+005A LATIN CAPITAL LETTER Z */
++    [0x5B] = 0x00C3, /* U+00C3 LATIN CAPITAL LETTER A WITH TILDE */
++    [0x5C] = 0x00D5, /* U+00D5 LATIN CAPITAL LETTER O WITH TILDE */
++    [0x5D] = 0x00DA, /* U+00DA LATIN CAPITAL LETTER U WITH ACUTE */
++    [0x5E] = 0x00DC, /* U+00DC LATIN CAPITAL LETTER U WITH DIAERESIS */
++    [0x5F] = 0x00A7, /* U+00A7 SECTION SIGN */
++    [0x60] = 0x007E, /* U+007E TILDE */
++    [0x61] = 0x0061, /* U+0061 LATIN SMALL LETTER A */
++    [0x62] = 0x0062, /* U+0062 LATIN SMALL LETTER B */
++    [0x63] = 0x0063, /* U+0063 LATIN SMALL LETTER C */
++    [0x64] = 0x0064, /* U+0064 LATIN SMALL LETTER D */
++    [0x65] = 0x0065, /* U+0065 LATIN SMALL LETTER E */
++    [0x66] = 0x0066, /* U+0066 LATIN SMALL LETTER F */
++    [0x67] = 0x0067, /* U+0067 LATIN SMALL LETTER G */
++    [0x68] = 0x0068, /* U+0068 LATIN SMALL LETTER H */
++    [0x69] = 0x0069, /* U+0069 LATIN SMALL LETTER I */
++    [0x6A] = 0x006A, /* U+006A LATIN SMALL LETTER J */
++    [0x6B] = 0x006B, /* U+006B LATIN SMALL LETTER K */
++    [0x6C] = 0x006C, /* U+006C LATIN SMALL LETTER L */
++    [0x6D] = 0x006D, /* U+006D LATIN SMALL LETTER M */
++    [0x6E] = 0x006E, /* U+006E LATIN SMALL LETTER N */
++    [0x6F] = 0x006F, /* U+006F LATIN SMALL LETTER O */
++    [0x70] = 0x0070, /* U+0070 LATIN SMALL LETTER P */
++    [0x71] = 0x0071, /* U+0071 LATIN SMALL LETTER Q */
++    [0x72] = 0x0072, /* U+0072 LATIN SMALL LETTER R */
++    [0x73] = 0x0073, /* U+0073 LATIN SMALL LETTER S */
++    [0x74] = 0x0074, /* U+0074 LATIN SMALL LETTER T */
++    [0x75] = 0x0075, /* U+0075 LATIN SMALL LETTER U */
++    [0x76] = 0x0076, /* U+0076 LATIN SMALL LETTER V */
++    [0x77] = 0x0077, /* U+0077 LATIN SMALL LETTER W */
++    [0x78] = 0x0078, /* U+0078 LATIN SMALL LETTER X */
++    [0x79] = 0x0079, /* U+0079 LATIN SMALL LETTER Y */
++    [0x7A] = 0x007A, /* U+007A LATIN SMALL LETTER Z */
++    [0x7B] = 0x00E3, /* U+00E3 LATIN SMALL LETTER A WITH TILDE */
++    [0x7C] = 0x00F5, /* U+00F5 LATIN SMALL LETTER O WITH TILDE */
++    [0x7D] = 0x0060, /* U+0060 GRAVE ACCENT */
++    [0x7E] = 0x00FC, /* U+00FC LATIN SMALL LETTER U WITH DIAERESIS */
++    [0x7F] = 0x00E0, /* U+00E0 LATIN SMALL LETTER A WITH GRAVE */
++  };
++
++static struct gsm_codepoint const ucs_to_gsm_portuguese[] =
++  {
++    { 0x0024, 0x02 }, /* U+0024 DOLLAR SIGN */
++    { 0x0040, 0x00 }, /* U+0040 COMMERCIAL AT */
++    { 0x005C, 0x17 }, /* U+005C REVERSE SOLIDUS */
++    { 0x005E, 0x16 }, /* U+005E CIRCUMFLEX ACCENT */
++    { 0x005F, 0x11 }, /* U+005F LOW LINE */
++    { 0x0060, 0x7D }, /* U+0060 GRAVE ACCENT */
++    { 0x007C, 0x1A }, /* U+007C VERTICAL LINE */
++    { 0x007E, 0x60 }, /* U+007E TILDE */
++    { 0x00A3, 0x01 }, /* U+00A3 POUND SIGN */
++    { 0x00A5, 0x03 }, /* U+00A5 YEN SIGN */
++    { 0x00A7, 0x5F }, /* U+00A7 SECTION SIGN */
++    { 0x00AA, 0x12 }, /* U+00AA FEMININE ORDINAL INDICATOR */
++    { 0x00BA, 0x24 }, /* U+00BA MASCULINE ORDINAL INDICATOR */
++    { 0x00C0, 0x14 }, /* U+00C0 LATIN CAPITAL LETTER A WITH GRAVE */
++    { 0x00C1, 0x0E }, /* U+00C1 LATIN CAPITAL LETTER A WITH ACUTE */
++    { 0x00C2, 0x1C }, /* U+00C2 LATIN CAPITAL LETTER A WITH CIRCUMFLEX */
++    { 0x00C3, 0x5B }, /* U+00C3 LATIN CAPITAL LETTER A WITH TILDE */
++    { 0x00C7, 0x13 }, /* U+00C7 LATIN CAPITAL LETTER C WITH CEDILLA */
++    { 0x00C9, 0x1F }, /* U+00C9 LATIN CAPITAL LETTER E WITH ACUTE */
++    { 0x00CA, 0x1E }, /* U+00CA LATIN CAPITAL LETTER E WITH CIRCUMFLEX */
++    { 0x00CD, 0x40 }, /* U+00CD LATIN CAPITAL LETTER I WITH ACUTE */
++    { 0x00D3, 0x19 }, /* U+00D3 LATIN CAPITAL LETTER O WITH ACUTE */
++    { 0x00D4, 0x0B }, /* U+00D4 LATIN CAPITAL LETTER O WITH CIRCUMFLEX */
++    { 0x00D5, 0x5C }, /* U+00D5 LATIN CAPITAL LETTER O WITH TILDE */
++    { 0x00DA, 0x5D }, /* U+00DA LATIN CAPITAL LETTER U WITH ACUTE */
++    { 0x00DC, 0x5E }, /* U+00DC LATIN CAPITAL LETTER U WITH DIAERESIS */
++    { 0x00E0, 0x7F }, /* U+00E0 LATIN SMALL LETTER A WITH GRAVE */
++    { 0x00E1, 0x0F }, /* U+00E1 LATIN SMALL LETTER A WITH ACUTE */
++    { 0x00E2, 0x1D }, /* U+00E2 LATIN SMALL LETTER A WITH CIRCUMFLEX */
++    { 0x00E3, 0x7B }, /* U+00E3 LATIN SMALL LETTER A WITH TILDE */
++    { 0x00E7, 0x09 }, /* U+00E7 LATIN SMALL LETTER C WITH CEDILLA */
++    { 0x00E9, 0x05 }, /* U+00E9 LATIN SMALL LETTER E WITH ACUTE */
++    { 0x00EA, 0x04 }, /* U+00EA LATIN SMALL LETTER E WITH CIRCUMFLEX */
++    { 0x00ED, 0x07 }, /* U+00ED LATIN SMALL LETTER I WITH ACUTE */
++    { 0x00F3, 0x08 }, /* U+00F3 LATIN SMALL LETTER O WITH ACUTE */
++    { 0x00F4, 0x0C }, /* U+00F4 LATIN SMALL LETTER O WITH CIRCUMFLEX */
++    { 0x00F5, 0x7C }, /* U+00F5 LATIN SMALL LETTER O WITH TILDE */
++    { 0x00FA, 0x06 }, /* U+00FA LATIN SMALL LETTER U WITH ACUTE */
++    { 0x00FC, 0x7E }, /* U+00FC LATIN SMALL LETTER U WITH DIAERESIS */
++    { 0x0394, 0x10 }, /* U+0394 GREEK CAPITAL LETTER DELTA */
++    { 0x20AC, 0x18 }, /* U+20AC EURO SIGN */
++    { 0x221E, 0x15 }, /* U+221E INFINITY */
++  };
++
++/* ------------------------------------------------------------------------- */
++
++/* Direction of the transformation.  */
++enum direction
++  {
++    no_gsm,
++    to_gsm,
++    from_gsm
++  };
++
++struct encodings
++{
++  char const *name;
++
++  struct locking {
++    uint16_t const (*gsm_to_ucs)[128];		/* Locking */
++    struct gsm_codepoint const *gsm_codepoint;
++    int gsm_codepoint_size;
++  } const *locking;
++
++  struct shifted {
++    struct gsm_codepoint const *gsm_shifted;
++    int gsm_shifted_size;
++  } const *shifted;
++};
++
++static struct locking const gsm_default =
++  {
++    &gsm_default_to_ucs,
++    ucs_to_gsm_default,
++    (sizeof ucs_to_gsm_default) / (sizeof ucs_to_gsm_default[0])
++  };
++
++static struct shifted const gsm_shifted_default =
++  {
++    gsm_default_shifted,
++    (sizeof gsm_default_shifted) / (sizeof gsm_default_shifted[0])
++  };
++
++static struct locking const gsm_turkish =
++  {
++    &gsm_turkish_to_ucs,
++    ucs_to_gsm_turkish,
++    (sizeof ucs_to_gsm_turkish) / (sizeof ucs_to_gsm_turkish[0])
++  };
++
++static struct locking const gsm_portuguese =
++  {
++    &gsm_portuguese_to_ucs,
++    ucs_to_gsm_portuguese,
++    (sizeof ucs_to_gsm_portuguese) / (sizeof ucs_to_gsm_portuguese[0])
++  };
++
++static struct shifted const gsm_shifted_turkish =
++  {
++    gsm_turkish_shifted,
++    (sizeof gsm_turkish_shifted) / (sizeof gsm_turkish_shifted[0])
++  };
++
++static struct shifted const gsm_shifted_spanish =
++  {
++    gsm_spanish_shifted,
++    (sizeof gsm_spanish_shifted) / (sizeof gsm_spanish_shifted[0])
++  };
++
++static struct shifted const gsm_shifted_portuguese =
++  {
++    gsm_portuguese_shifted,
++    (sizeof gsm_portuguese_shifted) / (sizeof gsm_portuguese_shifted[0])
++  };
++
++static struct encodings const encodings[] =
++  {
++    { "3GPP-23.038//", &gsm_default, &gsm_shifted_default },
++    { "3GPP-23.038-A.2.1//", &gsm_default, &gsm_shifted_turkish },
++    { "3GPP-23.038-A.2.2//", &gsm_default, &gsm_shifted_spanish },
++    { "3GPP-23.038-A.2.3//", &gsm_default, &gsm_shifted_portuguese },
++    { "3GPP-23.038-A.3.1//", &gsm_turkish, &gsm_shifted_default },
++    { "3GPP-23.038-A.3.3//", &gsm_portuguese, &gsm_shifted_default },
++    { "3GPP-23.038-A.3.1-A.2.1//", &gsm_turkish, &gsm_shifted_turkish },
++    { "3GPP-23.038-A.3.1-A.2.2//", &gsm_turkish, &gsm_shifted_spanish },
++    { "3GPP-23.038-A.3.1-A.2.3//", &gsm_turkish, &gsm_shifted_portuguese },
++    { "3GPP-23.038-A.3.3-A.2.1//", &gsm_portuguese, &gsm_shifted_turkish },
++    { "3GPP-23.038-A.3.3-A.2.2//", &gsm_portuguese, &gsm_shifted_spanish },
++    { "3GPP-23.038-A.3.3-A.2.3//", &gsm_portuguese, &gsm_shifted_portuguese },
++  };
++
++struct gsm_data
++{
++  enum direction dir;
++  struct locking const *locking;
++  struct shifted const *shifted;
++};
++
++/* Definitions used in the body of the `gconv' function.  */
++#define FROM_LOOP		gconv_from_gsm
++#define TO_LOOP			gconv_to_gsm
++#define DEFINE_INIT		0
++#define DEFINE_FINI		0
++#define MIN_NEEDED_FROM		1
++#define MAX_NEEDED_FROM		2
++#define MIN_NEEDED_TO		4
++#define MAX_NEEDED_TO		4
++#define FROM_DIRECTION		(dir == from_gsm)
++#define PREPARE_LOOP							\
++  struct gsm_data const *gsm_data = (struct gsm_data *) step->__data;	\
++  enum direction dir = gsm_data->dir;					\
++  struct locking const *locking = gsm_data->locking;			\
++  struct shifted const *shifted = gsm_data->shifted;
++
++#define EXTRA_LOOP_ARGS		, locking, shifted
++
++
++int
++gconv_init (struct __gconv_step *step)
++{
++  enum direction dir = no_gsm;
++  int i;
++  struct gsm_data *new_data;
++
++#define N (sizeof (encodings) / sizeof (encodings[0]))
++
++  for (i = 0; i < N; i++)
++    if (strcmp (step->__from_name, encodings[i].name) == 0)
++      {
++	dir = from_gsm;
++	break;
++      }
++    else if (strcmp (step->__to_name, encodings[i].name) == 0)
++      {
++	dir = to_gsm;
++	break;
++      }
++
++  if (dir == no_gsm)
++    return __GCONV_NOCONV;
++
++  new_data = (struct gsm_data *) malloc (sizeof *new_data);
++
++  if (new_data == NULL)
++    return  __GCONV_NOMEM;
++
++  new_data->dir = dir;
++
++  new_data->locking = encodings[i].locking;
++  new_data->shifted = encodings[i].shifted;
++
++  step->__data = new_data;
++
++  if (dir == from_gsm)
++    {
++      step->__min_needed_from = MIN_NEEDED_FROM;
++      step->__max_needed_from = MAX_NEEDED_FROM;
++      step->__min_needed_to = MIN_NEEDED_TO;
++      step->__max_needed_to = MIN_NEEDED_TO;
++    }
++  else
++    {
++      step->__min_needed_from = MIN_NEEDED_TO;
++      step->__max_needed_from = MIN_NEEDED_TO;
++      step->__min_needed_to = MIN_NEEDED_FROM;
++      step->__max_needed_to = MAX_NEEDED_FROM;
++    }
++
++  return __GCONV_OK;
++}
++
++void
++gconv_end (struct __gconv_step *data)
++{
++  free (data->__data);
++}
++
++
++/* First define the conversion function from GSM to UCS4.  */
++#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
++#define MAX_NEEDED_INPUT        MAX_NEEDED_FROM
++#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
++#define LOOPFCT			FROM_LOOP
++#define LOOP_NEED_FLAGS
++#define EXTRA_LOOP_DECLS ,			\
++    struct locking const *locking,		\
++    struct shifted const *shifted
++
++#define INIT_PARAMS							\
++  uint16_t const (*to_ucs)[128] = locking->gsm_to_ucs;			\
++  struct gsm_codepoint const *gsm_shifted = shifted->gsm_shifted;	\
++  int shifted_max = shifted->gsm_shifted_size - 1;
++
++#define BODY								\
++  {									\
++    uint32_t ch = *inptr;						\
++  									\
++    /* This is a 7bit character set, disallow all 8bit characters.  */	\
++    if (__builtin_expect (ch > 0x7F, 0))				\
++      STANDARD_FROM_LOOP_ERR_HANDLER (1);				\
++									\
++    ch = (*to_ucs)[ch];							\
++									\
++    if (__builtin_expect (ch, 1) == 0)					\
++      {									\
++	/* Escape sequences.  */					\
++	int i;								\
++									\
++	if (__builtin_expect (inptr + 2 > inend, 0))			\
++	  {								\
++	    result = __GCONV_INCOMPLETE_INPUT;				\
++	    break;							\
++	  }								\
++									\
++	ch = *++inptr;							\
++									\
++	for (i = 0; i < shifted_max; i++)				\
++	  {								\
++	    if (gsm_shifted[i].gsm == ch)				\
++	      break;							\
++	  }								\
++									\
++	if (gsm_shifted[i].gsm == ch)					\
++	  {								\
++	    ch = gsm_shifted[i].ucs;					\
++	  }								\
++	else if (irreversible)						\
++	  {								\
++	    if (ch == ESC)						\
++	      ch = ' ';							\
++	  }								\
++	else								\
++	  {								\
++	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				\
++	  }								\
++      }									\
++									\
++    put32 (outptr, ch);							\
++    inptr += 1;								\
++    outptr += 4;							\
++  }
++
++#include <iconv/loop.c>
++
++/** Find UCS codepoint from GSM coding table */
++inline struct gsm_codepoint const *
++find_codepoint (struct gsm_codepoint const *table,
++		uint16_t ucs,
++		int size)
++{
++  int i1 = 0, i2 = size - 1;
++
++  for (;;)
++    {
++      int i;
++
++      if (i1 >= i2)
++	return table + (i1 < size ? i1 : i2);
++
++      i = (i1 + i2) / 2;
++
++      if (table[i].ucs > ucs)
++	i2 = i - 1;
++      else if (table[i].ucs < ucs)
++	i1 = i + 1;
++      else
++	return table + i;
++    }
++}
++
++/* Next, define the other direction.  */
++#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
++#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
++#define MAX_NEEDED_OUTPUT       MAX_NEEDED_FROM
++#define LOOPFCT			TO_LOOP
++
++#define INIT_PARAMS							\
++  uint16_t const (*to_ucs)[128] = locking->gsm_to_ucs;			\
++  struct gsm_codepoint const *gsm_locking = locking->gsm_codepoint;	\
++  int locking_size = locking->gsm_codepoint_size;			\
++  struct gsm_codepoint const *gsm_shifted = shifted->gsm_shifted;	\
++  int shifted_size = shifted->gsm_shifted_size;
++
++#define BODY							\
++  {								\
++    unsigned int ch;						\
++								\
++    ch = get32 (inptr);						\
++								\
++    if (ch >= 128 || (*to_ucs)[ch] != ch)			\
++      {								\
++	struct gsm_codepoint const *code;			\
++								\
++	code = find_codepoint(gsm_locking, ch, locking_size);	\
++	if (code->ucs != ch)					\
++	  code = find_codepoint(gsm_shifted, ch, shifted_size);	\
++								\
++	if (code->ucs == ch)					\
++	  {							\
++	    if (__builtin_expect (code->esc, 0))		\
++	      {							\
++		if (__builtin_expect (outptr + 1 == outend, 0))	\
++		  {						\
++		    result = __GCONV_FULL_OUTPUT;		\
++		    break;					\
++		  }						\
++		*outptr++ = ESC;				\
++	      }							\
++	    ch = code->gsm;					\
++	  }							\
++	else							\
++	  {							\
++	    STANDARD_TO_LOOP_ERR_HANDLER (4);			\
++	  }							\
++      }								\
++								\
++    *outptr++ = (unsigned char) ch;				\
++    inptr += 4;							\
++  }
++
++#define LOOP_NEED_FLAGS
++#define EXTRA_LOOP_DECLS ,			\
++    struct locking const *locking,		\
++    struct shifted const *shifted
++#include <iconv/loop.c>
++
++/* Now define the toplevel functions.  */
++#include <iconv/skeleton.c>

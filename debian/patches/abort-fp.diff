@@ -1,0 +1,33 @@
+#! /bin/sh -e
+
+# All lines beginning with `## DP:' are a description of the patch.
+# DP: Description: Compile abort.c with -O0
+
+if [ $# -lt 1 ]; then
+    echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+    exit 1
+fi
+
+[ -f debian/patches/00patch-opts ] && . debian/patches/00patch-opts
+patch_opts="${patch_opts:--f --no-backup-if-mismatch} ${2:+-d $2}"
+
+case "$1" in
+    -patch) patch -p0 ${patch_opts} < $0;;
+    -unpatch) patch -R -p0 ${patch_opts} < $0;;
+    *)
+        echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+        exit 1;;
+esac
+
+exit 0
+
+--- stdlib/Makefile~	2005-11-09 06:04:56.000000000 +0200
++++ stdlib/Makefile	2006-07-18 12:53:03.000000000 +0300
+@@ -94,6 +94,7 @@
+ CFLAGS-system.c = -fexceptions
+ CFLAGS-system.os = -fomit-frame-pointer
+ CFLAGS-fmtmsg.c = -fexceptions
++CFLAGS-abort.c = -fno-omit-frame-pointer -mapcs-frame
+ 
+ ifneq (,$(filter %REENTRANT, $(defines)))
+ CFLAGS-strfmon.c = -D_IO_MTSAFE_IO

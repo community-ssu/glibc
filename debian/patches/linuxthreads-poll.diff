@@ -1,0 +1,31 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 99-unnamed.dpatch by Yauheni Kaliuta <yauheni.kaliuta@nokia.com>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+--- a/linuxthreads/manager.c.orig	2006-11-09 16:40:40.000000000 +0200
++++ a/linuxthreads/manager.c	2006-11-09 16:40:55.000000000 +0200
+@@ -149,7 +149,20 @@
+   ufd.events = POLLIN;
+   /* Enter server loop */
+   while(1) {
+-    n = __poll(&ufd, 1, 2000);
++
++    if (n > 0)
++    {
++     n = __poll(&ufd, 1,  2000);
++    }
++    else
++    {
++     static const struct timeval t1 = { 10, 0 };
++     struct timeval t0;
++     gettimeofday(&t0, NULL);
++     t0.tv_sec  %= t1.tv_sec;
++     timersub(&t1, &t0, &t0);
++     n = __poll(&ufd, 1, t0.tv_sec * 1000 + t0.tv_usec / 1000);
++    }
+ 
+     /* Check for termination of the main thread */
+     if (getppid() == 1) {

@@ -1,0 +1,33 @@
+#! /bin/sh -e
+
+# All lines beginning with `# DP:' are a description of the patch.
+# DP: tls_modid-assert-fix
+
+if [ $# -ne 2 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch -d "$2" -f --no-backup-if-mismatch -p0 < $0;;
+    -unpatch) patch -d "$2" -f --no-backup-if-mismatch -R -p0 < $0;;
+    *)
+	echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+	exit 1
+esac
+exit 0
+
+Index: elf/rtld.c
+===================================================================
+RCS file: /cvs/glibc/libc/elf/rtld.c,v
+retrieving revision 1.362
+diff -u -r1.362 rtld.c
+--- elf/rtld.c	8 Apr 2006 19:50:51 -0000	1.362
++++ elf/rtld.c	28 Sep 2006 23:22:53 -0000
+@@ -389,6 +389,7 @@
+        ++cnt)
+     bootstrap_map.l_info[cnt] = 0;
+ # endif
++  bootstrap_map.l_tls_modid = 0;
+ #endif
+ 
+   /* Figure out the run-time load address of the dynamic linker itself.  */
