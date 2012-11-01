@@ -1,7 +1,6 @@
 glibc (2.5.1-1eglibc27+0m5+cssu0) unstable; urgency=low
 
   * Backport c99/gnu89 inline support patch from glibc-2.6 to support new gcc.
-  * Increase min kernel version to include support for kernel pselect() etc.
 
  -- Steven Newbury <steve@snewbury.org.uk>  Sat,  4 Aug 2012 15:37:49 +0100
 
