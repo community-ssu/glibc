@@ -1,0 +1,10 @@
+GCC inside scratchbox has an evil specs files that breaks --with-headers
+
+remove this bit:
+%rename cpp old_cpp
+
+*cpp:
+-isystem /usr/local/include -isystem /usr/include %(old_cpp)
+
+
+from /scratchbox/compilers/cs2007q3-glibc2.5-arm7/gcc.specs in order to build with pselect support

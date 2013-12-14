@@ -51,6 +51,21 @@ $(stamp)mkincludedir:
 	find $(LINUX_HEADERS) -maxdepth 1 -xtype d -name asm\* \
 	  -exec ln -s '{}' debian/include ';'
 
+	# Header hack to enable pselect, ppoll and epoll support with fallback 
+	# for old kernels with old kernel headers
+	if ! grep "#define __NR_pselect6" $(LINUX_HEADERS)/asm/unistd.h > /dev/null;\
+	  then rm debian/include/asm;\
+	  mkdir debian/include/asm;\
+	  find $(LINUX_HEADERS)/asm/ -maxdepth 1\
+	   -not -path $(LINUX_HEADERS)/asm/\
+	   -exec ln -s '{}' debian/include/asm ';';\
+	  rm debian/include/asm/unistd.h;\
+	  cp $(LINUX_HEADERS)/asm/unistd.h debian/include/asm/unistd.h;\
+	  patch -p0 < debian/patches/pselect_ppoll_epoll.diff;\
+	fi;
+
+
+
 	# To make configure happy if libc6-dev is not installed.
 	touch debian/include/assert.h
 
