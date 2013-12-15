@@ -1,3 +1,10 @@
+glibc (2.5.1-1eglibc27+0m5+cssu1) unstable; urgency=low
+
+  * ppoll, pselect, epoll enabled by default (with fallback if there is no
+    kernel support)
+
+ -- Christian Ratzenhofer <christian.ratzenhofer@cdnm.at>  Sun, 15 Dec 2013 15:49:37 +0100
+
 glibc (2.5.1-1eglibc27+0m5+cssu0) unstable; urgency=low
 
   * Backport c99/gnu89 inline support patch from glibc-2.6 to support new gcc.
