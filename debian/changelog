@@ -1,3 +1,10 @@
+glibc (2.5.1-1eglibc27+0m5+cssu2+thumb0) unstable; urgency=low
+
+  * gcc472 compatibility fixes and workarounds
+  * thumb2 compiled
+
+ -- Ivaylo Dimitrov <freemangordon@abv.bg>  Sun, 19 Jan 2014 09:23:44 +0200
+
 glibc (2.5.1-1eglibc27+0m5+cssu2) unstable; urgency=low
 
   * Timezone information as of 2013
