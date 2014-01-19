@@ -3,6 +3,7 @@ Architecture: amd64 arm armel armeb i386 m68k mips mipsel powerpc sparc s390 hpp
 Section: libs
 Priority: required
 Provides: ${locale:Depends}
+Depends: kernel-feature-errata-430973-workaround [armel]
 Description: GNU C Library: Shared libraries and Timezone data
  Contains the standard libraries that are used by nearly all programs on
  the system. This package includes shared versions of the standard C library
@@ -37,7 +38,7 @@ Package: libc6-prof
 Architecture: amd64 arm armel armeb i386 m68k mips mipsel powerpc sparc s390 hppa sh3 sh4 sh3eb sh4eb
 Section: libdevel
 Priority: extra
-Depends: libc6 (= ${Source-Version})
+Depends: libc6 (= ${Source-Version}), kernel-feature-errata-430973-workaround [armel]
 Description: GNU C Library: Profiling Libraries
  Static libraries compiled with profiling info (-pg) suitable for use
  with gprof.
@@ -48,7 +49,7 @@ Section: libdevel
 Priority: optional
 Conflicts: libc-pic
 Provides: libc-pic, glibc-pic
-Depends: libc6 (= ${Source-Version})
+Depends: libc6 (= ${Source-Version}), kernel-feature-errata-430973-workaround [armel]
 Description: GNU C Library: PIC archive library
  Contains an archive library (ar file) composed of individual shared objects.
  This is used for creating a library which is a smaller subset of the

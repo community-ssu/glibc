@@ -24,7 +24,7 @@ Architecture: any
 Section: libs
 Priority: standard
 Provides: i18ndata
-Depends: ${locale:Depends}, debconf | debconf-2.0
+Depends: ${locale:Depends}, debconf | debconf-2.0, kernel-feature-errata-430973-workaround [armel]
 Conflicts: localebin, wg15-locale, i18ndata, locale-ja, locale-ko, locale-vi, locale-zh, base-config
 Replaces: localebin, wg15-locale, @libc@-bin, i18ndata, glibc2, locale-ja, locale-ko, locale-vi, locale-zh, base-config
 Description: GNU C Library: National Language (locale) data [support]
@@ -41,7 +41,7 @@ Package: nscd
 Architecture: @threads_archs@
 Section: admin
 Priority: optional
-Depends: @libc@ (>= ${Source-Version})
+Depends: @libc@ (>= ${Source-Version}), kernel-feature-errata-430973-workaround [armel]
 Replaces: @libc@ (<< 2.1-4)
 Description: GNU C Library: Name Service Cache Daemon
  A daemon which handles passwd, group and host lookups

@@ -96,6 +96,10 @@ NJOBS = 1
 
 SETNJOBS := $(NJOBS)
 
+thumb =
+ifneq (,$(findstring thumb,$(DEB_BUILD_OPTIONS)))
+    thumb = -mthumb
+endif
 
 # Default setup
 GLIBC_PASSES ?= libc
@@ -120,8 +124,8 @@ else
 CC     = $(BUILD_CC)
 endif
 
-BUILD_CFLAGS = -O2 -g -fgnu89-inline
-HOST_CFLAGS = -pipe -O2 -fstrict-aliasing -fgnu89-inline -g $(call xx,extra_cflags)
+BUILD_CFLAGS = -O2 -g -fgnu89-inline $(thumb)
+HOST_CFLAGS = -pipe -O2 $(thumb) -fstrict-aliasing -fgnu89-inline -g $(call xx,extra_cflags)
 
 configure_target := $(DEB_HOST_GNU_TYPE)
 
