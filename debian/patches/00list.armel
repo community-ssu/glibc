@@ -32,3 +32,4 @@ glibc-ports-shared-pie
 data-cache-flush
 glibc-gnu89-inline
 tz2013a
+gcc472compat
