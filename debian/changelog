@@ -1,3 +1,9 @@
+glibc (2.5.1-1eglibc27+0m5+cssu3) unstable; urgency=low
+
+  * Fix for CVE 2015-0235 (GHOST)
+
+ -- Christian Ratzenhofer <christian.ratzenhofer@cdnm.at>  Sat, 28 Feb 2015 19:07:11 +0100
+
 glibc (2.5.1-1eglibc27+0m5+cssu2) unstable; urgency=low
 
   * Timezone information as of 2013
